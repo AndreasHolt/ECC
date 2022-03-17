@@ -131,8 +131,17 @@ Graph.prototype.drawEquation = function (equation, color, thickness) {
 	context.moveTo(this.minX, equation(this.minX));
 
 	let lastX = 0;
-	let realRootMultiplier = 1.02;
-	let realRoot = -3.1844 * realRootMultiplier;
+	
+	for (var x = this.minX + this.iteration; x <= this.maxX; x += this.iteration) {
+		if (isNaN(equation(x))) {
+			lastX = x
+		}
+	}
+	
+	let realRootMultiplier = 1.01;
+	let realRoot = lastX * realRootMultiplier;
+
+	console.log(lastX);
 
 	for (var x = this.minX + this.iteration; x <= this.maxX; x += this.iteration) {
 		// context.lineTo(x, equation(x));
