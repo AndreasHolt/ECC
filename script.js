@@ -191,14 +191,19 @@ var myGraph = new Graph({
 	unitsPerTick: 1
 });
 
+function equationP(x) {
+	return Math.sqrt(x * x * x - 7 * x + 10)
+}
+
+// console.log("ay", equationP(-2));
 
 
 myGraph.drawEquation(function (x) {
-	return Math.sqrt(x * x * x - 7 * x + 10);
+	return equationP(x);
 }, 'green', 3);
 
 myGraph.drawEquation(function (x) {
-	return -Math.sqrt(x * x * x - 7 * x + 10);
+	return -equationP(x);
 }, 'green', 3);
 
 /// ----------------------------------------------------------------------
@@ -212,23 +217,30 @@ document.getElementById('myCanvas').addEventListener('click', e => {
 
 var pointSize = 10;
 
-Graph.prototype.getPosition = function (event) {
+myGraph.convertToCoordinates = function (x, y) {
+	myGraph.drawCoordinates((x * this.scaleX) + this.centerX, (-y * this.scaleY) + this.centerY);
+}
 
+
+Graph.prototype.getPosition = function (event) {
 	var rect = this.domRect;
 	var x = event.clientX - rect.left;
 	var y = event.clientY - rect.top;
 
-	myGraph.drawCoordinates(x, y);
+	if (y > this.centerY) {
+		myGraph.drawCoordinates(x, this.centerY - (-equationP((x/this.scaleX) - 10) * this.scaleY));
+	} else {
+		myGraph.drawCoordinates(x, this.centerY - (equationP((x/this.scaleX) - 10) * this.scaleY));
+	}
 };
 
 Graph.prototype.drawCoordinates = function (x, y) {
 	// Draw rectangle
-	this.context.strokeRect(x, y, 2, 2);
+	this.context.strokeRect(x-2, y-2, 4, 4);
 
 	// Not working yet. Drawing cicles instead of rectangles..
 	this.context.fillStyle = "#ff2626"; // Red color
 	this.context.beginPath();
 	this.context.arc(this.scaleX * x, this.scaleY * y, pointSize, 0, Math.PI * 2, true);
 	this.context.fill();
-	console.log('printed');
 };
