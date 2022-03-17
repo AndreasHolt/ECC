@@ -236,11 +236,14 @@ Graph.prototype.getPosition = function (event) {
 
 Graph.prototype.drawCoordinates = function (x, y) {
 	// Draw rectangle
-	this.context.strokeRect(x-2, y-2, 4, 4);
+	this.context.beginPath();
+	this.context.fillStyle = "magenta";
+	this.context.rect(x-2, y-2, 4, 4);
+	this.context.fill();
 
 	// Not working yet. Drawing cicles instead of rectangles..
-	this.context.fillStyle = "#ff2626"; // Red color
-	this.context.beginPath();
-	this.context.arc(this.scaleX * x, this.scaleY * y, pointSize, 0, Math.PI * 2, true);
-	this.context.fill();
+	// this.context.fillStyle = "#ff2626"; // Red color
+	// this.context.beginPath();
+	// this.context.arc(this.scaleX * x, this.scaleY * y, pointSize, 0, Math.PI * 2, true);
+	// this.context.fill();
 };
