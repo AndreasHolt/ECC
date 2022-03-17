@@ -210,9 +210,12 @@ myGraph.drawEquation(function (x) {
 /// Draw points on graph
 /// ----------------------------------------------------------------------
 
-
 document.getElementById('myCanvas').addEventListener('click', e => {
-	myGraph.getPosition(e);
+	myGraph.createPoint(e);
+});
+
+document.getElementById('myCanvas').addEventListener('mousemove', e => {
+	myGraph.movePoint(e);
 });
 
 var pointSize = 10;
@@ -222,7 +225,7 @@ myGraph.convertToCoordinates = function (x, y) {
 }
 
 
-Graph.prototype.getPosition = function (event) {
+Graph.prototype.createPoint = function (event) {
 	var rect = this.domRect;
 	var x = event.clientX - rect.left;
 	var y = event.clientY - rect.top;
@@ -234,12 +237,35 @@ Graph.prototype.getPosition = function (event) {
 	}
 };
 
+let point = null;
+
+Graph.prototype.movePoint = function (event) {
+	var rect = this.domRect;
+	var x = event.clientX - rect.left;
+	var y = event.clientY - rect.top;
+
+	if (point == null) {
+		if (y > this.centerY) {
+			point = myGraph.drawCoordinates(x, this.centerY - (-equationP((x/this.scaleX) - 10) * this.scaleY));
+		} else {
+			point = myGraph.drawCoordinates(x, this.centerY - (equationP((x/this.scaleX) - 10) * this.scaleY));
+		}
+	} else {
+		console.log("move point");
+		point.moveTo(this.centerX,this.centerY)
+	}	
+
+	console.log(point);
+};
+
 Graph.prototype.drawCoordinates = function (x, y) {
 	// Draw rectangle
 	this.context.beginPath();
 	this.context.fillStyle = "magenta";
 	this.context.rect(x-2, y-2, 4, 4);
 	this.context.fill();
+
+	return this.context;
 
 	// Not working yet. Drawing cicles instead of rectangles..
 	// this.context.fillStyle = "#ff2626"; // Red color
