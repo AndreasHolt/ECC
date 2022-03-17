@@ -291,36 +291,35 @@ function moveSection(id, x, y) {
 }
 
 document.getElementById('layer2').addEventListener('click', e => {
-    console.log('test')
-    let point = document.getElementById('point')
-    let pointSVG = document.getElementById('pointSVG')
-    var svgNS = "http://www.w3.org/2000/svg";
-
     let pointsOnGraph = document.getElementsByClassName('workingPoints')
-
 
     // Delete the point on the graph that was placed first
     if(pointsOnGraph.length < 2){
+        addPointOnClick()
+
+    } else {
+        pointsOnGraph[0].remove()
+        addPointOnClick()
+    }
+
+    console.log(document.getElementsByClassName('workingPoints').length)
+
+});
+
+let addPointOnClick = function() {
+    let point = document.getElementById('point')
+    var svgNS = "http://www.w3.org/2000/svg";
      // Create a circle element (not part of the DOM yet)
      var circle = document.createElementNS(svgNS,'circle'); // Creates a <circle/>
      circle.setAttribute('fill','red'); // Note: NOT setAttributeNS()
      circle.setAttribute('cx', point.getAttribute('cx'));     // setAttribute turns 150 into a string
      circle.setAttribute('cy', point.getAttribute('cy'));    // using a string works, too
      circle.classList.add('workingPoints')
-     console.log(point.getAttribute('cx'))
      circle.setAttribute('r',5);       // give the circle a radius so we can see it
 
      // Now, add the circle to the SVG document so we can see it
      var svg = document.querySelector('svg'); // the root <svg> element
      svg.appendChild(circle);
-    } else {
-        console.log(pointSVG)
-        console.log(pointsOnGraph[1])
-        pointsOnGraph[0].remove()
-    }
-
-    console.log(document.getElementsByClassName('workingPoints').length)
-
-});
+}
 
 
