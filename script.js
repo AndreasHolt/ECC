@@ -227,6 +227,10 @@ document.getElementById('pointSVG').addEventListener('mousemove', e => {
 	myGraph.movePoint(e);
 });
 
+
+
+
+
 var pointSize = 10;
 
 myGraph.convertToCoordinates = function (x, y) {
@@ -274,11 +278,34 @@ Graph.prototype.drawCoordinates = function (x, y) {
 };
 
 
-function moveSection(idStr, xOffset, yOffset) {
-	var domElemnt = document.getElementById(idStr);
+function moveSection(id, x, y) {
+    var el = document.getElementById(id);
 
-	if (domElemnt) {
-		var transformAttr = ' translate(' + xOffset + ',' + yOffset + ')';
-		domElemnt.setAttribute('transform', transformAttr);
-	}
+    if (!y)
+        return
+
+    if (el) {
+        el.setAttribute('cx', x);
+        el.setAttribute('cy', y);
+    }
 }
+
+document.getElementById('layer2').addEventListener('click', e => {
+    console.log('test')
+    let point = document.getElementById('point')
+    var svgNS = "http://www.w3.org/2000/svg";
+
+     // Create a circle element (not part of the DOM yet)
+     var circle = document.createElementNS(svgNS,'circle'); // Creates a <circle/>
+     circle.setAttribute('fill','red'); // Note: NOT setAttributeNS()
+     circle.setAttribute('cx', point.getAttribute('cx'));     // setAttribute turns 150 into a string
+     circle.setAttribute('cy', point.getAttribute('cy'));    // using a string works, too
+     console.log(point.getAttribute('cx'))
+     circle.setAttribute('r',3);       // give the circle a radius so we can see it
+
+     // Now, add the circle to the SVG document so we can see it
+     var svg = document.querySelector('svg'); // the root <svg> element
+     svg.appendChild(circle);
+
+});
+
