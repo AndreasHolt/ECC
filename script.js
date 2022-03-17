@@ -29,6 +29,9 @@ function Graph(config) {
 	this.scaleX = this.canvas.width / this.rangeX;
 	this.scaleY = this.canvas.height / this.rangeY;
 
+	// our settings
+	this.pointSize = 4
+
 	// draw x and y axis
 	this.drawXAxis();
 	this.drawYAxis();
@@ -144,13 +147,10 @@ Graph.prototype.drawEquation = function (equation, color, thickness) {
 	console.log(lastX);
 
 	for (var x = this.minX + this.iteration; x <= this.maxX; x += this.iteration) {
-		// context.lineTo(x, equation(x));
 		if (isNaN(equation(x)) && x > realRoot) {
-			// console.log("ay ", lastX);
 			context.lineTo(x, 0);
 		} else {
 			context.lineTo(x, equation(x));
-			console.log("Draw normal");
 		}
 	}
 
@@ -183,6 +183,15 @@ Graph.prototype.transformContext = function () {
 // Defining new graph
 
 var myGraph = new Graph({
+	canvasId: 'myCanvas',
+	minX: -10,
+	minY: -10,
+	maxX: 10,
+	maxY: 10,
+	unitsPerTick: 1
+});
+
+var pointGraph = new Graph({
 	canvasId: 'myCanvas',
 	minX: -10,
 	minY: -10,
@@ -244,16 +253,29 @@ Graph.prototype.movePoint = function (event) {
 	var x = event.clientX - rect.left;
 	var y = event.clientY - rect.top;
 
-	if (point == null) {
+	// if (point == null) {
+		// if (y > this.centerY) {
+		// 	point = myGraph.drawCoordinates(x, this.centerY - (-equationP((x/this.scaleX) - 10) * this.scaleY));
+		// } else {
+		// 	point = myGraph.drawCoordinates(x, this.centerY - (equationP((x/this.scaleX) - 10) * this.scaleY));
+		// }
 		if (y > this.centerY) {
-			point = myGraph.drawCoordinates(x, this.centerY - (-equationP((x/this.scaleX) - 10) * this.scaleY));
+			newY = this.centerY - (-equationP((x/this.scaleX) - 10) * this.scaleY)
 		} else {
-			point = myGraph.drawCoordinates(x, this.centerY - (equationP((x/this.scaleX) - 10) * this.scaleY));
+			newY = this.centerY - (equationP((x/this.scaleX) - 10) * this.scaleY)
 		}
-	} else {
-		console.log("move point");
-		point.moveTo(this.centerX,this.centerY)
-	}	
+
+		point = pointGraph.drawCoordinates(x, newY);
+		point.beginPath();
+		point.fillStyle = "rgba(255, 255, 255, 1)";
+		point.rect(x-(this.pointSize/2), newY-(this.pointSize/2), this.pointSize*2, this.pointSize*2)
+		point.fill();
+		
+
+	// } else {
+	// 	console.log("move point");
+	// 	point.clearRect(x-(this.pointSize/2), newY-(this.pointSize/2), 4, 4)
+	// }	
 
 	console.log(point);
 };
@@ -262,14 +284,8 @@ Graph.prototype.drawCoordinates = function (x, y) {
 	// Draw rectangle
 	this.context.beginPath();
 	this.context.fillStyle = "magenta";
-	this.context.rect(x-2, y-2, 4, 4);
+	this.context.rect(x-(this.pointSize/2), y-(this.pointSize/2), this.pointSize, this.pointSize);
 	this.context.fill();
 
 	return this.context;
-
-	// Not working yet. Drawing cicles instead of rectangles..
-	// this.context.fillStyle = "#ff2626"; // Red color
-	// this.context.beginPath();
-	// this.context.arc(this.scaleX * x, this.scaleY * y, pointSize, 0, Math.PI * 2, true);
-	// this.context.fill();
 };
