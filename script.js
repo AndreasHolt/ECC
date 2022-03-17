@@ -1,3 +1,7 @@
+/// ----------------------------------------------------------------------
+/// Configuration of graph
+/// ----------------------------------------------------------------------
+
   function Graph(config) {
     // user defined properties
     this.canvas = document.getElementById(config.canvasId);
@@ -138,6 +142,9 @@
     context.restore();
   };
 
+
+
+
   Graph.prototype.transformContext = function() {
     var context = this.context;
 
@@ -153,20 +160,7 @@
   };
 
 
-
-Graph.prototype.insertPoints = function() {
-    console.log('test')
-    this.context.fillRect(this.scaleX *10, this.scaleY * 7,5,5);
-    console.log(this.scaleX * -5)
-    console.log(this.scaleY * 3)
-
-}
-
-Graph.prototype.updateCanvas = function() {
-    var canvasData = this.context.getImageData(0, 0, this.unitX, this.unitY);
-
-    this.context.putImageData(canvasData, 0, 0);
-}
+// Defining new graph
 
   var myGraph = new Graph({
     canvasId: 'myCanvas',
@@ -177,6 +171,8 @@ Graph.prototype.updateCanvas = function() {
     unitsPerTick: 1
   });
 
+
+
   myGraph.drawEquation(function(x) {
     return Math.sqrt(x*x*x-7*x+10);
   }, 'green', 3);
@@ -185,9 +181,9 @@ Graph.prototype.updateCanvas = function() {
     return -Math.sqrt(x*x*x-7*x+10);
   }, 'green', 3);
 
-
-myGraph.insertPoints()
-myGraph.updateCanvas()
+/// ----------------------------------------------------------------------
+/// Draw points on graph
+/// ----------------------------------------------------------------------
 
 
 document.getElementById('myCanvas').addEventListener('click', e => {
@@ -206,13 +202,10 @@ Graph.prototype.getPosition = function(event){
 }
 
 Graph.prototype.drawCoordinates = function(x,y){	
-    let xDraw = x 
-    
-    
-
+    // Draw rectangle
     this.context.strokeRect(x,y,2,2);
 
-
+    // Not working yet. Drawing cicles instead of rectangles..
   	this.context.fillStyle = "#ff2626"; // Red color
     this.context.beginPath();
     this.context.arc(this.scaleX * x, this.scaleY * y, pointSize, 0, Math.PI * 2, true);
