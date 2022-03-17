@@ -223,7 +223,7 @@ document.getElementById('myCanvas').addEventListener('click', e => {
 	myGraph.createPoint(e);
 });
 
-document.getElementById('myCanvas').addEventListener('mousemove', e => {
+document.getElementById('pointSVG').addEventListener('mousemove', e => {
 	myGraph.movePoint(e);
 });
 
@@ -250,34 +250,17 @@ let point = null;
 
 Graph.prototype.movePoint = function (event) {
 	var rect = this.domRect;
-	var x = event.clientX - rect.left;
-	var y = event.clientY - rect.top;
+	var x = event.clientX - 8;
+	var y = event.clientY - 8;
 
-	// if (point == null) {
-		// if (y > this.centerY) {
-		// 	point = myGraph.drawCoordinates(x, this.centerY - (-equationP((x/this.scaleX) - 10) * this.scaleY));
-		// } else {
-		// 	point = myGraph.drawCoordinates(x, this.centerY - (equationP((x/this.scaleX) - 10) * this.scaleY));
-		// }
-		if (y > this.centerY) {
-			newY = this.centerY - (-equationP((x/this.scaleX) - 10) * this.scaleY)
-		} else {
-			newY = this.centerY - (equationP((x/this.scaleX) - 10) * this.scaleY)
-		}
+	if (y > this.centerY) {
+		moveSection("point", x, this.centerY - (-equationP((x/this.scaleX) - 10) * this.scaleY));
+	} else {
+		moveSection("point", x, this.centerY - (equationP((x/this.scaleX) - 10) * this.scaleY));
+	}
 
-		point = pointGraph.drawCoordinates(x, newY);
-		point.beginPath();
-		point.fillStyle = "rgba(255, 255, 255, 1)";
-		point.rect(x-(this.pointSize/2), newY-(this.pointSize/2), this.pointSize*2, this.pointSize*2)
-		point.fill();
-		
 
-	// } else {
-	// 	console.log("move point");
-	// 	point.clearRect(x-(this.pointSize/2), newY-(this.pointSize/2), 4, 4)
-	// }	
-
-	console.log(point);
+	// moveSection("point", x, y);
 };
 
 Graph.prototype.drawCoordinates = function (x, y) {
@@ -289,3 +272,13 @@ Graph.prototype.drawCoordinates = function (x, y) {
 
 	return this.context;
 };
+
+
+function moveSection(idStr, xOffset, yOffset) {
+	var domElemnt = document.getElementById(idStr);
+
+	if (domElemnt) {
+		var transformAttr = ' translate(' + xOffset + ',' + yOffset + ')';
+		domElemnt.setAttribute('transform', transformAttr);
+	}
+}
