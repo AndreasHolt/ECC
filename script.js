@@ -1,19 +1,10 @@
 var myGraph = new Graph({
 	canvasId: 'myCanvas',
-	minX: -10,
-	minY: -10,
-	maxX: 10,
-	maxY: 10,
-	unitsPerTick: 1
-});
-
-var pointGraph = new Graph({
-	canvasId: 'myCanvas',
-	minX: -10,
-	minY: -10,
-	maxX: 10,
-	maxY: 10,
-	unitsPerTick: 1
+	minX: -50,
+	minY: -50,
+	maxX: 50,
+	maxY: 50,
+	unitsPerTick: 5
 });
 
 function equationP(x) {
