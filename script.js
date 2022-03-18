@@ -294,12 +294,18 @@ document.getElementById('layer2').addEventListener('click', e => {
     let pointsOnGraph = document.getElementsByClassName('workingPoints')
 
     // Delete the point on the graph that was placed first
-    if(pointsOnGraph.length < 2){
+    if(pointsOnGraph.length === 1){
+        addPointOnClick()
+        calculateThird()
+
+
+    } else if(pointsOnGraph.length === 0){
         addPointOnClick()
 
     } else {
         pointsOnGraph[0].remove()
         addPointOnClick()
+        calculateThird()
     }
 
     console.log(document.getElementsByClassName('workingPoints').length)
@@ -321,5 +327,28 @@ let addPointOnClick = function() {
      var svg = document.querySelector('svg'); // the root <svg> element
      svg.appendChild(circle);
 }
+
+
+let calculateThird = function() {
+    let points = document.getElementsByClassName('workingPoints')
+    storePoints = {
+        point1: [points[0].getAttribute('cx'), points[0].getAttribute('cy')],
+        point2: [points[1].getAttribute('cx'), points[1].getAttribute('cy')]
+    }
+
+    let lambda = ((storePoints.point2[1] - storePoints.point1[1]) / (storePoints.point2[0] - storePoints.point1[0]))
+    let thirdX = lambda * lambda  + lambda * 
+    
+
+    console.log(storePoints.point1[0])
+    console.log('lambda is: ' + lambda)
+
+
+    
+
+    
+    console.log('test')
+}
+
 
 
