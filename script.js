@@ -59,7 +59,10 @@ function init() {
 				pointsOnGraph[0].remove()
 			} 
 
-			if(calculatedPoints.length == 1) {
+			if(calculatedPoints.length == 2) {
+				calculatedPoints[1].remove();
+				calculatedPoints[0].remove();
+			} else if(calculatedPoints.length == 1) {
 				calculatedPoints[0].remove();
 			}
 			
