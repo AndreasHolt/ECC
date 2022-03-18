@@ -64,7 +64,6 @@ Graph.prototype.drawXAxis = function () {
 		context.fillText(unit, xPos, this.centerY + this.tickSize / 2 + 3);
 		unit -= this.unitsPerTick;
 		xPos = Math.round(xPos - xPosIncrement);
-		console.log(xPos);
 	}
 
 	// draw right tick marks
@@ -144,8 +143,6 @@ Graph.prototype.drawEquation = function (equation, color, thickness) {
 	let realRootMultiplier = 1.01;
 	let realRoot = lastX * realRootMultiplier;
 
-	console.log(lastX);
-
 	for (var x = this.minX + this.iteration; x <= this.maxX; x += this.iteration) {
 		if (isNaN(equation(x)) && x > realRoot) {
 			context.lineTo(x, 0);
@@ -204,9 +201,6 @@ function equationP(x) {
 	return Math.sqrt((x * x * x) + 10 * x + 5)
 }
 
-// console.log("ay", equationP(-2));
-
-
 myGraph.drawEquation(function (x) {
 	return equationP(x);
 }, 'green', 3);
@@ -262,9 +256,6 @@ Graph.prototype.movePoint = function (event) {
 	} else {
 		moveSection("point", x, this.centerY - (equationP((x/this.scaleX) - 10) * this.scaleY));
 	}
-
-
-	// moveSection("point", x, y);
 };
 
 Graph.prototype.drawCoordinates = function (x, y) {
@@ -307,24 +298,20 @@ document.getElementById('layer2').addEventListener('click', e => {
         addPointOnClick()
         calculateThird()
     }
-
-    console.log(document.getElementsByClassName('workingPoints').length)
-
 });
 
 let addPointOnClick = function() {
     let point = document.getElementById('point')
     var svgNS = "http://www.w3.org/2000/svg";
-     // Create a circle element (not part of the DOM yet)
-     var circle = document.createElementNS(svgNS,'circle'); // Creates a <circle/>
-     circle.setAttribute('fill','red'); // Note: NOT setAttributeNS()
-     circle.setAttribute('cx', point.getAttribute('cx'));     // setAttribute turns 150 into a string
-     circle.setAttribute('cy', point.getAttribute('cy'));    // using a string works, too
-     circle.classList.add('workingPoints')
-     circle.setAttribute('r',5);       // give the circle a radius so we can see it
 
-     // Now, add the circle to the SVG document so we can see it
-     var svg = document.querySelector('svg'); // the root <svg> element
+     var circle = document.createElementNS(svgNS,'circle');
+     circle.setAttribute('fill','red');
+     circle.setAttribute('cx', point.getAttribute('cx'));
+     circle.setAttribute('cy', point.getAttribute('cy'));
+     circle.classList.add('workingPoints')
+     circle.setAttribute('r',5);
+
+     var svg = document.querySelector('svg');
      svg.appendChild(circle);
 }
 
