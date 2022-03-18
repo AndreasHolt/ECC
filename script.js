@@ -220,37 +220,22 @@ myGraph.drawEquation(function (x) {
 /// Draw points on graph
 /// ----------------------------------------------------------------------
 
-document.getElementById('myCanvas').addEventListener('click', e => {
-	myGraph.createPoint(e);
-});
 
 document.getElementById('pointSVG').addEventListener('mousemove', e => {
 	myGraph.movePoint(e);
 });
 
 
-
-
-
 var pointSize = 10;
 
-myGraph.convertToCoordinates = function (x, y) {
-	myGraph.drawCoordinates((x * this.scaleX) + this.centerX, (-y * this.scaleY) + this.centerY);
-}
-
-
-Graph.prototype.createPoint = function (event) {
-	var rect = this.domRect;
-	var x = event.clientX - rect.left;
-	var y = event.clientY - rect.top;
-
-	if (y > this.centerY) {
-		myGraph.drawCoordinates(x, this.centerY - (-equationP((x/this.scaleX) - 10) * this.scaleY));
-	} else {
-		myGraph.drawCoordinates(x, this.centerY - (equationP((x/this.scaleX) - 10) * this.scaleY));
+myGraph.convertToCoordinates = function (x, coordinate) {
+	if(coordinate === x) {
+		return ((x * this.scaleX) + this.centerX);
 	}
-};
-
+	else if(coordinate === y) {
+		return ((x * this.scaleY) + this.centerY);
+	}
+}
 let point = null;
 
 Graph.prototype.movePoint = function (event) {
@@ -262,16 +247,6 @@ Graph.prototype.movePoint = function (event) {
 	} else {
 		moveSection("point", mousePos.x, this.centerY - (equationP(coords.x) * this.scaleY));
 	}
-};
-
-Graph.prototype.drawCoordinates = function (x, y) {
-	// Draw rectangle
-	this.context.beginPath();
-	this.context.fillStyle = "magenta";
-	this.context.rect(x-(this.pointSize/2), y-(this.pointSize/2), this.pointSize, this.pointSize);
-	this.context.fill();
-
-	return this.context;
 };
 
 Graph.prototype.mouseToGraph = function(mouseX, mouseY) {
@@ -320,6 +295,23 @@ let addPointOnClick = function() {
      svg.appendChild(circle);
 }
 
+Graph.prototype.addCalculatedPoint = function(x, y) {
+    let point = document.getElementById('point')
+    var svgNS = "http://www.w3.org/2000/svg";
+
+     var circle = document.createElementNS(svgNS,'circle');
+     circle.setAttribute('fill','blue');
+     circle.setAttribute('cx', (x * this.scaleX) + this.centerX);
+     circle.setAttribute('cy', (-y * this.scaleY) + this.centerY);
+	 console.log(this.scaleX, x, y);
+	 console.log((x * this.scaleX) + this.centerX, (-y * this.scaleY) + this.centerY);
+     circle.classList.add('calculatedPoints')
+     circle.setAttribute('r',5);
+
+     var svg = document.querySelector('svg');
+     svg.appendChild(circle);
+}
+
 
 let calculateThird = function() {
     let points = document.getElementsByClassName('workingPoints')
@@ -355,7 +347,7 @@ Graph.prototype.pointDouble = function (){
 	let newY = ((storePoints.point1[1]-this.centerY)/this.scaleY) + lambda*((storePoints.point1[0]-this.centerX)/this.scaleX-newX);
 
 	console.log(newX, newY);
-	myGraph.drawCoordinates(newX, newY);
+	myGraph.addCalculatedPoint(newX, newY);
 }
 
 let operations = document.getElementsByClassName('operation');
