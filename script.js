@@ -296,15 +296,15 @@ let addPointOnClick = function() {
 }
 
 Graph.prototype.addCalculatedPoint = function(x, y) {
-    let point = document.getElementById('point')
+	if(document.getElementsByClassName('calculatedPoints').length == 1){
+		document.getElementsByClassName('calculatedPoints')[0].remove();
+	}
     var svgNS = "http://www.w3.org/2000/svg";
 
      var circle = document.createElementNS(svgNS,'circle');
-     circle.setAttribute('fill','blue');
+     circle.setAttribute('fill','dodgerblue');
      circle.setAttribute('cx', (x * this.scaleX) + this.centerX);
      circle.setAttribute('cy', (-y * this.scaleY) + this.centerY);
-	 console.log(this.scaleX, x, y);
-	 console.log((x * this.scaleX) + this.centerX, (-y * this.scaleY) + this.centerY);
      circle.classList.add('calculatedPoints')
      circle.setAttribute('r',5);
 
@@ -347,7 +347,12 @@ Graph.prototype.pointDouble = function (){
 	let newY = ((storePoints.point1[1]-this.centerY)/this.scaleY) + lambda*((storePoints.point1[0]-this.centerX)/this.scaleX-newX);
 
 	console.log(newX, newY);
+
 	myGraph.addCalculatedPoint(newX, newY);
+}
+
+function checkPointDoubling() {
+
 }
 
 let operations = document.getElementsByClassName('operation');
