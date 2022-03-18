@@ -22,8 +22,8 @@ Graph.prototype.moveSection = function (id, x, y) {
 }
 
 Graph.prototype.mouseToGraph = function(mouseX, mouseY) {
-	x = (this.centerX - this.offsetLeft) + mouseX - 10 * this.scaleX;
-	y = (this.centerY - this.offsetTop) + mouseY - 10 * this.scaleY;
+	x = (this.centerX - this.offsetLeft) + mouseX - 50 * this.scaleX;
+	y = (this.centerY - this.offsetTop) + mouseY - 50 * this.scaleY;
 	return {x, y}
 }
 
