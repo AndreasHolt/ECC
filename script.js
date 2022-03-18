@@ -165,9 +165,6 @@ Graph.prototype.drawEquation = function (equation, color, thickness) {
 	context.restore();
 };
 
-
-
-
 Graph.prototype.transformContext = function () {
 	var context = this.context;
 
@@ -181,7 +178,6 @@ Graph.prototype.transformContext = function () {
 	 */
 	context.scale(this.scaleX, -this.scaleY);
 };
-
 
 // Defining new graph
 
@@ -228,14 +224,6 @@ document.getElementById('pointSVG').addEventListener('mousemove', e => {
 
 var pointSize = 10;
 
-myGraph.convertToCoordinates = function (x, coordinate) {
-	if(coordinate === x) {
-		return ((x * this.scaleX) + this.centerX);
-	}
-	else if(coordinate === y) {
-		return ((x * this.scaleY) + this.centerY);
-	}
-}
 let point = null;
 
 Graph.prototype.movePoint = function (event) {
@@ -312,7 +300,6 @@ Graph.prototype.addCalculatedPoint = function(x, y) {
      svg.appendChild(circle);
 }
 
-
 let calculateThird = function() {
     let points = document.getElementsByClassName('workingPoints')
     storePoints = {
@@ -339,26 +326,18 @@ Graph.prototype.pointDouble = function (){
 	let x = (storePoints.point1[0]-this.centerX)/this.scaleX;
 	let y = -(storePoints.point1[1]-this.centerY)/this.scaleY;
 
-	console.log(x, y);
-
 	let lambda = (3*x*x+10)/(2*y); // 10 = elliptic curve parameter a. 
-	console.log(lambda);
-	let newX = lambda * lambda - 2*(storePoints.point1[0]-this.centerX)/this.scaleX;
-	let newY = ((storePoints.point1[1]-this.centerY)/this.scaleY) + lambda*((storePoints.point1[0]-this.centerX)/this.scaleX-newX);
-
-	console.log(newX, newY);
+	let newX = lambda * lambda - 2*x;
+	let newY = -y + lambda*(x-newX);
 
 	myGraph.addCalculatedPoint(newX, newY);
-}
-
-function checkPointDoubling() {
-
 }
 
 let operations = document.getElementsByClassName('operation');
 for (const input of operations) {
 	input.addEventListener('click',  e => {
 		let pointsOnGraph = document.getElementsByClassName('workingPoints');
+		let calculatedPoints = document.getElementsByClassName('calculatedPoints');
 		for (const buttons of operations) {
 			if(buttons.disabled == true) {
 				buttons.disabled = false;
@@ -372,6 +351,9 @@ for (const input of operations) {
 			console.log(pointsOnGraph[0]);
 			pointsOnGraph[0].remove()
 		} 
+		if(calculatedPoints.length == 1) {
+			calculatedPoints[0].remove();
+		}
 		input.disabled = true;
 	});
 }
