@@ -41,21 +41,29 @@ Graph.prototype.coordsToGraph = function(coordsX, coordsY) {
 }
 
 Graph.prototype.addCalculatedPoint = function(x, y) {
-	if(document.getElementsByClassName('calculatedPoints').length == 1){
+	if(document.getElementsByClassName('calculatedPoints').length == 2){
+		document.getElementsByClassName('calculatedPoints')[1].remove();
 		document.getElementsByClassName('calculatedPoints')[0].remove();
 	}
     var svgNS = "http://www.w3.org/2000/svg";
 
+    let arrayIntersectInverted = [y, -y]
+
+    for(i = 0; i < arrayIntersectInverted.length; i++){
+        console.log('test')
      var circle = document.createElementNS(svgNS,'circle');
-     circle.setAttribute('fill','dodgerblue');
+     (i == 0)?(circle.setAttribute('fill','dodgerblue')):(circle.setAttribute('fill','fuchsia'));
+
      circle.setAttribute('cx', (x * this.scaleX) + this.centerX);
-     circle.setAttribute('cy', (-y * this.scaleY) + this.centerY);
+     circle.setAttribute('cy', (-arrayIntersectInverted[i] * this.scaleY) + this.centerY);
      circle.classList.add('calculatedPoints')
      circle.setAttribute('r',5);
 
      var svg = document.querySelector('svg');
      svg.appendChild(circle);
-}
+
+    }
+    }
 
 Graph.prototype.addPointOnClick = function() {
     let point = document.getElementById('point')
