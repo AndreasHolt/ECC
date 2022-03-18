@@ -23,14 +23,20 @@ function Graph(config) {
 	this.rangeY = this.maxY - this.minY;
 	this.unitX = this.canvas.width / this.rangeX;
 	this.unitY = this.canvas.height / this.rangeY;
-	this.centerY = Math.round(Math.abs(this.minY / this.rangeY) * this.canvas.height);
-	this.centerX = Math.round(Math.abs(this.minX / this.rangeX) * this.canvas.width);
+	// this.centerY = Math.round(Math.abs(this.minY / this.rangeY) * this.canvas.height);
+	// this.centerX = Math.round(Math.abs(this.minX / this.rangeX) * this.canvas.width);
 	this.iteration = (this.maxX - this.minX) / 1000;
 	this.scaleX = this.canvas.width / this.rangeX;
 	this.scaleY = this.canvas.height / this.rangeY;
 
 	// our settings
 	this.pointSize = 4
+	this.svgID = "pointSVG"
+	this.offsetTop = this.canvas.offsetTop
+	this.offsetLeft = this.canvas.offsetLeft
+	this.centerY = (Math.abs(this.minY / this.rangeY) * this.canvas.height);
+	this.centerX = (Math.abs(this.minX / this.rangeX) * this.canvas.width);
+
 
 	// draw x and y axis
 	this.drawXAxis();
@@ -247,14 +253,13 @@ Graph.prototype.createPoint = function (event) {
 let point = null;
 
 Graph.prototype.movePoint = function (event) {
-	var rect = this.domRect;
-	var x = event.clientX - 8;
-	var y = event.clientY - 8;
+	let mousePos = this.mouseToGraph(event.clientX, event.clientY)
+	let coords = this.graphToCoords(mousePos.x, mousePos.y)
 
-	if (y > this.centerY) {
-		moveSection("point", x, this.centerY - (-equationP((x/this.scaleX) - 10) * this.scaleY));
+	if (mousePos.y > this.centerY) {
+		moveSection("point", mousePos.x, this.centerY - (-equationP(coords.x) * this.scaleY));
 	} else {
-		moveSection("point", x, this.centerY - (equationP((x/this.scaleX) - 10) * this.scaleY));
+		moveSection("point", mousePos.x, this.centerY - (equationP(coords.x) * this.scaleY));
 	}
 };
 
@@ -268,6 +273,24 @@ Graph.prototype.drawCoordinates = function (x, y) {
 	return this.context;
 };
 
+Graph.prototype.mouseToGraph = function(mouseX, mouseY) {
+	x = (this.centerX - this.offsetLeft) + mouseX - 10 * this.scaleX;
+	y = (this.centerY - this.offsetTop) + mouseY - 10 * this.scaleY;
+	return {x, y}
+}
+
+Graph.prototype.graphToCoords = function(graphX, graphY) {
+	x = (graphX/this.scaleX) - this.rangeX/2
+	y = -((graphY/this.scaleY) - this.rangeY/2)
+
+	return {x, y}
+}
+
+Graph.prototype.coordsToGraph = function(coordsX, coordsY) {
+	x = this.centerX - coordsX
+	y = this.centerY - coordsY
+	return {x, y}
+}
 
 function moveSection(id, x, y) {
     var el = document.getElementById(id);
