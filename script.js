@@ -201,7 +201,8 @@ var pointGraph = new Graph({
 });
 
 function equationP(x) {
-	return Math.sqrt((x * x * x) + 10 * x + 5)
+	let a = 10, b = 5;
+	return Math.sqrt((x * x * x) + a * x + b);
 }
 
 // console.log("ay", equationP(-2));
@@ -290,28 +291,6 @@ function moveSection(id, x, y) {
     }
 }
 
-document.getElementById('layer2').addEventListener('click', e => {
-    let pointsOnGraph = document.getElementsByClassName('workingPoints')
-
-    // Delete the point on the graph that was placed first
-    if(pointsOnGraph.length === 1){
-        addPointOnClick()
-        calculateThird()
-
-
-    } else if(pointsOnGraph.length === 0){
-        addPointOnClick()
-
-    } else {
-        pointsOnGraph[0].remove()
-        addPointOnClick()
-        calculateThird()
-    }
-
-    console.log(document.getElementsByClassName('workingPoints').length)
-
-});
-
 let addPointOnClick = function() {
     let point = document.getElementById('point')
     var svgNS = "http://www.w3.org/2000/svg";
@@ -343,12 +322,96 @@ let calculateThird = function() {
     console.log(storePoints.point1[0])
     console.log('lambda is: ' + lambda)
 
-
-    
-
-    
     console.log('test')
 }
 
+Graph.prototype.pointDouble = function (){
+	let points = document.getElementsByClassName('workingPoints');
+	storePoints = {
+		point1: [points[0].getAttribute('cx'), points[0].getAttribute('cy')]
+	}
 
+	let x = (storePoints.point1[0]-this.centerX)/this.scaleX;
+	let y = -(storePoints.point1[1]-this.centerY)/this.scaleY;
 
+	console.log(x, y);
+
+	let lambda = (3*x*x+10)/(2*y); // 10 = elliptic curve parameter a. 
+	console.log(lambda);
+	let newX = lambda * lambda - 2*(storePoints.point1[0]-this.centerX)/this.scaleX;
+	let newY = ((storePoints.point1[1]-this.centerY)/this.scaleY) + lambda*((storePoints.point1[0]-this.centerX)/this.scaleX-newX);
+
+	console.log(newX, newY);
+	myGraph.drawCoordinates(newX, newY);
+}
+
+let operations = document.getElementsByClassName('operation');
+for (const input of operations) {
+	input.addEventListener('click',  e => {
+		let pointsOnGraph = document.getElementsByClassName('workingPoints');
+		for (const buttons of operations) {
+			if(buttons.disabled == true) {
+				buttons.disabled = false;
+				}
+			}
+		if(pointsOnGraph.length == 2) {
+			console.log(pointsOnGraph[0], pointsOnGraph[1]);
+			pointsOnGraph[1].remove()
+			pointsOnGraph[0].remove()
+		} else if(pointsOnGraph.length == 1) {
+			console.log(pointsOnGraph[0]);
+			pointsOnGraph[0].remove()
+		} 
+		input.disabled = true;
+	});
+}
+
+document.getElementById('layer2').addEventListener('click', e => {
+    let pointsOnGraph = document.getElementsByClassName('workingPoints')
+
+    // Delete the point on the graph that was placed first
+	if(operations[0].disabled){
+		if(pointsOnGraph.length === 1){
+			addPointOnClick();
+			runOperation(1);   
+	
+		} else if(pointsOnGraph.length === 0){
+			addPointOnClick();
+	
+		} else {
+			pointsOnGraph[0].remove();
+			addPointOnClick();
+			runOperation(1);
+		}
+	} else if (operations[1].disabled) {
+		if(pointsOnGraph.length === 0){
+			addPointOnClick();
+			runOperation(2);   
+
+		} else if(pointsOnGraph.length === 1){
+			pointsOnGraph[0].remove();
+			addPointOnClick();
+			runOperation(2);
+		}
+	}
+
+    console.log(document.getElementsByClassName('workingPoints').length)
+
+});
+
+function runOperation(operations) {
+	switch (operations) {
+		case 1:
+			calculateThird();
+			break;
+		case 2:
+			myGraph.pointDouble();
+			break;
+		case 3:
+			console.log('Hey Chat!');
+			break;
+		default:
+			console.log('Please no');
+			break;
+	}
+}
