@@ -7,7 +7,7 @@ Graph.prototype.pointDouble = function (){
 	let x = (storePoints.point1[0]-this.centerX)/this.scaleX;
 	let y = -(storePoints.point1[1]-this.centerY)/this.scaleY;
 
-	let lambda = (3*x*x-4)/(2*y); // 10 = elliptic curve parameter a. 
+	let lambda = (3*x*x+this.parameterA)/(2*y);
 	let newX = lambda * lambda - 2*x;
 	let newY = -y + lambda*(x-newX);
 
