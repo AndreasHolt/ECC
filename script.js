@@ -8,7 +8,7 @@ var myGraph = new Graph({
 });
 
 function equationP(x) {
-	let a = -4, b = 15;
+	let a = -6, b = 10;
 	return Math.sqrt((x * x * x) + a * x + b);
 }
 
