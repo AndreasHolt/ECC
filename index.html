@@ -7,6 +7,8 @@
 
     
 </head>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <body>
     <div class="container">
         <div class="layer1">
@@ -27,12 +29,39 @@
             <input type="button" class="operation" value="Point Multiplication">
         </fieldset>
     </h1>
+    <div>
+        <form id="curve">
+            <p id="parameters">Pick curve parameters: \(y^2 = x^3 + ax + b\)</p>
+            <label for="a">a</label>
+            <input type="number" id="a" name="a" min="-5" placeholder="a" value="-4">
+            <label for="b">b</label>
+            <input type="number" id="b" name="b" placeholder="b" value="10">
+            <br><br>
+            <input type="button" value="Submit Parameters">
+            <p>Or choose a pre-determined polynomial:</p>
+            <select name="Pre-determined polynomials" id="prepoly">
+                <option value="0" selected=True disabled>--Select a polynomial--</option>
+                <option value="0">None</option>
+                <optgroup label="Good polynomials">
+                    <option value="1">\(y^2 = x^3 + 5x - 3\)</option> 
+                    <option value="2">poop</option>
+                </optgroup>
+                <optgroup label="Bad polynomials">
+                    <option value="3">stinky</option>
+                    <option value="4">funny</option>
+                </optgroup>
+                
+            </select>
+        </form>
+    </div>
     
     <script src="graph.js"></script>
     <script src="graphHelpers.js"></script>
     <script src="realsAddition.js"></script>
     <script src="realsDoubling.js"></script>
+    <script src="curve.js"></script>
     <script src="script.js"></script> 
+    
 </body>
 
 </html>

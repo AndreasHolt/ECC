@@ -3,9 +3,9 @@ Graph.prototype.movePoint = function (event) {
 	let coords = this.graphToCoords(mousePos.x, mousePos.y)
 
 	if (mousePos.y > this.centerY) {
-		this.moveSection("point", mousePos.x, this.centerY - (-equationP(coords.x) * this.scaleY));
+		this.moveSection("point", mousePos.x, this.centerY - (-myGraph.equationP(coords.x) * this.scaleY));
 	} else {
-		this.moveSection("point", mousePos.x, this.centerY - (equationP(coords.x) * this.scaleY));
+		this.moveSection("point", mousePos.x, this.centerY - (myGraph.equationP(coords.x) * this.scaleY));
 	}
 };
 
