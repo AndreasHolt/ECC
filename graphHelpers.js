@@ -68,25 +68,9 @@ Graph.prototype.addCalculatedPoint = function(x, y) {
 
         var newLine = document.createElementNS('http://www.w3.org/2000/svg','line');
         if(i == 0){
-            newLine.setAttribute('x1',fromPoint.getAttribute('cx'));
-            newLine.setAttribute('y1',fromPoint.getAttribute('cy'));
-
-            newLine.classList.add('linesConnecting')
-            newLine.setAttribute('x2', (x * this.scaleX) + this.centerX);
-            newLine.setAttribute('y2', (arrayIntersectInverted[i+1] * this.scaleY) + this.centerY);
-            newLine.setAttribute("stroke", "dodgerblue")
-            newLine.setAttribute("stroke-width", "2")
-            svg.appendChild(newLine);
+            myGraph.drawLine('+', 'dodgerblue', i, fromPoint,newLine, x, y, svg)
         } else {
-            newLine.setAttribute('x1', (x * this.scaleX) + this.centerX);
-            newLine.setAttribute('y1', (arrayIntersectInverted[i] * this.scaleY) + this.centerY);
- 
-            newLine.classList.add('linesConnecting')
-            newLine.setAttribute('x2', (x * this.scaleX) + this.centerX);
-            newLine.setAttribute('y2', (arrayIntersectInverted[i-1] * this.scaleY) + this.centerY);
-            newLine.setAttribute("stroke", "fuchsia")
-            newLine.setAttribute("stroke-width", "2")
-            svg.appendChild(newLine);
+            myGraph.drawLine('-', 'fuchsia', i, fromPoint, newLine, x, y, svg)
         }
 
         
@@ -100,6 +84,29 @@ Graph.prototype.addCalculatedPoint = function(x, y) {
 
     }
 }
+
+Graph.prototype.drawLine = function(operator, color, i, fromPoint, newLine, x, y, svg) {
+        if(i == 0){
+            newLine.setAttribute('x1',fromPoint.getAttribute('cx'));
+            newLine.setAttribute('y1',fromPoint.getAttribute('cy'));
+        } else {
+            newLine.setAttribute('x1', (x * this.scaleX) + this.centerX);
+            newLine.setAttribute('y1', (-y * this.scaleY) + this.centerY);
+        }
+    
+
+
+        newLine.classList.add('linesConnecting')
+        newLine.setAttribute('x2', (x * this.scaleX) + this.centerX);
+        newLine.setAttribute('y2', ((((operator == '-')?(y):(-y)) * this.scaleY) + this.centerY));
+        newLine.setAttribute("stroke", color)
+        newLine.setAttribute("stroke-width", "2")
+        svg.appendChild(newLine);
+}
+
+
+
+
 
 Graph.prototype.addPointOnClick = function() {
     let point = document.getElementById('point')
