@@ -1,23 +1,54 @@
+let scaleZoom = 10
+
 var myGraph = new Graph({
 	canvasId: 'myCanvas',
-	minX: -50,
-	minY: -50,
-	maxX: 50,
-	maxY: 50,
-	unitsPerTick: 5
+	minX: -scaleZoom,
+	minY: -scaleZoom,
+	maxX: scaleZoom,
+	maxY: scaleZoom,
+	unitsPerTick: scaleZoom/5
 });
 
-Graph.prototype.equationP = function(x) {
-	return Math.sqrt((x * x * x) + this.parameterA * x + this.parameterB);
+
+function drawEquation() {
+	myGraph.drawEquation(function (x) {
+		return equationP(x);
+	}, 'green', 3);
+	
+	myGraph.drawEquation(function (x) {
+		return -equationP(x);
+	}, 'green', 3);
 }
 
-myGraph.drawEquation(function (x) {
-	return myGraph.equationP(x);
-}, 'green', 3);
+drawEquation()
 
-myGraph.drawEquation(function (x) {
-	return -myGraph.equationP(x);
-}, 'green', 3);
+function equationP(x) {
+	let a = -5, b = 15;
+	return Math.sqrt((x * x * x) + a * x + b);
+}
+
+document.getElementById("pointSVG").addEventListener("wheel", e => {
+	console.log(e.deltaY);
+
+	myGraph.context.clearRect(0, 0, 578, 300) // Use var of size instead
+
+	if (e.deltaY < 0) { // Zoom in
+		scaleZoom /= 2;
+	} else {
+		scaleZoom *= 2; // Zoom out
+	}
+
+	myGraph = new Graph({
+		canvasId: 'myCanvas',
+		minX: -scaleZoom,
+		minY: -scaleZoom,
+		maxX: scaleZoom,
+		maxY: scaleZoom,
+		unitsPerTick: scaleZoom/5
+	});
+
+	drawEquation()
+})
 
 /// ----------------------------------------------------------------------
 /// Draw points on graph
@@ -34,6 +65,8 @@ function init() {
 	for (const input of operations) {
 		input.addEventListener('click',  e => {
 			let pointsOnGraph = document.getElementsByClassName('workingPoints');
+            
+			let linesOnGraph = document.getElementsByClassName('linesConnecting');
 			let calculatedPoints = document.getElementsByClassName('calculatedPoints');
 
 			for (const buttons of operations) {
@@ -45,15 +78,24 @@ function init() {
 			if(pointsOnGraph.length == 2) {
 				pointsOnGraph[1].remove()
 				pointsOnGraph[0].remove()
+
+				linesOnGraph[1].remove()
+				linesOnGraph[0].remove()
 			} else if(pointsOnGraph.length == 1) {
 				pointsOnGraph[0].remove()
+				linesOnGraph[1].remove()
+				linesOnGraph[0].remove()
 			} 
 
 			if(calculatedPoints.length == 2) {
 				calculatedPoints[1].remove();
 				calculatedPoints[0].remove();
+				linesOnGraph[1].remove()
+				linesOnGraph[0].remove()
 			} else if(calculatedPoints.length == 1) {
 				calculatedPoints[0].remove();
+				linesOnGraph[1].remove()
+				linesOnGraph[0].remove()
 			}
 			
 			input.disabled = true;
