@@ -1,24 +1,54 @@
+let scaleZoom = 10
+
 var myGraph = new Graph({
 	canvasId: 'myCanvas',
-	minX: -50,
-	minY: -50,
-	maxX: 50,
-	maxY: 50,
-	unitsPerTick: 5
+	minX: -scaleZoom,
+	minY: -scaleZoom,
+	maxX: scaleZoom,
+	maxY: scaleZoom,
+	unitsPerTick: scaleZoom/5
 });
+
+
+function drawEquation() {
+	myGraph.drawEquation(function (x) {
+		return equationP(x);
+	}, 'green', 3);
+	
+	myGraph.drawEquation(function (x) {
+		return -equationP(x);
+	}, 'green', 3);
+}
+
+drawEquation()
 
 function equationP(x) {
 	let a = -4, b = 15;
 	return Math.sqrt((x * x * x) + a * x + b);
 }
 
-myGraph.drawEquation(function (x) {
-	return equationP(x);
-}, 'green', 3);
+document.getElementById("pointSVG").addEventListener("wheel", e => {
+	console.log(e.deltaY);
 
-myGraph.drawEquation(function (x) {
-	return -equationP(x);
-}, 'green', 3);
+	myGraph.context.clearRect(0, 0, 578, 300) // Use var of size instead
+
+	if (e.deltaY < 0) { // Zoom in
+		scaleZoom /= 2;
+	} else {
+		scaleZoom *= 2; // Zoom out
+	}
+
+	myGraph = new Graph({
+		canvasId: 'myCanvas',
+		minX: -scaleZoom,
+		minY: -scaleZoom,
+		maxX: scaleZoom,
+		maxY: scaleZoom,
+		unitsPerTick: scaleZoom/5
+	});
+
+	drawEquation()
+})
 
 /// ----------------------------------------------------------------------
 /// Draw points on graph
