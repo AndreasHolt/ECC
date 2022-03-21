@@ -23,7 +23,7 @@ function drawEquation() {
 drawEquation()
 
 function equationP(x) {
-	let a = -4, b = 15;
+	let a = -5, b = 15;
 	return Math.sqrt((x * x * x) + a * x + b);
 }
 
@@ -65,6 +65,8 @@ function init() {
 	for (const input of operations) {
 		input.addEventListener('click',  e => {
 			let pointsOnGraph = document.getElementsByClassName('workingPoints');
+            
+			let linesOnGraph = document.getElementsByClassName('linesConnecting');
 			let calculatedPoints = document.getElementsByClassName('calculatedPoints');
 
 			for (const buttons of operations) {
@@ -76,15 +78,24 @@ function init() {
 			if(pointsOnGraph.length == 2) {
 				pointsOnGraph[1].remove()
 				pointsOnGraph[0].remove()
+
+				linesOnGraph[1].remove()
+				linesOnGraph[0].remove()
 			} else if(pointsOnGraph.length == 1) {
 				pointsOnGraph[0].remove()
+				linesOnGraph[1].remove()
+				linesOnGraph[0].remove()
 			} 
 
 			if(calculatedPoints.length == 2) {
 				calculatedPoints[1].remove();
 				calculatedPoints[0].remove();
+				linesOnGraph[1].remove()
+				linesOnGraph[0].remove()
 			} else if(calculatedPoints.length == 1) {
 				calculatedPoints[0].remove();
+				linesOnGraph[1].remove()
+				linesOnGraph[0].remove()
 			}
 			
 			input.disabled = true;
