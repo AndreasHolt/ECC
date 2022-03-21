@@ -7,17 +7,16 @@ var myGraph = new Graph({
 	unitsPerTick: 5
 });
 
-function equationP(x) {
-	let a = -4, b = 15;
-	return Math.sqrt((x * x * x) + a * x + b);
+Graph.prototype.equationP = function(x) {
+	return Math.sqrt((x * x * x) + this.parameterA * x + this.parameterB);
 }
 
 myGraph.drawEquation(function (x) {
-	return equationP(x);
+	return myGraph.equationP(x);
 }, 'green', 3);
 
 myGraph.drawEquation(function (x) {
-	return -equationP(x);
+	return -myGraph.equationP(x);
 }, 'green', 3);
 
 /// ----------------------------------------------------------------------

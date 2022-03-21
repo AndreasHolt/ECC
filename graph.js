@@ -1,3 +1,4 @@
+
 function Graph(config) {
 	// user defined properties
 	this.canvas = document.getElementById(config.canvasId);
@@ -5,6 +6,8 @@ function Graph(config) {
 	this.minY = config.minY;
 	this.maxX = config.maxX;
 	this.maxY = config.maxY;
+	this.parameterA = -4;
+	this.parameterB = 10;
 	this.unitsPerTick = config.unitsPerTick;
 	this.domRect = this.canvas.getBoundingClientRect();
 
