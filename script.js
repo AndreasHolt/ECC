@@ -6,26 +6,28 @@ var myGraph = new Graph({
 	minY: -scaleZoom,
 	maxX: scaleZoom,
 	maxY: scaleZoom,
+	parameterA: -5,
+	parameterB: 15,
 	unitsPerTick: scaleZoom/5
 });
 
+Graph.prototype.equationP = function(x) {
+	return Math.sqrt((x * x * x) + this.parameterA * x + this.parameterB);
+}
 
 function drawEquation() {
 	myGraph.drawEquation(function (x) {
-		return equationP(x);
+		return myGraph.equationP(x);
 	}, 'green', 3);
 	
 	myGraph.drawEquation(function (x) {
-		return -equationP(x);
+		return -myGraph.equationP(x);
 	}, 'green', 3);
 }
 
 drawEquation()
 
-function equationP(x) {
-	let a = -5, b = 15;
-	return Math.sqrt((x * x * x) + a * x + b);
-}
+
 
 document.getElementById("pointSVG").addEventListener("wheel", e => {
 	console.log(e.deltaY);
