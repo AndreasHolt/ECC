@@ -6,8 +6,8 @@ function Graph(config) {
 	this.minY = config.minY;
 	this.maxX = config.maxX;
 	this.maxY = config.maxY;
-	this.parameterA = -4;
-	this.parameterB = 10;
+	this.parameterA = config.parameterA;
+	this.parameterB = config.parameterB;
 	this.unitsPerTick = config.unitsPerTick;
 	this.domRect = this.canvas.getBoundingClientRect();
 
