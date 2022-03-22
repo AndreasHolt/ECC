@@ -108,9 +108,7 @@ document.getElementById('layer2').addEventListener('click', e => {
 			myGraph.addPointOnClick();
 	
 		} else {
-			pointsOnGraph[0].remove();
-			myGraph.addPointOnClick();
-			runOperation(1);
+			deletePoints();
 		}
 	} else if (operations[1].disabled) {
 		if(pointsOnGraph.length === 0){
@@ -118,9 +116,7 @@ document.getElementById('layer2').addEventListener('click', e => {
 			runOperation(2);   
 
 		} else if(pointsOnGraph.length === 1){
-			pointsOnGraph[0].remove();
-			myGraph.addPointOnClick();
-			runOperation(2);
+			deletePoints();
 		}
 	}
 });
@@ -128,7 +124,7 @@ document.getElementById('layer2').addEventListener('click', e => {
 function runOperation(operations) {
 	switch (operations) {
 		case 1:
-			pointAddition();
+			myGraph.pointAddition();
 			break;
 		case 2:
 			myGraph.pointDouble();
