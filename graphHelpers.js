@@ -1,3 +1,4 @@
+
 Graph.prototype.movePoint = function (event) {
 	let mousePos = this.mouseToGraph(event.clientX, event.clientY)
 	let coords = this.graphToCoords(mousePos.x, mousePos.y)
@@ -89,23 +90,14 @@ Graph.prototype.drawLine = function(operator, color, i, x, y, svg) {
             newLine.setAttribute('x1',fromPoint.getAttribute('cx'));
             newLine.setAttribute('y1',fromPoint.getAttribute('cy'));
         } else {
-            if(x < 0){
-                newLine.setAttribute('x1', (x * this.scaleX) + this.centerX);
-                newLine.setAttribute('y1', (-y * this.scaleY) + this.centerY);
-            } else {
-                newLine.setAttribute('x1', (x * this.scaleX) + this.centerX);
-                newLine.setAttribute('y1', (y * this.scaleY) + this.centerY);
-            }
+            newLine.setAttribute('x1', (x * this.scaleX) + this.centerX);
+            newLine.setAttribute('y1', (-y * this.scaleY) + this.centerY);
  
         }
 
         newLine.classList.add('linesConnecting')
         newLine.setAttribute('x2', (x * this.scaleX) + this.centerX);
-        if(x < 0){
-            newLine.setAttribute('y2', ((((operator == '-')?(y):(-y)) * this.scaleY) + this.centerY));
-        } else {
-            newLine.setAttribute('y2', ((((operator == '-')?(-y):(y)) * this.scaleY) + this.centerY));
-        }
+        newLine.setAttribute('y2', ((((operator == '-')?(y):(y)) * this.scaleY) + this.centerY));
         newLine.setAttribute("stroke", color)
         newLine.setAttribute("stroke-width", "2")
         svg.appendChild(newLine);
