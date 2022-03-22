@@ -10,6 +10,14 @@
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <body>
+    <h1>
+        <fieldset>
+            <legend>Lemao</legend>
+            <input type="button" value="Finite field">
+            <input type="button" value="Infinite field">
+            <input type="button" value="EC Elgamal">
+        </fieldset>
+    </h1>
     <div class="container">
         <div class="layer1">
             <canvas id="myCanvas" width="578" height="300"></canvas>
@@ -43,8 +51,8 @@
                 <option value="0" selected=True disabled>--Select a polynomial--</option>
                 <option value="0">None</option>
                 <optgroup label="Good polynomials">
-                    <option value="1">\(y^2 = x^3 + 5x - 3\)</option> 
-                    <option value="2">poop</option>
+                    <option value="1">a = 0, b = 5</option> 
+                    <option value="2">a = -5, b = 20</option>
                 </optgroup>
                 <optgroup label="Bad polynomials">
                     <option value="3">stinky</option>
