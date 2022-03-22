@@ -128,7 +128,7 @@ document.getElementById('layer2').addEventListener('click', e => {
 function runOperation(operations) {
 	switch (operations) {
 		case 1:
-			pointAddition();
+			myGraph.pointAddition();
 			break;
 		case 2:
 			myGraph.pointDouble();
