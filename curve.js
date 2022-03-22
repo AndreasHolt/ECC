@@ -17,7 +17,6 @@ firstBox[2].addEventListener('click', e => {
         unitsPerTick: scaleZoom/5
     });
 
-    drawEquation()
-
-    console.log("graph A:" + myGraph.parameterA, "graph B: " + myGraph.parameterB);
+    deletePoints();
+    drawEquation();
 });

@@ -55,7 +55,33 @@ document.getElementById("pointSVG").addEventListener("wheel", e => {
 /// ----------------------------------------------------------------------
 /// Draw points on graph
 /// ----------------------------------------------------------------------
+function deletePoints() {
+	let pointsOnGraph = document.getElementsByClassName('workingPoints');        
+	let linesOnGraph = document.getElementsByClassName('linesConnecting');
+	let calculatedPoints = document.getElementsByClassName('calculatedPoints');
 
+	if(pointsOnGraph.length === 2) {
+		pointsOnGraph[1].remove()
+		pointsOnGraph[0].remove()
+
+	} else if(pointsOnGraph.length === 1) {
+		pointsOnGraph[0].remove()
+	} 
+
+	if(calculatedPoints.length === 2) {
+		calculatedPoints[1].remove();
+		calculatedPoints[0].remove();
+	} else if(calculatedPoints.length == 1) {
+		calculatedPoints[0].remove();
+	}
+
+	if(linesOnGraph.length === 2) {
+		linesOnGraph[1].remove()
+		linesOnGraph[0].remove()
+	} else if(linesOnGraph.length === 1) {
+		linesOnGraph[0].remove()
+	} 
+}
 
 document.getElementById('pointSVG').addEventListener('mousemove', e => {
 	myGraph.movePoint(e);
@@ -66,41 +92,16 @@ let operations = document.getElementsByClassName('operation');
 function init() {
 	for (const input of operations) {
 		input.addEventListener('click',  e => {
-			let pointsOnGraph = document.getElementsByClassName('workingPoints');
-            
-			let linesOnGraph = document.getElementsByClassName('linesConnecting');
-			let calculatedPoints = document.getElementsByClassName('calculatedPoints');
 
 			for (const buttons of operations) {
 				if(buttons.disabled == true) {
 					buttons.disabled = false;
 				}
 			}
-
-			if(pointsOnGraph.length == 2) {
-				pointsOnGraph[1].remove()
-				pointsOnGraph[0].remove()
-
-				linesOnGraph[1].remove()
-				linesOnGraph[0].remove()
-			} else if(pointsOnGraph.length == 1) {
-				pointsOnGraph[0].remove()
-				linesOnGraph[1].remove()
-				linesOnGraph[0].remove()
-			} 
-
-			if(calculatedPoints.length == 2) {
-				calculatedPoints[1].remove();
-				calculatedPoints[0].remove();
-				linesOnGraph[1].remove()
-				linesOnGraph[0].remove()
-			} else if(calculatedPoints.length == 1) {
-				calculatedPoints[0].remove();
-				linesOnGraph[1].remove()
-				linesOnGraph[0].remove()
-			}
 			
-			input.disabled = true;
+			deletePoints();
+			
+			e.target.disabled = true;
 		});
 	}
 }
