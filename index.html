@@ -29,21 +29,21 @@
         </div>
     </div>
 
-    <h1>
+    <h3>
         <fieldset>
             <legend>Choose an operation</legend>
             <input type="button" class="operation" value="Point Addition">
             <input type="button" class="operation" value="Point Doubling">
             <input type="button" class="operation" value="Point Multiplication">
         </fieldset>
-    </h1>
+    </h3>
     <div>
         <form id="curve">
             <p id="parameters">Pick curve parameters: \(y^2 = x^3 + ax + b\)</p>
             <label for="a">a</label>
-            <input type="number" id="a" name="a" min="-5" placeholder="a" value="-4">
+            <input type="number" id="a" name="a" min="-5" placeholder="a">
             <label for="b">b</label>
-            <input type="number" id="b" name="b" placeholder="b" value="10">
+            <input type="number" id="b" name="b" placeholder="b">
             <br><br>
             <input type="button" value="Submit Parameters">
             <p>Or choose a pre-determined polynomial:</p>
