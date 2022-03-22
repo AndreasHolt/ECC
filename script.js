@@ -56,31 +56,18 @@ document.getElementById("pointSVG").addEventListener("wheel", e => {
 /// Draw points on graph
 /// ----------------------------------------------------------------------
 function deletePoints() {
-	let pointsOnGraph = document.getElementsByClassName('workingPoints');        
-	let linesOnGraph = document.getElementsByClassName('linesConnecting');
-	let calculatedPoints = document.getElementsByClassName('calculatedPoints');
-
-	if(pointsOnGraph.length === 2) {
-		pointsOnGraph[1].remove()
-		pointsOnGraph[0].remove()
-
-	} else if(pointsOnGraph.length === 1) {
-		pointsOnGraph[0].remove()
-	} 
-
-	if(calculatedPoints.length === 2) {
-		calculatedPoints[1].remove();
-		calculatedPoints[0].remove();
-	} else if(calculatedPoints.length == 1) {
-		calculatedPoints[0].remove();
+	let allSVG = [
+		document.getElementsByClassName('workingPoints'),
+		document.getElementsByClassName('linesConnecting'),
+		document.getElementsByClassName('calculatedPoints')
+	]
+	
+	for(const key of allSVG) {
+		for(let i = key.length; i > 0; i--) {
+			console.log(key[i-1])
+			key[i-1].remove();
+		}
 	}
-
-	if(linesOnGraph.length === 2) {
-		linesOnGraph[1].remove()
-		linesOnGraph[0].remove()
-	} else if(linesOnGraph.length === 1) {
-		linesOnGraph[0].remove()
-	} 
 }
 
 document.getElementById('pointSVG').addEventListener('mousemove', e => {

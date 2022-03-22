@@ -70,16 +70,6 @@ Graph.prototype.addCalculatedPoint = function(x, y) {
         } else {
             myGraph.drawLine('-', 'dodgerblue', i, x, y, svg)
         }
-
-        
-
-
-
-
-
-
-
-
     }
 }
 
@@ -94,7 +84,6 @@ Graph.prototype.drawLine = function(operator, color, i, x, y, svg) {
             newLine.setAttribute('y1', (-y * this.scaleY) + this.centerY);
  
         }
-
         newLine.classList.add('linesConnecting')
         newLine.setAttribute('x2', (x * this.scaleX) + this.centerX);
         newLine.setAttribute('y2', ((((operator == '-')?(y):(y)) * this.scaleY) + this.centerY));
@@ -102,10 +91,6 @@ Graph.prototype.drawLine = function(operator, color, i, x, y, svg) {
         newLine.setAttribute("stroke-width", "2")
         svg.appendChild(newLine);
 }
-
-
-
-
 
 Graph.prototype.addPointOnClick = function() {
     let point = document.getElementById('point')
