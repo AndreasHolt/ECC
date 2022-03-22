@@ -15,5 +15,5 @@ Graph.prototype.pointAddition = function() {
     let newY = y2 + lambda*newX + lambda*(-x2);
     console.log(newX, newY)
 
-    myGraph.addCalculatedPoint(newX, newY);
+    myGraph.addCalculatedPoint(newX, newY, 1);
 }
