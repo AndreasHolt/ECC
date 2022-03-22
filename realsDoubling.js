@@ -11,5 +11,5 @@ Graph.prototype.pointDouble = function (){
 	let newX = lambda * lambda - 2*x;
 	let newY = -y + lambda*(x-newX);
 
-	myGraph.addCalculatedPoint(newX, newY);
+	myGraph.addCalculatedPoint(newX, newY, 2);
 }

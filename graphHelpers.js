@@ -58,7 +58,7 @@ Graph.prototype.getPointPlacement = function(x) {
     return returnValue;
 }
 
-Graph.prototype.addCalculatedPoint = function(x, y) {
+Graph.prototype.addCalculatedPoint = function(x, y, pointOperation) {
 	if(document.getElementsByClassName('calculatedPoints').length == 2){
 		document.getElementsByClassName('calculatedPoints')[1].remove();
 		document.getElementsByClassName('calculatedPoints')[0].remove();
@@ -83,9 +83,9 @@ Graph.prototype.addCalculatedPoint = function(x, y) {
          svg.appendChild(circle);
 
         if(i == 0){
-            myGraph.drawLine('+', 'fuchsia', i, x, y, svg)
+            myGraph.drawLine('+', 'fuchsia', i, x, y, svg, pointOperation)
         } else {
-            myGraph.drawLine('-', 'dodgerblue', i, x, y, svg)
+            myGraph.drawLine('-', 'dodgerblue', i, x, y, svg, pointOperation)
         }
     }
 }
@@ -115,10 +115,15 @@ function logicPointAddition(x) {
     return fromPoint;
 }
 
-Graph.prototype.drawLine = function(operator, color, i, x, y, svg) {
-    let fromPoint = logicPointAddition(x);
-    let pointDecider = myGraph.getPointPlacement(x);
-
+Graph.prototype.drawLine = function(operator, color, i, x, y, svg, pointOperation) {
+    let fromPoint;
+    let pointDecider = 0;
+    if(pointOperation === 1) {
+        fromPoint = logicPointAddition(x);
+        pointDecider = myGraph.getPointPlacement(x);
+    } else if(pointOperation === 2) {
+        fromPoint = document.getElementsByClassName('workingPoints')[0]
+    }
     var newLine = document.createElementNS('http://www.w3.org/2000/svg','line');
     if(i == 0){
         newLine.setAttribute('x1',fromPoint.getAttribute('cx'));
@@ -128,7 +133,7 @@ Graph.prototype.drawLine = function(operator, color, i, x, y, svg) {
         newLine.setAttribute('y1', (-y * this.scaleY) + this.centerY);
 
     }
-    if(pointDecider === 2 && i == 0) {
+    if(pointOperation === 1 && i == 0 && pointDecider === 2) {
         let secondPoint = document.getElementsByClassName('workingPoints')[1]
         newLine.setAttribute('x2', secondPoint.getAttribute('cx'));
         newLine.setAttribute('y2', secondPoint.getAttribute('cy'));
