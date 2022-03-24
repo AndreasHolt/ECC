@@ -30,16 +30,14 @@ drawEquation()
 
 
 document.getElementById("pointSVG").addEventListener("wheel", e => {
-	console.log(e.deltaY);
-
+	let graphPos, graphPos2
 	myGraph.context.clearRect(0, 0, 578, 300) // Use var of size instead
 
 	if (e.deltaY < 0) { // Zoom in
 		scaleZoom /= 1.02;
-	} else {
-		scaleZoom *= 1.02; // Zoom out
+	} else { // Zoom out
+		scaleZoom *= 1.02;
 	}
-
 
     myGraph = new Graph({
         canvasId: 'myCanvas',
@@ -52,22 +50,57 @@ document.getElementById("pointSVG").addEventListener("wheel", e => {
         unitsPerTick: scaleZoom/5
     });
 
-  console.log('1: ', myGraph.minX = -scaleZoom);
-  console.log(myGraph.minY = -scaleZoom);
-  console.log(myGraph.maxX= scaleZoom);
-  console.log(myGraph.maxY= scaleZoom);
-  console.log(myGraph.unitsPerTick = scaleZoom/5);
-
     myGraph.drawXAxis()
-
     myGraph.drawYAxis()
-
-
 
     drawEquation()
 
+	let points = document.querySelectorAll(".workingPoints,.calculatedPoints")
+
+	for (let i = 0; i < points.length; i++) {
+		const el = points[i];
+
+		let cx = el.getAttribute("cx")
+		let cy = el.getAttribute("cy")
+		let coords = myGraph.graphToCoords(cx, cy)
+
+		if (e.deltaY < 0) { // Zoom in
+			graphPos = myGraph.coordsToGraph(coords.x * 1.02, coords.y * 1.02)
+		} else { // Zoom out
+			graphPos = myGraph.coordsToGraph(coords.x / 1.02, coords.y / 1.02)
+		}
+		
+		el.setAttribute("cx", graphPos.x)
+		el.setAttribute("cy", graphPos.y)
+	}
+
+	let lines = document.getElementsByClassName("linesConnecting")
+
+	for (let i = 0; i < lines.length; i++) {
+		const el = lines[i];
+
+		let x1 = el.getAttribute("x1")
+		let y1 = el.getAttribute("y1")
+		let x2 = el.getAttribute("x2")
+		let y2 = el.getAttribute("y2")
+		
+		let coords1 = myGraph.graphToCoords(x1, y1)
+		let coords2 = myGraph.graphToCoords(x2, y2)
 
 
+		if (e.deltaY < 0) { // Zoom in
+			graphPos = myGraph.coordsToGraph(coords1.x * 1.02, coords1.y * 1.02)
+			graphPos2 = myGraph.coordsToGraph(coords2.x * 1.02, coords2.y * 1.02)
+		} else { // Zoom out
+			graphPos = myGraph.coordsToGraph(coords1.x / 1.02, coords1.y / 1.02)
+			graphPos2 = myGraph.coordsToGraph(coords2.x / 1.02, coords2.y / 1.02)
+		}
+		
+		el.setAttribute("x1", graphPos.x)
+		el.setAttribute("y1", graphPos.y)
+		el.setAttribute("x2", graphPos2.x)
+		el.setAttribute("y2", graphPos2.y)
+	}
 })
 
 /// ----------------------------------------------------------------------
@@ -82,7 +115,7 @@ function deletePoints() {
 	
 	for(const key of allSVG) {
 		for(let i = key.length; i > 0; i--) {
-			console.log(key[i-1])
+			// console.log(key[i-1])
 			key[i-1].remove();
 		}
 	}
