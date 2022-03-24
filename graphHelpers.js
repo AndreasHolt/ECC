@@ -30,14 +30,17 @@ Graph.prototype.mouseToGraph = function(mouseX, mouseY) { // this.maxX and y
 
 Graph.prototype.graphToCoords = function(graphX, graphY) {
 	x = (graphX/this.scaleX) - this.rangeX/2
-	y = -((graphY/this.scaleY) - this.rangeY/2)
+	y = (graphY/this.scaleY) - this.rangeY/2
 
 	return {x, y}
 }
 
 Graph.prototype.coordsToGraph = function(coordsX, coordsY) {
-	x = this.centerX - coordsX
-	y = this.centerY - coordsY
+	// x = this.centerX - coordsX
+	// y = this.centerY - coordsY
+	x = this.centerX + (coordsX * this.scaleX)
+	y = this.centerY + (coordsY * this.scaleY)
+    console.log(x, y);
 	return {x, y}
 }
 
