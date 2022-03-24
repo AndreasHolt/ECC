@@ -30,6 +30,8 @@ drawEquation()
 
 
 document.getElementById("pointSVG").addEventListener("wheel", e => {
+
+    e.preventDefault();
 	let graphPos, graphPos2
 	myGraph.context.clearRect(0, 0, 578, 300) // Use var of size instead
 
