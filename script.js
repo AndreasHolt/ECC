@@ -35,9 +35,9 @@ document.getElementById("pointSVG").addEventListener("wheel", e => {
 	myGraph.context.clearRect(0, 0, 578, 300) // Use var of size instead
 
 	if (e.deltaY < 0) { // Zoom in
-		scaleZoom /= 2;
+		scaleZoom /= 1.02;
 	} else {
-		scaleZoom *= 2; // Zoom out
+		scaleZoom *= 1.02; // Zoom out
 	}
 
 	myGraph = new Graph({
