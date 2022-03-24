@@ -40,7 +40,6 @@ Graph.prototype.coordsToGraph = function(coordsX, coordsY) {
 	// y = this.centerY - coordsY
 	x = this.centerX + (coordsX * this.scaleX)
 	y = this.centerY + (coordsY * this.scaleY)
-    console.log(x, y);
 	return {x, y}
 }
 
