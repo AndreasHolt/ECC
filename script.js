@@ -31,6 +31,9 @@ drawEquation()
 
 document.getElementById("pointSVG").addEventListener("wheel", e => {
 	let graphPos, graphPos2
+
+	e.preventDefault();
+	
 	myGraph.context.clearRect(0, 0, 578, 300) // Use var of size instead
 
 	if (e.deltaY < 0) { // Zoom in
