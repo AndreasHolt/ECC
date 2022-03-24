@@ -40,16 +40,34 @@ document.getElementById("pointSVG").addEventListener("wheel", e => {
 		scaleZoom *= 1.02; // Zoom out
 	}
 
-	myGraph = new Graph({
-		canvasId: 'myCanvas',
-		minX: -scaleZoom,
-		minY: -scaleZoom,
-		maxX: scaleZoom,
-		maxY: scaleZoom,
-		unitsPerTick: scaleZoom/5
-	});
 
-	drawEquation()
+    myGraph = new Graph({
+        canvasId: 'myCanvas',
+        minX: -scaleZoom,
+        minY: -scaleZoom,
+        maxX: scaleZoom,
+        maxY: scaleZoom,
+        parameterA: -5,
+        parameterB: 15,
+        unitsPerTick: scaleZoom/5
+    });
+
+  console.log('1: ', myGraph.minX = -scaleZoom);
+  console.log(myGraph.minY = -scaleZoom);
+  console.log(myGraph.maxX= scaleZoom);
+  console.log(myGraph.maxY= scaleZoom);
+  console.log(myGraph.unitsPerTick = scaleZoom/5);
+
+    myGraph.drawXAxis()
+
+    myGraph.drawYAxis()
+
+
+
+    drawEquation()
+
+
+
 })
 
 /// ----------------------------------------------------------------------
