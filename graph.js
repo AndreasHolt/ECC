@@ -66,7 +66,7 @@ Graph.prototype.drawXAxis = function () {
 		context.moveTo(xPos, this.centerY - this.tickSize / 2);
 		context.lineTo(xPos, this.centerY + this.tickSize / 2);
 		context.stroke();
-		context.fillText(unit, xPos, this.centerY + this.tickSize / 2 + 3);
+		context.fillText(Math.round(unit * 100) / 100, xPos, this.centerY + this.tickSize / 2 + 3);
 		unit -= this.unitsPerTick;
 		xPos = Math.round(xPos - xPosIncrement);
 	}
@@ -78,7 +78,7 @@ Graph.prototype.drawXAxis = function () {
 		context.moveTo(xPos, this.centerY - this.tickSize / 2);
 		context.lineTo(xPos, this.centerY + this.tickSize / 2);
 		context.stroke();
-		context.fillText(unit, xPos, this.centerY + this.tickSize / 2 + 3);
+		context.fillText(Math.round(unit * 100) / 100, xPos, this.centerY + this.tickSize / 2 + 3);
 		unit += this.unitsPerTick;
 		xPos = Math.round(xPos + xPosIncrement);
 	}
@@ -109,7 +109,7 @@ Graph.prototype.drawYAxis = function () {
 		context.moveTo(this.centerX - this.tickSize / 2, yPos);
 		context.lineTo(this.centerX + this.tickSize / 2, yPos);
 		context.stroke();
-		context.fillText(unit, this.centerX - this.tickSize / 2 - 3, yPos);
+		context.fillText(Math.round(unit * 100) / 100, this.centerX - this.tickSize / 2 - 3, yPos);
 		unit += this.unitsPerTick;
 		yPos = Math.round(yPos - yPosIncrement);
 	}
@@ -121,7 +121,7 @@ Graph.prototype.drawYAxis = function () {
 		context.moveTo(this.centerX - this.tickSize / 2, yPos);
 		context.lineTo(this.centerX + this.tickSize / 2, yPos);
 		context.stroke();
-		context.fillText(unit, this.centerX - this.tickSize / 2 - 3, yPos);
+		context.fillText(Math.round(unit * 100) / 100, this.centerX - this.tickSize / 2 - 3, yPos);
 		unit -= this.unitsPerTick;
 		yPos = Math.round(yPos + yPosIncrement);
 	}
