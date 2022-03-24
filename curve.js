@@ -2,7 +2,6 @@ const firstBox = document.getElementById('curve');
 firstBox[2].addEventListener('click', e => {
     let firstParameter = document.getElementById('a');
     let secondParameter = document.getElementById('b');
-    console.log(firstParameter.value, secondParameter.value);
 
     myGraph.context.clearRect(0, 0, 578, 300) // Use var of size instead
 
