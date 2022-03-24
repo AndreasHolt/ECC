@@ -32,7 +32,7 @@ drawEquation()
 document.getElementById("pointSVG").addEventListener("wheel", e => {
 	let graphPos, graphPos2
 
-	e.preventDefault();
+	e.preventDefault(); // Prevents page scroll when zooming
 	
 	myGraph.context.clearRect(0, 0, 578, 300) // Use var of size instead
 
