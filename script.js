@@ -55,8 +55,9 @@ document.getElementById("pointSVG").addEventListener("wheel", e => {
 
     drawEquation()
 
-	let points = document.querySelectorAll(".workingPoints,.calculatedPoints")
+	let points = document.querySelectorAll(".workingPoints,.calculatedPoints,.point")
 
+	// TODO when scrolling in and out the "point" is not at the cursor y pos
 	for (let i = 0; i < points.length; i++) {
 		const el = points[i];
 
