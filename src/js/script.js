@@ -30,7 +30,7 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
 
     e.preventDefault(); // Prevents page scroll when zooming
 
-    myGraph.context.clearRect(0, 0, 578, 300); // Use var of size instead
+    myGraph.context.clearRect(0, 0, 751.4, 390); // Use var of size instead
 
     if (e.deltaY < 0) { // Zoom in
         scaleZoom /= 1.02;
