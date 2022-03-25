@@ -11,8 +11,8 @@ function Graph(config) {
     this.domRect = this.canvas.getBoundingClientRect();
 
     // constants
-    this.axisColor = '#aaa';
-    this.font = '8pt Calibri';
+    this.axisColor = 'rgb(155,163,175)';
+    this.font = '10pt Calibri';
     this.tickSize = 20;
 
     // relationships

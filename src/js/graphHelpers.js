@@ -72,7 +72,7 @@ Graph.prototype.addCalculatedPoint = function (x, y, pointOperation) {
 
     for (let i = 0; i < arrayIntersectInverted.length; i++) {
         const circle = document.createElementNS(svgNS, 'circle');
-        (i === 0) ? (circle.setAttribute('fill', 'dodgerblue')) : (circle.setAttribute('fill', 'fuchsia'));
+        (i === 0) ? (circle.setAttribute('fill', 'orange')) : (circle.setAttribute('fill', 'fuchsia'));
 
         circle.setAttribute('cx', (x * this.scaleX) + this.centerX);
         circle.setAttribute('cy', (-arrayIntersectInverted[i] * this.scaleY) + this.centerY);
@@ -85,7 +85,7 @@ Graph.prototype.addCalculatedPoint = function (x, y, pointOperation) {
         if (i === 0) {
             myGraph.drawLine('+', 'fuchsia', i, x, y, svg, pointOperation);
         } else {
-            myGraph.drawLine('-', 'dodgerblue', i, x, y, svg, pointOperation);
+            myGraph.drawLine('-', 'orange', i, x, y, svg, pointOperation);
         }
     }
 };
