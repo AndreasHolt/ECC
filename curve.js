@@ -1,5 +1,5 @@
 const firstBox = document.getElementById('curve');
-firstBox[2].addEventListener('click', (e) => {
+firstBox[2].addEventListener('click', () => {
     const firstParameter = document.getElementById('a');
     const secondParameter = document.getElementById('b');
 
@@ -11,8 +11,8 @@ firstBox[2].addEventListener('click', (e) => {
         minY: -scaleZoom,
         maxX: scaleZoom,
         maxY: scaleZoom,
-        parameterA: parseInt(firstParameter.value),
-        parameterB: parseInt(secondParameter.value),
+        parameterA: parseInt(firstParameter.value, 10),
+        parameterB: parseInt(secondParameter.value, 10),
         unitsPerTick: scaleZoom / 5,
     });
 
