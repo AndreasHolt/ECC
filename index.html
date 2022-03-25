@@ -9,15 +9,21 @@
 <script type="module" src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script type="module" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <body>
-    <h1>
-        <fieldset>
-            <legend>Lemao</legend>
-            <input type="button" value="Parameters">
-            <input type="button" value="Infinite field">
-            <input type="button" value="Finite field">
-            <input type="button" value="EC Elgamal">
-        </fieldset>
-    </h1>
+
+
+
+<ul class="flex">
+    <li class="flex-1 mr-2">
+        <a class="text-center block border border-blue-500 rounded py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white" href="#">Elliptic Curves over Infinite Fields</a>
+    </li>
+    <li class="flex-1 mr-2">
+        <a class="text-center block border border-white rounded hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-2 px-4" href="#">Elliptic Curves over Finite Field</a>
+    </li>
+    <li class="text-center flex-1">
+        <a class="text-center block border border-white rounded hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-2 px-4" href="#">EC El Gamal</a>
+    </li>
+</ul>
+
     <div class="container">
         <div class="layer1">
             <canvas id="myCanvas" width="578" height="300"></canvas>
@@ -30,39 +36,48 @@
     </div>
 
     <h3>
-        <fieldset>
-            <legend>Choose an operation</legend>
-            <input type="button" class="operation" value="Point Addition">
-            <input type="button" class="operation" value="Point Doubling">
-            <input type="button" class="operation" value="Point Multiplication">
+        <fieldset class="inline-flex ">
+            <legend class="font-bold text-xl mb-2 text-gray-800">Choose an operation</legend>
+            <input type="button" class="operation bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l" value="Point Addition">
+            <input type="button" class="operation bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-m" value="Point Doubling">
+            <input type="button" class="operation bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r" value="Point Multiplication">
         </fieldset>
     </h3>
-    <div>
+    <div class="inline-block relative w-64">
         <form id="curve">
-            <p id="parameters">Pick curve parameters: \(y^2 = x^3 + ax + b\)</p>
-            <label for="a">a</label>
-            <input type="number" id="a" name="a" min="-5" placeholder="a">
-            <label for="b">b</label>
-            <input type="number" id="b" name="b" placeholder="b">
-            <br><br>
-            <input type="button" value="Submit Parameters">
-            <p class="text-pink-600">Or choose a pre-determined polynomial:</p>
-            <select name="Pre-determined polynomials" id="prepoly">
+            <p class="font-bold text-xl mb-2 text-gray-800" id="parameters">Pick curve parameters: \(y^2 = x^3 + ax + b\)</p>
+
+
+
+            <div class="flex flex-wrap -mx-3 mb-6">
+                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="a">A-Parameter</label>
+                    <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="number" id="a" name="a" min="-5" placeholder="a">
+                </div>
+                <div class="w-full md:w-1/2 px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="b">B-Parameter</label>
+                    <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="number" id="b" name="b" placeholder="b">
+                </div>
+            </div>
+
+            <input class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" type="button" value="Submit Parameters">
+            <p class="font-bold text-xl mb-2 text-gray-800">Or choose a pre-determined polynomial:</p>
+            <select name="Pre-determined polynomials" id="prepoly" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
                 <option value="0" selected=True disabled>--Select a polynomial--</option>
                 <option value="0">None</option>
                 <optgroup label="Good polynomials">
-                    <option value="1">a = 0, b = 5</option> 
+                    <option value="1">a = 0, b = 5</option>
                     <option value="2">a = -5, b = 20</option>
                 </optgroup>
                 <optgroup label="Bad polynomials">
                     <option value="3">stinky</option>
                     <option value="4">funny</option>
                 </optgroup>
-                
+
             </select>
         </form>
     </div>
-    
+
     <script src="src/js/graph.js"></script>
     <script src="src/js/graphHelpers.js"></script>
     <script src="src/js/realsAddition.js"></script>
