@@ -6,7 +6,9 @@
     "dev": "vite",
     "start": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "eslint": "eslint --ext .js ./",
+    "eslintfix": "eslint --ext .js ./ --fix"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.4",
