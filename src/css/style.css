@@ -2,7 +2,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 #myCanvas {
     padding-left: 0;
     padding-right: 0;
@@ -22,7 +21,7 @@
 .container {
     display: grid;
 }
-  
+
 .layer1, .layer2 {
     grid-column: 1;
     grid-row: 1;
