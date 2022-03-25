@@ -16,9 +16,9 @@ Graph.prototype.equationP = function (x) {
 };
 
 function drawEquation() {
-    myGraph.drawEquation((x) => myGraph.equationP(x), 'green', 3);
+    myGraph.drawEquation((x) => myGraph.equationP(x), 'rgb(59,129,246)', 3);
 
-    myGraph.drawEquation((x) => -myGraph.equationP(x), 'green', 3);
+    myGraph.drawEquation((x) => -myGraph.equationP(x), 'rgb(59,129,246)', 3);
 }
 
 drawEquation();
