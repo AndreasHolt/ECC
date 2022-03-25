@@ -21,14 +21,14 @@ Graph.prototype.moveSection = function (id, x, y) {
 };
 
 Graph.prototype.mouseToGraph = function (mouseX, mouseY) { // this.maxX and y
-    x = (this.centerX - this.offsetLeft) + mouseX - this.maxX * this.scaleX;
-    y = (this.centerY - this.offsetTop) + mouseY - this.maxY * this.scaleY;
+    const x = (this.centerX - this.offsetLeft) + mouseX - this.maxX * this.scaleX;
+    const y = (this.centerY - this.offsetTop) + mouseY - this.maxY * this.scaleY;
     return { x, y };
 };
 
 Graph.prototype.graphToCoords = function (graphX, graphY) {
-    x = (graphX / this.scaleX) - this.rangeX / 2;
-    y = (graphY / this.scaleY) - this.rangeY / 2;
+    const x = (graphX / this.scaleX) - this.rangeX / 2;
+    const y = (graphY / this.scaleY) - this.rangeY / 2;
 
     return { x, y };
 };
@@ -36,8 +36,8 @@ Graph.prototype.graphToCoords = function (graphX, graphY) {
 Graph.prototype.coordsToGraph = function (coordsX, coordsY) {
     // x = this.centerX - coordsX
     // y = this.centerY - coordsY
-    x = this.centerX + (coordsX * this.scaleX);
-    y = this.centerY + (coordsY * this.scaleY);
+    const x = this.centerX + (coordsX * this.scaleX);
+    const y = this.centerY + (coordsY * this.scaleY);
     return { x, y };
 };
 
@@ -59,7 +59,7 @@ Graph.prototype.getPointPlacement = function (x) {
 };
 
 Graph.prototype.addCalculatedPoint = function (x, y, pointOperation) {
-    if (document.getElementsByClassName('calculatedPoints').length == 2) {
+    if (document.getElementsByClassName('calculatedPoints').length === 2) {
         document.getElementsByClassName('calculatedPoints')[1].remove();
         document.getElementsByClassName('calculatedPoints')[0].remove();
 
@@ -70,9 +70,9 @@ Graph.prototype.addCalculatedPoint = function (x, y, pointOperation) {
 
     const arrayIntersectInverted = [y, -y];
 
-    for (i = 0; i < arrayIntersectInverted.length; i++) {
+    for (let i = 0; i < arrayIntersectInverted.length; i++) {
         const circle = document.createElementNS(svgNS, 'circle');
-        (i == 0) ? (circle.setAttribute('fill', 'dodgerblue')) : (circle.setAttribute('fill', 'fuchsia'));
+        (i === 0) ? (circle.setAttribute('fill', 'dodgerblue')) : (circle.setAttribute('fill', 'fuchsia'));
 
         circle.setAttribute('cx', (x * this.scaleX) + this.centerX);
         circle.setAttribute('cy', (-arrayIntersectInverted[i] * this.scaleY) + this.centerY);
@@ -82,7 +82,7 @@ Graph.prototype.addCalculatedPoint = function (x, y, pointOperation) {
         const svg = document.querySelector('svg');
         svg.appendChild(circle);
 
-        if (i == 0) {
+        if (i === 0) {
             myGraph.drawLine('+', 'fuchsia', i, x, y, svg, pointOperation);
         } else {
             myGraph.drawLine('-', 'dodgerblue', i, x, y, svg, pointOperation);
@@ -125,20 +125,20 @@ Graph.prototype.drawLine = function (operator, color, i, x, y, svg, pointOperati
         fromPoint = document.getElementsByClassName('workingPoints')[0];
     }
     const newLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    if (i == 0) {
+    if (i === 0) {
         newLine.setAttribute('x1', fromPoint.getAttribute('cx'));
         newLine.setAttribute('y1', fromPoint.getAttribute('cy'));
     } else {
         newLine.setAttribute('x1', (x * this.scaleX) + this.centerX);
         newLine.setAttribute('y1', (-y * this.scaleY) + this.centerY);
     }
-    if (pointOperation === 1 && i == 0 && pointDecider === 2) {
+    if (pointOperation === 1 && i === 0 && pointDecider === 2) {
         const secondPoint = document.getElementsByClassName('workingPoints')[1];
         newLine.setAttribute('x2', secondPoint.getAttribute('cx'));
         newLine.setAttribute('y2', secondPoint.getAttribute('cy'));
     } else {
         newLine.setAttribute('x2', (x * this.scaleX) + this.centerX);
-        newLine.setAttribute('y2', ((((operator == '-') ? (y) : (y)) * this.scaleY) + this.centerY));
+        newLine.setAttribute('y2', ((((operator === '-') ? (y) : (y)) * this.scaleY) + this.centerY));
     }
     newLine.classList.add('linesConnecting');
     newLine.setAttribute('stroke', color);

@@ -1,6 +1,6 @@
 Graph.prototype.pointDouble = function () {
     const points = document.getElementsByClassName('workingPoints');
-    storePoints = {
+    const storePoints = {
         point1: [points[0].getAttribute('cx'), points[0].getAttribute('cy')],
     };
 

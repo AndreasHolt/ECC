@@ -139,8 +139,8 @@ Graph.prototype.drawEquation = function (equation, color, thickness) {
 
     let lastX = 0;
 
-    for (var x = this.minX + this.iteration; x <= this.maxX; x += this.iteration) {
-        if (isNaN(equation(x))) {
+    for (let x = this.minX + this.iteration; x <= this.maxX; x += this.iteration) {
+        if (Number.isNaN(equation(x))) {
             lastX = x;
         }
     }
@@ -148,8 +148,8 @@ Graph.prototype.drawEquation = function (equation, color, thickness) {
     const realRootMultiplier = 1.01;
     const realRoot = lastX * realRootMultiplier;
 
-    for (var x = this.minX + this.iteration; x <= this.maxX; x += this.iteration) {
-        if (isNaN(equation(x)) && x > realRoot) {
+    for (let x = this.minX + this.iteration; x <= this.maxX; x += this.iteration) {
+        if (Number.isNaN(equation(x)) && x > realRoot) {
             context.lineTo(x, 0);
         } else {
             context.lineTo(x, equation(x));
@@ -171,9 +171,9 @@ Graph.prototype.transformContext = function () {
     this.context.translate(this.centerX, this.centerY);
 
     /*
-	 * stretch grid to fit the canvas window, and
-	 * invert the y scale so that that increments
-	 * as you move upwards
-	 */
+    * stretch grid to fit the canvas window, and
+    * invert the y scale so that that increments
+    * as you move upwards
+    */
     context.scale(this.scaleX, -this.scaleY);
 };

@@ -130,7 +130,7 @@ function init() {
     for (const input of operations) {
         input.addEventListener('click', (e) => {
             for (const buttons of operations) {
-                if (buttons.disabled == true) {
+                if (buttons.disabled === true) {
                     buttons.disabled = false;
                 }
             }
@@ -144,7 +144,24 @@ function init() {
 
 init();
 
-document.getElementById('layer2').addEventListener('click', (e) => {
+function runOperation(ops) {
+    switch (ops) {
+    case 1:
+        myGraph.pointAddition();
+        break;
+    case 2:
+        myGraph.pointDouble();
+        break;
+    case 3:
+        console.log('Hey Chat!');
+        break;
+    default:
+        console.log('Please no');
+        break;
+    }
+}
+
+document.getElementById('layer2').addEventListener('click', () => {
     const pointsOnGraph = document.getElementsByClassName('workingPoints');
 
     // Delete the point on the graph that was placed first
@@ -166,20 +183,3 @@ document.getElementById('layer2').addEventListener('click', (e) => {
         }
     }
 });
-
-function runOperation(operations) {
-    switch (operations) {
-    case 1:
-        myGraph.pointAddition();
-        break;
-    case 2:
-        myGraph.pointDouble();
-        break;
-    case 3:
-        console.log('Hey Chat!');
-        break;
-    default:
-        console.log('Please no');
-        break;
-    }
-}
