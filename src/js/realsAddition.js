@@ -14,5 +14,26 @@ Graph.prototype.pointAddition = function () {
     const newX = (lambda * lambda) - x2 - x1;
     const newY = y2 + lambda * newX + lambda * (-x2);
 
+    myGraph.latexAddition(storePoints, newX, newY)
     myGraph.addCalculatedPoint(newX, newY, 1);
 };
+
+Graph.prototype.latexAddition = function (placedPoints, calculatedX, calculatedY) {
+    let pObj = this.graphToCoords(placedPoints.point1[0], placedPoints.point1[1])
+    let P = `${Math.round(pObj.x * 100) / 100}, ${Math.round(-pObj.y * 100) / 100}`;
+
+    let qObj = this.graphToCoords(placedPoints.point2[0], placedPoints.point2[1])
+    let Q = `${Math.round(qObj.x * 100) / 100}, ${Math.round(-qObj.y * 100) / 100}`;
+
+    console.log(calculatedX, calculatedY)
+    let minusR = `${Math.round(calculatedX * 100) / 100}, ${Math.round(-calculatedY* 100) / 100}`;
+    let R = `${Math.round(calculatedX * 100) / 100}, ${Math.round(calculatedY* 100) / 100}`;
+
+    let pointsListed = document.getElementById('pointsListed')
+    pointsListed.innerHTML = `\\(P = (${P})\\) &nbsp \\(Q = (${Q})\\) &nbsp \\(-R = (${minusR})\\) &nbsp \\(R = (${R})\\)`
+
+
+
+    MathJax.typeset()
+
+}
