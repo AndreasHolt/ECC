@@ -5,9 +5,9 @@
     <link rel="stylesheet" href="src/css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ECC</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<script type="module" src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script type="module" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <body>
 
 
@@ -45,7 +45,7 @@
             <input class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mb-10" type="button" value="Submit Parameters">
             <p class="font-bold text-xl mb-2 text-gray-800">Or choose a pre-determined polynomial:</p>
             <select name="Pre-determined polynomials" id="prepoly" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
-                <option value="0" selected=True disabled>--Select a polynomial--</option>
+                <option value="0" selected=True disabled>Select a polynomial</option>
                 <option value="0">None</option>
                 <optgroup label="Good polynomials">
                     <option value="1">a = 0, b = 5</option>

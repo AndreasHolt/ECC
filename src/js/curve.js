@@ -1,3 +1,14 @@
+function changeEquation(a, b){
+
+    let sign1;
+    let sign2;
+    (a < 0)?(sign1 = ''):(sign1 = '+');
+    (b < 0)?(sign2 = ''):(sign2 = '+');
+
+    document.getElementById('parameters').innerHTML = `Pick curve parameters: \\(y^2 = x^3 ${sign1} ${a}x ${sign2} ${b}\\)`;
+    MathJax.typeset()
+}
+
 const firstBox = document.getElementById('curve');
 firstBox[2].addEventListener('click', () => {
     const firstParameter = document.getElementById('a');
@@ -16,6 +27,9 @@ firstBox[2].addEventListener('click', () => {
         unitsPerTick: scaleZoom / 5,
     });
 
+
+
+    changeEquation(firstParameter.value, secondParameter.value);
     deletePoints();
     drawEquation();
 });
