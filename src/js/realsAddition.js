@@ -27,15 +27,17 @@ function listPoints(myGraph, placedPoints, calculatedX, calculatedY, operation) 
     return pObj;
 }
 
-function pointAdditionSteps(myGraph, points, lambda, newX, newY) {
+function pointAdditionSteps(myGraph, points, lambdaI, x, y) {
     points.forEach((point) => {
+        // eslint-disable-next-line no-param-reassign
         point.x = Math.round(point.x * 100) / 100;
+        // eslint-disable-next-line no-param-reassign
         point.y = Math.round(point.y * 100) / 100;
     });
 
-    lambda = Math.round(lambda * 100) / 100;
-    newX = Math.round(newX * 100) / 100;
-    newY = Math.round(newY * 100) / 100;
+    const lambda = Math.round(lambdaI * 100) / 100;
+    const newX = Math.round(x * 100) / 100;
+    const newY = Math.round(y * 100) / 100;
 
     const stepRows = document.getElementsByClassName('steps');
     stepRows[0].innerHTML = `If P and Q are distinct \\((x_P \\neq x_Q)\\), the line through them has slope: <br>
@@ -69,10 +71,10 @@ function pointAddition(myGraph) {
     let newY = 0;
 
     // Handle edgecase: same x coordinate for both points (i.e. vertical line), but not same y coordinate
-    if (x2 == x1 && y1 != y2) {
+    if (x2 === x1 && y1 !== y2) {
         newY = 9999999;
         newX = x1;
-    } else if (x2 == x1 && y1 == y2) {
+    } else if (x2 === x1 && y1 === y2) {
         myGraph.pointDouble(); // Handle edgecase: both points are the same, so double the point instead
 
         // TODO: pointDoublingSteps when implemented

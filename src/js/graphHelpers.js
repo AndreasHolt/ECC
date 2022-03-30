@@ -56,66 +56,29 @@ function getPointPlacement(myGraph, x) {
     return returnValue;
 }
 
-function addCalculatedPoint(myGraph, x, y, pointOperation) {
-    if (document.getElementsByClassName('calculatedPoints').length === 2) {
-        document.getElementsByClassName('calculatedPoints')[1].remove();
-        document.getElementsByClassName('calculatedPoints')[0].remove();
-
-        document.getElementsByClassName('linesConnecting')[1].remove();
-        document.getElementsByClassName('linesConnecting')[0].remove();
-    }
-    const svgNS = 'http://www.w3.org/2000/svg';
-
-    const arrayIntersectInverted = [y, -y];
-
-    for (let i = 0; i < arrayIntersectInverted.length; i++) {
-        const circle = document.createElementNS(svgNS, 'circle');
-
-        if (i === 0) {
-            circle.setAttribute('fill', 'orange');
-        } else {
-            circle.setAttribute('fill', 'fuchsia');
-        }
-
-        circle.setAttribute('cx', (x * myGraph.scaleX) + myGraph.centerX);
-        circle.setAttribute('cy', (-arrayIntersectInverted[i] * myGraph.scaleY) + myGraph.centerY);
-        circle.classList.add('calculatedPoints');
-        circle.setAttribute('r', 5);
-
-        const svg = document.querySelector('svg');
-        svg.appendChild(circle);
-
-        if (i === 0) {
-            drawLine(myGraph, '+', 'fuchsia', i, x, y, svg, pointOperation);
-        } else {
-            drawLine(myGraph, '-', 'orange', i, x, y, svg, pointOperation);
-        }
-    }
-}
-
 function logicPointAddition(myGraph, x) {
     const pointDecider = getPointPlacement(myGraph, x);
-    let fromPoint = 0;
     if (pointDecider === 1) {
         const tempPoint = document.getElementsByClassName('workingPoints');
 
         if (tempPoint[0].getAttribute('cx') > tempPoint[1].getAttribute('cx')) {
-            fromPoint = tempPoint[1];
-        } else {
-            fromPoint = tempPoint[0];
+            return tempPoint[1];
         }
-    } else if (pointDecider === 2) {
-        fromPoint = document.getElementsByClassName('workingPoints')[0];
-    } else if (pointDecider === 3) {
+
+        return tempPoint[0];
+    } if (pointDecider === 2) {
+        return document.getElementsByClassName('workingPoints')[0];
+    } if (pointDecider === 3) {
         const tempPoint = document.getElementsByClassName('workingPoints');
 
         if (tempPoint[0].getAttribute('cx') > tempPoint[1].getAttribute('cx')) {
-            fromPoint = tempPoint[0];
-        } else {
-            fromPoint = tempPoint[1];
+            return tempPoint[0];
         }
+
+        return tempPoint[1];
     }
-    return fromPoint;
+
+    return null;
 }
 
 function drawLine(myGraph, operator, color, i, x, y, svg, pointOperation) {
@@ -149,6 +112,44 @@ function drawLine(myGraph, operator, color, i, x, y, svg, pointOperation) {
 
     svg.appendChild(newLine);
 }
+
+function addCalculatedPoint(myGraph, x, y, pointOperation) {
+    if (document.getElementsByClassName('calculatedPoints').length === 2) {
+        document.getElementsByClassName('calculatedPoints')[1].remove();
+        document.getElementsByClassName('calculatedPoints')[0].remove();
+
+        document.getElementsByClassName('linesConnecting')[1].remove();
+        document.getElementsByClassName('linesConnecting')[0].remove();
+    }
+    const svgNS = 'http://www.w3.org/2000/svg';
+
+    const arrayIntersectInverted = [y, -y];
+
+    for (let i = 0; i < arrayIntersectInverted.length; i += 1) {
+        const circle = document.createElementNS(svgNS, 'circle');
+
+        if (i === 0) {
+            circle.setAttribute('fill', 'orange');
+        } else {
+            circle.setAttribute('fill', 'fuchsia');
+        }
+
+        circle.setAttribute('cx', (x * myGraph.scaleX) + myGraph.centerX);
+        circle.setAttribute('cy', (-arrayIntersectInverted[i] * myGraph.scaleY) + myGraph.centerY);
+        circle.classList.add('calculatedPoints');
+        circle.setAttribute('r', 5);
+
+        const svg = document.querySelector('svg');
+        svg.appendChild(circle);
+
+        if (i === 0) {
+            drawLine(myGraph, '+', 'fuchsia', i, x, y, svg, pointOperation);
+        } else {
+            drawLine(myGraph, '-', 'orange', i, x, y, svg, pointOperation);
+        }
+    }
+}
+
 function addPointOnClick() {
     const point = document.getElementById('point');
     const svgNS = 'http://www.w3.org/2000/svg';
