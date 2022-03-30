@@ -123,6 +123,11 @@ function Graph(config) {
     this.centerY = (Math.abs(this.minY / this.rangeY) * this.canvas.height);
     this.centerX = (Math.abs(this.minX / this.rangeX) * this.canvas.width);
 
+    // eslint-disable-next-line func-names
+    this.equationP = function (x) {
+        return Math.sqrt((x * x * x) + this.parameterA * x + this.parameterB);
+    };
+
     // draw x and y axis
     drawXAxis(this);
     drawYAxis(this);
