@@ -1,10 +1,10 @@
-import { pointDouble } from './realsDoubling';
-import { pointAddition, listPoints, pointAdditionSteps } from './realsAddition';
+import pointDouble from './realsDoubling';
+import { pointAddition } from './realsAddition';
 import {
-    movePoint, moveSection, mouseToGraph, graphToCoords, coordsToGraph, getPointPlacement, addCalculatedPoint, logicPointAddition, drawLine, addPointOnClick,
+    movePoint, graphToCoords, coordsToGraph, addPointOnClick,
 } from './graphHelpers';
 import {
-    Graph, drawXAxis, drawYAxis, drawEquation, transformContext,
+    Graph, drawXAxis, drawYAxis, drawEquation,
 } from './graph';
 
 let scaleZoom = 10;
@@ -66,7 +66,7 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
     const points = document.querySelectorAll('.workingPoints,.calculatedPoints,.point');
 
     // TODO when scrolling in and out the "point" is not at the cursor y pos
-    for (let i = 0; i < points.length; i++) {
+    for (let i = 0; i < points.length; i += 1) {
         const el = points[i];
 
         const cx = el.getAttribute('cx');
@@ -85,7 +85,7 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
 
     const lines = document.getElementsByClassName('linesConnecting');
 
-    for (let i = 0; i < lines.length; i++) {
+    for (let i = 0; i < lines.length; i += 1) {
         const el = lines[i];
 
         const x1 = el.getAttribute('x1');
@@ -121,35 +121,36 @@ function deletePoints() {
         document.getElementsByClassName('calculatedPoints'),
     ];
 
-    for (const key of allSVG) {
-        for (let i = key.length; i > 0; i--) {
+    Array.from(allSVG).forEach((key) => {
+        for (let i = key.length; i > 0; i -= 1) {
             // console.log(key[i-1])
             key[i - 1].remove();
         }
-    }
+    });
 }
 
 document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
     movePoint(e, myGraph);
 });
 
-// TODO add id's to button an interact with via their id instaed of runOperation
+// TODO add id's to button an interact with via their id instead of runOperation
 const operations = document.getElementsByClassName('operation');
 
 function init() {
-    for (const input of operations) {
+    Array.from(operations).forEach((input) => {
         input.addEventListener('click', (e) => {
-            for (const buttons of operations) {
+            Object.keys(operations).forEach((buttons) => {
                 if (buttons.disabled === true) {
+                    // eslint-disable-next-line no-param-reassign
                     buttons.disabled = false;
                 }
-            }
+            });
 
             deletePoints();
 
             e.target.disabled = true;
         });
-    }
+    });
 }
 
 init();
@@ -195,10 +196,15 @@ document.getElementById('layer2').addEventListener('click', () => {
 });
 
 function changeEquation(a, b) {
-    let sign1;
-    let sign2;
-    (a < 0) ? (sign1 = '') : (sign1 = '+');
-    (b < 0) ? (sign2 = '') : (sign2 = '+');
+    let sign1 = '';
+    let sign2 = '';
+
+    if (a >= 0) {
+        sign1 = '';
+    }
+    if (b >= 0) {
+        sign2 = '+';
+    }
 
     document.getElementById('parameters').innerHTML = `Pick curve parameters: \\(y^2 = x^3 ${sign1} ${a}x ${sign2} ${b}\\)`;
     MathJax.typeset();
