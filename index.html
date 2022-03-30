@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="./src/css/style.css">
@@ -8,124 +9,134 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
+
 <body>
+    <ul class="flex">
+        <li class="flex-1 mr-2">
+            <a class="text-center block border border-blue-500 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white"
+                href="#">Elliptic Curves over Infinite Fields (ℝ)</a>
+        </li>
+        <li class="flex-1 mr-2">
+            <a class="text-center block border border-white hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-2 px-4"
+                href="#">Elliptic Curves over Finite Fields (𝔽 <sub>p</sub>)</a>
+        </li>
+        <li class="text-center flex-1">
+            <a class="text-center block border border-white hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-2 px-4"
+                href="#">EC El Gamal</a>
+        </li>
+    </ul>
+
+    <div class="flex flex-row mt-10 px-10 py-10">
+        <div class="inline-block relative w-64 basis-1/3">
+            <form id="curve">
+                <p class="font-bold text-xl mb-2 text-gray-800 mb-10" id="parameters">Pick curve parameters: \(y^2 = x^3
+                    + ax + b\)</p>
 
 
 
-<ul class="flex">
-    <li class="flex-1 mr-2">
-        <a class="text-center block border border-blue-500 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white" href="#">Elliptic Curves over Infinite Fields (ℝ)</a>
-    </li>
-    <li class="flex-1 mr-2">
-        <a class="text-center block border border-white hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-2 px-4" href="#">Elliptic Curves over Finite Fields (𝔽 <sub>p</sub>)</a>
-    </li>
-    <li class="text-center flex-1">
-        <a class="text-center block border border-white hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-2 px-4" href="#">EC El Gamal</a>
-    </li>
-</ul>
-
-<div class="flex flex-row mt-10 px-10 py-10">
-    <div class="inline-block relative w-64 basis-1/3">
-        <form id="curve">
-            <p class="font-bold text-xl mb-2 text-gray-800 mb-10" id="parameters">Pick curve parameters: \(y^2 = x^3 + ax + b\)</p>
-
-
-
-            <div class="flex flex-wrap -mx-3 mb-6 justify-center">
-                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="a">A-Parameter</label>
-                    <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="number" id="a" name="a" min="-5" placeholder="Ex: -4">
+                <div class="flex flex-wrap -mx-3 mb-6 justify-center">
+                    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                            for="a">A-Parameter</label>
+                        <input
+                            class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                            type="number" id="a" name="a" min="-5" placeholder="Ex: -4">
+                    </div>
+                    <div class="w-full md:w-1/2 px-3 justify-center">
+                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                            for="b">B-Parameter</label>
+                        <input
+                            class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                            type="number" id="b" name="b" placeholder="Ex: 15">
+                    </div>
                 </div>
-                <div class="w-full md:w-1/2 px-3 justify-center">
-                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="b">B-Parameter</label>
-                    <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="number" id="b" name="b" placeholder="Ex: 15">
-                </div>
+
+                <input
+                    class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mb-10"
+                    type="button" value="Submit Parameters">
+                <p class="font-bold text-xl mb-2 text-gray-800">Or choose a pre-determined polynomial:</p>
+                <select name="Pre-determined polynomials" id="prepoly"
+                    class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="0" selected=True disabled>Select a polynomial</option>
+                    <option value="0">None</option>
+                    <optgroup label="Good polynomials">
+                        <option value="1">a = 0, b = 5</option>
+                        <option value="2">a = -5, b = 20</option>
+                    </optgroup>
+                    <optgroup label="Bad polynomials">
+                        <option value="3">stinky</option>
+                        <option value="4">funny</option>
+                    </optgroup>
+
+                </select>
+            </form>
+        </div>
+        <div class="container basis-1/3">
+            <div class="layer1">
+                <canvas id="myCanvas" width="751.4" height="390"></canvas>
+            </div>
+            <div id='layer2' class="layer2">
+                <svg id="pointSVG" width="751.4" height="390">
+                    <circle id="point" class="point" cx="0" cy="0" r="5.5" stroke="rgb(59,129,246)" stroke-width="2"
+                        fill="white" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="basis-1/3">
+
+            <div class="inline-grid grid-cols-1 gap-4">
+                <button
+                    class="operation bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center">
+                    <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                        <!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                        <path
+                            d="M432 256c0 17.69-14.33 32.01-32 32.01H256v144c0 17.69-14.33 31.99-32 31.99s-32-14.3-32-31.99v-144H48c-17.67 0-32-14.32-32-32.01s14.33-31.99 32-31.99H192v-144c0-17.69 14.33-32.01 32-32.01s32 14.32 32 32.01v144h144C417.7 224 432 238.3 432 256z" />
+                    </svg>
+                    <span>Point Addition</span>
+                </button>
+                <button
+                    class="operation bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center">
+                    <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                        fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+                        <path fill-rule="evenodd"
+                            d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+                    </svg>
+                    <span>Point Doubling</span>
+                </button>
+                <button
+                    class="operation bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center">
+                    <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                        <!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                        <path
+                            d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z" />
+                    </svg>
+                    <span>Point Multiplication</span>
+                </button>
             </div>
 
-            <input class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mb-10" type="button" value="Submit Parameters">
-            <p class="font-bold text-xl mb-2 text-gray-800">Or choose a pre-determined polynomial:</p>
-            <select name="Pre-determined polynomials" id="prepoly" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
-                <option value="0" selected=True disabled>Select a polynomial</option>
-                <option value="0">None</option>
-                <optgroup label="Good polynomials">
-                    <option value="1">a = 0, b = 5</option>
-                    <option value="2">a = -5, b = 20</option>
-                </optgroup>
-                <optgroup label="Bad polynomials">
-                    <option value="3">stinky</option>
-                    <option value="4">funny</option>
-                </optgroup>
-
-            </select>
-        </form>
-    </div>
-    <div class="container basis-1/3">
-        <div class="layer1">
-            <canvas id="myCanvas" width="751.4" height="390"></canvas>
-        </div>
-        <div id='layer2' class="layer2">
-            <svg id="pointSVG" width="751.4" height="390">
-                <circle id="point" class="point" cx="0" cy="0" r="5.5" stroke="rgb(59,129,246)" stroke-width="2" fill="white" />
-            </svg>
         </div>
     </div>
 
-    <!--
-    <h3>
-        <fieldset class="inline-flex basis-1/4">
-            <legend class="font-bold text-xl mb-2 text-gray-800">Choose an operation</legend>
-            <input type="button" class="operation bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l" value="Point Addition">
-            <input type="button" class="operation bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-m" value="Point Doubling">
-            <input type="button" class="operation bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r" value="Point Multiplication">
-        </fieldset>
-    </h3>
-    -->
-    <div class="basis-1/3">
-
-        <div class="inline-grid grid-cols-1 gap-4">
-            <button class="operation bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center">
-                <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M432 256c0 17.69-14.33 32.01-32 32.01H256v144c0 17.69-14.33 31.99-32 31.99s-32-14.3-32-31.99v-144H48c-17.67 0-32-14.32-32-32.01s14.33-31.99 32-31.99H192v-144c0-17.69 14.33-32.01 32-32.01s32 14.32 32 32.01v144h144C417.7 224 432 238.3 432 256z"/></svg>
-                <span>Point Addition</span>
-            </button>
-            <button class="operation bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center">
-                <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-                    <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-                </svg>
-                <span>Point Doubling</span>
-            </button>
-            <button class="operation bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center">
-                <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
-                <span>Point Multiplication</span>
-            </button>
+    <div class="mt-10 px-10">
+        <h1 class="font-bold text-xl text-gray-800">Calculating the third point \((R)\)</h1>
+        <p id="pointsListed"></p>
+    </div>
+    <div class="flex flex-row mt-5 px-10 py-5">
+        <div class="basis-1/2">
+            <h1 class="font-bold text-xl text-gray-800">1.</h1>
+            <p class="steps">Test</p>
+        </div>
+        <div class="basis-1/2">
+            <h1 class="font-bold text-xl text-gray-800">2.</h1>
+            <p class="steps">Test</p>
         </div>
 
     </div>
-</div>
+    <script type="module" src="./src/js/script.js"></script>
 
-<div class="mt-10 px-10">
-    <h1 class="font-bold text-xl text-gray-800">Calculating the third point \((R)\)</h1>
-    <p id="pointsListed"></p>
-</div>
-<div class="flex flex-row mt-5 px-10 py-5">
-    <div class="basis-1/2">
-        <h1 class="font-bold text-xl text-gray-800">1.</h1>
-        <p class="steps">Test</p>
-    </div>
-    <div class="basis-1/2">
-        <h1 class="font-bold text-xl text-gray-800">2.</h1>
-        <p class="steps">Test</p>
-    </div>
-
-</div>
-
-    <script src="src/js/graph.js"></script>
-    <script src="src/js/graphHelpers.js"></script>
-    <script src="src/js/realsAddition.js"></script>
-    <script src="src/js/realsDoubling.js"></script>
-    <script src="src/js/curve.js"></script>
-    <script src="src/js/script.js"></script>
-    
 </body>
 
 </html>
