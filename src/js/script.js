@@ -1,3 +1,12 @@
+import { pointDouble } from './realsDoubling';
+import { pointAddition, listPoints, pointAdditionSteps } from './realsAddition';
+import {
+    movePoint, moveSection, mouseToGraph, graphToCoords, coordsToGraph, getPointPlacement, addCalculatedPoint, logicPointAddition, drawLine, addPointOnClick,
+} from './graphHelpers';
+import {
+    Graph, drawXAxis, drawYAxis, drawEquation, transformContext,
+} from './graph';
+
 let scaleZoom = 10;
 
 let myGraph = new Graph({
@@ -15,13 +24,13 @@ Graph.prototype.equationP = function (x) {
     return Math.sqrt((x * x * x) + this.parameterA * x + this.parameterB);
 };
 
-function drawEquation() {
-    myGraph.drawEquation((x) => myGraph.equationP(x), 'rgb(59,129,246)', 3);
+function drawEquations() {
+    drawEquation((x) => myGraph.equationP(x), 'rgb(59,129,246)', 3, myGraph);
 
-    myGraph.drawEquation((x) => -myGraph.equationP(x), 'rgb(59,129,246)', 3);
+    drawEquation((x) => -myGraph.equationP(x), 'rgb(59,129,246)', 3, myGraph);
 }
 
-drawEquation();
+drawEquations();
 
 document.getElementById('pointSVG').addEventListener('wheel', (e) => {
     e.preventDefault();
@@ -49,10 +58,10 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
         unitsPerTick: scaleZoom / 5,
     });
 
-    myGraph.drawXAxis();
-    myGraph.drawYAxis();
+    drawXAxis(myGraph);
+    drawYAxis(myGraph);
 
-    drawEquation();
+    drawEquations();
 
     const points = document.querySelectorAll('.workingPoints,.calculatedPoints,.point');
 
@@ -62,12 +71,12 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
 
         const cx = el.getAttribute('cx');
         const cy = el.getAttribute('cy');
-        const coords = myGraph.graphToCoords(cx, cy);
+        const coords = graphToCoords(myGraph, cx, cy);
 
         if (e.deltaY < 0) { // Zoom in
-            graphPos = myGraph.coordsToGraph(coords.x * 1.02, coords.y * 1.02);
+            graphPos = coordsToGraph(myGraph, coords.x * 1.02, coords.y * 1.02);
         } else { // Zoom out
-            graphPos = myGraph.coordsToGraph(coords.x / 1.02, coords.y / 1.02);
+            graphPos = coordsToGraph(myGraph, coords.x / 1.02, coords.y / 1.02);
         }
 
         el.setAttribute('cx', graphPos.x);
@@ -84,15 +93,15 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
         const x2 = el.getAttribute('x2');
         const y2 = el.getAttribute('y2');
 
-        const coords1 = myGraph.graphToCoords(x1, y1);
-        const coords2 = myGraph.graphToCoords(x2, y2);
+        const coords1 = graphToCoords(myGraph, x1, y1);
+        const coords2 = graphToCoords(myGraph, x2, y2);
 
         if (e.deltaY < 0) { // Zoom in
-            graphPos = myGraph.coordsToGraph(coords1.x * 1.02, coords1.y * 1.02);
-            graphPos2 = myGraph.coordsToGraph(coords2.x * 1.02, coords2.y * 1.02);
+            graphPos = coordsToGraph(myGraph, coords1.x * 1.02, coords1.y * 1.02);
+            graphPos2 = coordsToGraph(myGraph, coords2.x * 1.02, coords2.y * 1.02);
         } else { // Zoom out
-            graphPos = myGraph.coordsToGraph(coords1.x / 1.02, coords1.y / 1.02);
-            graphPos2 = myGraph.coordsToGraph(coords2.x / 1.02, coords2.y / 1.02);
+            graphPos = coordsToGraph(myGraph, coords1.x / 1.02, coords1.y / 1.02);
+            graphPos2 = coordsToGraph(myGraph, coords2.x / 1.02, coords2.y / 1.02);
         }
 
         el.setAttribute('x1', graphPos.x);
@@ -121,7 +130,7 @@ function deletePoints() {
 }
 
 document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
-    myGraph.movePoint(e);
+    movePoint(e, myGraph);
 });
 
 // TODO add id's to button an interact with via their id instaed of runOperation
@@ -148,10 +157,10 @@ init();
 function runOperation(ops) {
     switch (ops) {
     case 1:
-        myGraph.pointAddition();
+        pointAddition(myGraph);
         break;
     case 2:
-        myGraph.pointDouble();
+        pointDouble(myGraph);
         break;
     case 3:
         console.log('Hey Chat!');
@@ -168,19 +177,52 @@ document.getElementById('layer2').addEventListener('click', () => {
     // Delete the point on the graph that was placed first
     if (operations[0].disabled) {
         if (pointsOnGraph.length === 1) {
-            myGraph.addPointOnClick();
+            addPointOnClick(myGraph);
             runOperation(1);
         } else if (pointsOnGraph.length === 0) {
-            myGraph.addPointOnClick();
+            addPointOnClick(myGraph);
         } else {
             deletePoints();
         }
     } else if (operations[1].disabled) {
         if (pointsOnGraph.length === 0) {
-            myGraph.addPointOnClick();
+            addPointOnClick(myGraph);
             runOperation(2);
         } else if (pointsOnGraph.length === 1) {
             deletePoints();
         }
     }
+});
+
+function changeEquation(a, b) {
+    let sign1;
+    let sign2;
+    (a < 0) ? (sign1 = '') : (sign1 = '+');
+    (b < 0) ? (sign2 = '') : (sign2 = '+');
+
+    document.getElementById('parameters').innerHTML = `Pick curve parameters: \\(y^2 = x^3 ${sign1} ${a}x ${sign2} ${b}\\)`;
+    MathJax.typeset();
+}
+
+const firstBox = document.getElementById('curve');
+firstBox[2].addEventListener('click', () => {
+    const firstParameter = document.getElementById('a');
+    const secondParameter = document.getElementById('b');
+
+    myGraph.context.clearRect(0, 0, 751.4, 390, myGraph); // Use var of size instead
+
+    myGraph = new Graph({
+        canvasId: 'myCanvas',
+        minX: -scaleZoom,
+        minY: -scaleZoom,
+        maxX: scaleZoom,
+        maxY: scaleZoom,
+        parameterA: parseInt(firstParameter.value, 10),
+        parameterB: parseInt(secondParameter.value, 10),
+        unitsPerTick: scaleZoom / 5,
+    });
+
+    changeEquation(firstParameter.value, secondParameter.value);
+    deletePoints();
+    drawEquations();
 });
