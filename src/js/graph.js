@@ -96,7 +96,7 @@ function Graph(config) {
     this.parameterA = config.parameterA;
     this.parameterB = config.parameterB;
     this.unitsPerTick = config.unitsPerTick;
-    this.domRect = this.canvas.getBoundingClientRect();
+    // this.domRect = this.canvas.getBoundingClientRect();
 
     // constants
     this.axisColor = 'rgb(155,163,175)';
