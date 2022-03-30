@@ -44,8 +44,8 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
         minY: -scaleZoom,
         maxX: scaleZoom,
         maxY: scaleZoom,
-        parameterA: -5,
-        parameterB: 15,
+        parameterA: Number(document.getElementById('a').value),
+        parameterB: Number(document.getElementById('b').value),
         unitsPerTick: scaleZoom / 5,
     });
 
