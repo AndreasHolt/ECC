@@ -13,7 +13,7 @@ function pointDouble(myGraph) {
     const newX = lambda * lambda - 2 * x;
     const newY = -y + lambda * (x - newX);
 
-    addCalculatedPoint(newX, newY, 2, myGraph);
+    addCalculatedPoint(myGraph, newX, newY, 2);
 }
 
 export { pointDouble };
