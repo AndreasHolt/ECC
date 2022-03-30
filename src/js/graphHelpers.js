@@ -143,8 +143,12 @@ Graph.prototype.drawLine = function (operator, color, i, x, y, svg, pointOperati
     newLine.classList.add('linesConnecting');
     newLine.setAttribute('stroke', color);
     newLine.setAttribute('stroke-width', '2');
+
+
     svg.appendChild(newLine);
 };
+
+
 
 Graph.prototype.addPointOnClick = function () {
     const point = document.getElementById('point');
