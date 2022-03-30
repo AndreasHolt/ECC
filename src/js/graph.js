@@ -114,6 +114,7 @@ Graph.prototype.drawYAxis = function () {
         yPos = Math.round(yPos - yPosIncrement);
     }
 
+
     // draw bottom tick marks
     yPos = this.centerY + yPosIncrement;
     unit = -1 * this.unitsPerTick;
@@ -177,3 +178,4 @@ Graph.prototype.transformContext = function () {
     */
     context.scale(this.scaleX, -this.scaleY);
 };
+
