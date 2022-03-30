@@ -56,7 +56,7 @@ function getPointPlacement(myGraph, x) {
     return returnValue;
 }
 
-function addCalculatedPoint(x, y, pointOperation, myGraph) {
+function addCalculatedPoint(myGraph, x, y, pointOperation) {
     if (document.getElementsByClassName('calculatedPoints').length === 2) {
         document.getElementsByClassName('calculatedPoints')[1].remove();
         document.getElementsByClassName('calculatedPoints')[0].remove();
@@ -146,6 +146,7 @@ function drawLine(myGraph, operator, color, i, x, y, svg, pointOperation) {
     newLine.classList.add('linesConnecting');
     newLine.setAttribute('stroke', color);
     newLine.setAttribute('stroke-width', '2');
+
     svg.appendChild(newLine);
 }
 function addPointOnClick() {

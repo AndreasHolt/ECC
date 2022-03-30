@@ -27,7 +27,7 @@ function listPoints(myGraph, placedPoints, calculatedX, calculatedY, operation) 
     return pObj;
 }
 
-function pointAdditionSteps(points, lambda, newX, newY) {
+function pointAdditionSteps(myGraph, points, lambda, newX, newY) {
     points.forEach((point) => {
         point.x = Math.round(point.x * 100) / 100;
         point.y = Math.round(point.y * 100) / 100;
@@ -47,6 +47,8 @@ function pointAdditionSteps(points, lambda, newX, newY) {
                             \\(\\textbf{R = (${newX}, ${newY})}\\)`;
 
     MathJax.typeset();
+
+    addCalculatedPoint(myGraph, newX, newY, 1);
 }
 
 function pointAddition(myGraph) {
@@ -62,13 +64,27 @@ function pointAddition(myGraph) {
         y2 = (storePoints.point2[1] - myGraph.centerY) / myGraph.scaleY;
 
     const lambda = ((y2 - y1) / (x2 - x1));
-    const newX = (lambda * lambda) - x2 - x1;
-    const newY = y2 + lambda * newX + lambda * (-x2);
+
+    let newX = (lambda * lambda) - x2 - x1;
+    let newY = 0;
+
+    // Handle edgecase: same x coordinate for both points (i.e. vertical line), but not same y coordinate
+    if (x2 == x1 && y1 != y2) {
+        newY = 9999999;
+        newX = x1;
+    } else if (x2 == x1 && y1 == y2) {
+        myGraph.pointDouble(); // Handle edgecase: both points are the same, so double the point instead
+
+        // TODO: pointDoublingSteps when implemented
+        return;
+    } else {
+        newY = y2 + lambda * newX + lambda * (-x2);
+    }
 
     const listedPoints = listPoints(myGraph, storePoints, newX, newY, 'addition');
-    pointAdditionSteps(listedPoints, lambda, newX, newY);
+    pointAdditionSteps(myGraph, listedPoints, lambda, newX, newY);
 
-    addCalculatedPoint(newX, newY, 1, myGraph);
+    addCalculatedPoint(myGraph, newX, newY, 1);
 }
 
 export { pointAddition, listPoints, pointAdditionSteps };
