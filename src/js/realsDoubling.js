@@ -16,4 +16,4 @@ function pointDouble(myGraph) {
     addCalculatedPoint(myGraph, newX, newY, 2);
 }
 
-export { pointDouble };
+export default { pointDouble };

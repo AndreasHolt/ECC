@@ -1,45 +1,3 @@
-function Graph(config) {
-    // user defined properties
-    this.canvas = document.getElementById(config.canvasId);
-    this.minX = config.minX;
-    this.minY = config.minY;
-    this.maxX = config.maxX;
-    this.maxY = config.maxY;
-    this.parameterA = config.parameterA;
-    this.parameterB = config.parameterB;
-    this.unitsPerTick = config.unitsPerTick;
-    this.domRect = this.canvas.getBoundingClientRect();
-
-    // constants
-    this.axisColor = 'rgb(155,163,175)';
-    this.font = '10pt Calibri';
-    this.tickSize = 20;
-
-    // relationships
-    this.context = this.canvas.getContext('2d');
-    this.rangeX = this.maxX - this.minX;
-    this.rangeY = this.maxY - this.minY;
-    this.unitX = this.canvas.width / this.rangeX;
-    this.unitY = this.canvas.height / this.rangeY;
-    // this.centerY = Math.round(Math.abs(this.minY / this.rangeY) * this.canvas.height);
-    // this.centerX = Math.round(Math.abs(this.minX / this.rangeX) * this.canvas.width);
-    this.iteration = (this.maxX - this.minX) / 1000;
-    this.scaleX = this.canvas.width / this.rangeX;
-    this.scaleY = this.canvas.height / this.rangeY;
-
-    // our settings
-    this.pointSize = 4;
-    this.svgID = 'pointSVG';
-    this.offsetTop = this.canvas.offsetTop;
-    this.offsetLeft = this.canvas.offsetLeft;
-    this.centerY = (Math.abs(this.minY / this.rangeY) * this.canvas.height);
-    this.centerX = (Math.abs(this.minX / this.rangeX) * this.canvas.width);
-
-    // draw x and y axis
-    drawXAxis(this);
-    drawYAxis(this);
-}
-
 function drawXAxis(myGraph) {
     const { context } = myGraph;
     context.save();
@@ -128,6 +86,62 @@ function drawYAxis(myGraph) {
     context.restore();
 }
 
+function Graph(config) {
+    // user defined properties
+    this.canvas = document.getElementById(config.canvasId);
+    this.minX = config.minX;
+    this.minY = config.minY;
+    this.maxX = config.maxX;
+    this.maxY = config.maxY;
+    this.parameterA = config.parameterA;
+    this.parameterB = config.parameterB;
+    this.unitsPerTick = config.unitsPerTick;
+    this.domRect = this.canvas.getBoundingClientRect();
+
+    // constants
+    this.axisColor = 'rgb(155,163,175)';
+    this.font = '10pt Calibri';
+    this.tickSize = 20;
+
+    // relationships
+    this.context = this.canvas.getContext('2d');
+    this.rangeX = this.maxX - this.minX;
+    this.rangeY = this.maxY - this.minY;
+    this.unitX = this.canvas.width / this.rangeX;
+    this.unitY = this.canvas.height / this.rangeY;
+    // this.centerY = Math.round(Math.abs(this.minY / this.rangeY) * this.canvas.height);
+    // this.centerX = Math.round(Math.abs(this.minX / this.rangeX) * this.canvas.width);
+    this.iteration = (this.maxX - this.minX) / 1000;
+    this.scaleX = this.canvas.width / this.rangeX;
+    this.scaleY = this.canvas.height / this.rangeY;
+
+    // our settings
+    this.pointSize = 4;
+    this.svgID = 'pointSVG';
+    this.offsetTop = this.canvas.offsetTop;
+    this.offsetLeft = this.canvas.offsetLeft;
+    this.centerY = (Math.abs(this.minY / this.rangeY) * this.canvas.height);
+    this.centerX = (Math.abs(this.minX / this.rangeX) * this.canvas.width);
+
+    // draw x and y axis
+    drawXAxis(this);
+    drawYAxis(this);
+}
+
+function transformContext(myGraph) {
+    const { context } = myGraph;
+
+    // move context to center of canvas
+    myGraph.context.translate(myGraph.centerX, myGraph.centerY);
+
+    /*
+    * stretch grid to fit the canvas window, and
+    * invert the y scale so that that increments
+    * as you move upwards
+    */
+    context.scale(myGraph.scaleX, -myGraph.scaleY);
+}
+
 function drawEquation(equation, color, thickness, myGraph) {
     const { context } = myGraph;
     context.save();
@@ -162,20 +176,6 @@ function drawEquation(equation, color, thickness, myGraph) {
     context.strokeStyle = color;
     context.stroke();
     context.restore();
-}
-
-function transformContext(myGraph) {
-    const { context } = myGraph;
-
-    // move context to center of canvas
-    myGraph.context.translate(myGraph.centerX, myGraph.centerY);
-
-    /*
-    * stretch grid to fit the canvas window, and
-    * invert the y scale so that that increments
-    * as you move upwards
-    */
-    context.scale(myGraph.scaleX, -myGraph.scaleY);
 }
 
 export {
