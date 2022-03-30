@@ -20,10 +20,6 @@ let myGraph = new Graph({
     unitsPerTick: scaleZoom / 5,
 });
 
-Graph.prototype.equationP = function (x) {
-    return Math.sqrt((x * x * x) + this.parameterA * x + this.parameterB);
-};
-
 function drawEquations() {
     drawEquation((x) => myGraph.equationP(x), 'rgb(59,129,246)', 3, myGraph);
 
@@ -167,7 +163,7 @@ function runOperation(ops) {
         console.log('Hey Chat!');
         break;
     default:
-        console.log('Please no');
+        console.error('Run operation reached a point which it was not suppose to');
         break;
     }
 }
@@ -207,6 +203,7 @@ function changeEquation(a, b) {
     }
 
     document.getElementById('parameters').innerHTML = `Pick curve parameters: \\(y^2 = x^3 ${sign1} ${a}x ${sign2} ${b}\\)`;
+    // eslint-disable-next-line no-undef
     MathJax.typeset();
 }
 

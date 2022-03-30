@@ -88,6 +88,7 @@ function drawLine(myGraph, operator, color, i, x, y, svg, pointOperation) {
         fromPoint = logicPointAddition(myGraph, x);
         pointDecider = getPointPlacement(myGraph, x);
     } else if (pointOperation === 2) {
+        // eslint-disable-next-line prefer-destructuring
         fromPoint = document.getElementsByClassName('workingPoints')[0];
     }
     const newLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');

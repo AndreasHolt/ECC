@@ -19,10 +19,12 @@ function listPoints(myGraph, placedPoints, calculatedX, calculatedY, operation) 
     if (operation === 'addition') {
         const pqObjArr = [pObj, qObj];
         pointsListed.innerHTML = `\\(P = (${P})\\) &nbsp \\(Q = (${Q})\\) &nbsp \\(-R = (${minusR})\\) &nbsp \\(R = (${R})\\)`;
+        // eslint-disable-next-line no-undef
         MathJax.typeset();
         return pqObjArr;
     }
     pointsListed.innerHTML = `\\(P = (${P})\\) &nbsp \\(-R = (${minusR})\\) &nbsp \\(R = (${R})\\)`;
+    // eslint-disable-next-line no-undef
     MathJax.typeset();
     return pObj;
 }
@@ -50,6 +52,7 @@ function pointAdditionSteps(myGraph, points, lambdaI, x, y) {
                             \\(y_R = y_P + m(x_R - x_P) = ${points[0].y} + ${lambda}(${newX} - ${points[0].x}) = \\underline{${newY}}\\) <br> <br>
                             \\(\\textbf{R = (${newX}, ${newY})}\\)`;
 
+    // eslint-disable-next-line no-undef
     MathJax.typeset();
 
     addCalculatedPoint(myGraph, newX, newY, 1);
@@ -72,12 +75,12 @@ function pointAddition(myGraph) {
     let newX = (lambda * lambda) - x2 - x1;
     let newY = 0;
 
-    // Handle edgecase: same x coordinate for both points (i.e. vertical line), but not same y coordinate
+    // Handle edge case: same x coordinate for both points (i.e. vertical line), but not same y coordinate
     if (x2 === x1 && y1 !== y2) {
         newY = 9999999;
         newX = x1;
     } else if (x2 === x1 && y1 === y2) {
-        myGraph.pointDouble(); // Handle edgecase: both points are the same, so double the point instead
+        myGraph.pointDouble(); // Handle edge case: both points are the same, so double the point instead
 
         // TODO: pointDoublingSteps when implemented
         return;
