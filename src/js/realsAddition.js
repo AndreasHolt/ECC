@@ -11,12 +11,19 @@ Graph.prototype.pointAddition = function () {
         y2 = (storePoints.point2[1] - this.centerY) / this.scaleY;
 
     const lambda = ((y2 - y1) / (x2 - x1));
-    const newX = (lambda * lambda) - x2 - x1;
-    const newY = y2 + lambda * newX + lambda * (-x2);
+
+    let newX = (lambda * lambda) - x2 - x1;
+    let newY = 0;
+    if(x2 == x1){
+        newY = 9999999;
+        newX = x1;
+    } else {
+        newY = y2 + lambda * newX + lambda * (-x2)
+    }
 
     let listedPoints = myGraph.listPoints(storePoints, newX, newY, 'addition')
-    console.log(myGraph.listPoints(storePoints, newX, newY, 'addition'))
     pointAdditionSteps(listedPoints, lambda, newX, newY)
+
 
     myGraph.addCalculatedPoint(newX, newY, 1);
 };
