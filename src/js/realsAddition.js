@@ -14,12 +14,24 @@ Graph.prototype.pointAddition = function () {
 
     let newX = (lambda * lambda) - x2 - x1;
     let newY = 0;
-    if(x2 == x1){
+
+    // Handle edgecase: same x coordinate for both points (i.e. vertical line), but not same y coordinate
+    if(x2 == x1 && y1 != y2){
         newY = 9999999;
         newX = x1;
-    } else {
+    } else if(x2 == x1 && y1 == y2){
+        myGraph.pointDouble() // Handle edgecase: both points are the same, so double the point instead
+
+        // TODO: pointDoublingSteps when implemented
+        return 0
+
+    }
+    else {
         newY = y2 + lambda * newX + lambda * (-x2)
     }
+
+
+
 
     let listedPoints = myGraph.listPoints(storePoints, newX, newY, 'addition')
     pointAdditionSteps(listedPoints, lambda, newX, newY)
