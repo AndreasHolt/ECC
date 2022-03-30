@@ -1,5 +1,3 @@
-
-
 Graph.prototype.pointDouble = function () {
     const points = document.getElementsByClassName('workingPoints');
     const storePoints = {
@@ -13,10 +11,5 @@ Graph.prototype.pointDouble = function () {
     const newX = lambda * lambda - 2 * x;
     const newY = -y + lambda * (x - newX);
 
-
-
-
     myGraph.addCalculatedPoint(newX, newY, 2);
 };
-
-

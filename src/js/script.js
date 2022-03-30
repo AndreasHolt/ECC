@@ -124,6 +124,7 @@ document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
     myGraph.movePoint(e);
 });
 
+// TODO add id's to button an interact with via their id instaed of runOperation
 const operations = document.getElementsByClassName('operation');
 
 function init() {
