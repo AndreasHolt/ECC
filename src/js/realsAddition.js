@@ -35,6 +35,8 @@ function pointAdditionSteps(myGraph, points, lambdaI, x, y) {
         point.y = Math.round(point.y * 100) / 100;
     });
 
+    // TODO Why do we use * 100 round and then /100 is it to remove decimals?
+    // If so we should use Number.toFixed
     const lambda = Math.round(lambdaI * 100) / 100;
     const newX = Math.round(x * 100) / 100;
     const newY = Math.round(y * 100) / 100;
