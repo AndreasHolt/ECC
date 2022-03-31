@@ -135,7 +135,7 @@ const operations = document.getElementsByClassName('operation');
 function init() {
     Array.from(operations).forEach((input) => {
         input.addEventListener('click', (e) => {
-            Object.keys(operations).forEach((buttons) => {
+            Array.from(operations).forEach((buttons) => {
                 if (buttons.disabled === true) {
                     // eslint-disable-next-line no-param-reassign
                     buttons.disabled = false;
