@@ -1,4 +1,5 @@
 import { graphToCoords, addCalculatedPoint } from './graphHelpers';
+import { pointDouble } from './realsDoubling';
 
 function listPoints(myGraph, placedPoints, calculatedX, calculatedY, operation) {
     const pObj = graphToCoords(myGraph, placedPoints.point1[0], placedPoints.point1[1]);
@@ -80,7 +81,7 @@ function pointAddition(myGraph) {
         newY = 9999999;
         newX = x1;
     } else if (x2 === x1 && y1 === y2) {
-        myGraph.pointDouble(); // Handle edge case: both points are the same, so double the point instead
+        pointDouble(myGraph); // Handle edge case: both points are the same, so double the point instead
 
         // TODO: pointDoublingSteps when implemented
         return;
