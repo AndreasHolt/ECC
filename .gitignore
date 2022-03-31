@@ -27,3 +27,5 @@ dist-ssr
 .DS_Store
 .idea
 .vscode
+# Ignore videos created from cypress
+cypress/videos/*
