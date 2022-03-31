@@ -1,4 +1,4 @@
-import pointDouble from './realsDoubling';
+import { pointDouble } from './realsDoubling';
 import { pointAddition } from './realsAddition';
 import {
     movePoint, graphToCoords, coordsToGraph, addPointOnClick,
