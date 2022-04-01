@@ -1,5 +1,6 @@
 import { pointDouble } from './realsDoubling';
 import { pointAddition } from './realsAddition';
+import { pointMultiplication } from './realsMultiplication'
 import {
     movePoint, graphToCoords, coordsToGraph, addPointOnClick,
 } from './graphHelpers';
@@ -160,7 +161,7 @@ function runOperation(ops) {
         pointDouble(myGraph);
         break;
     case 3:
-        console.log('Hey Chat!');
+        pointMultiplication(myGraph);
         break;
     default:
         console.error('Run operation reached a point which it was not suppose to');
