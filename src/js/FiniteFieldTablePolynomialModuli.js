@@ -6,22 +6,53 @@ form.addEventListener("submit", handleSubmit);
 function handleSubmit (event) {
     event.preventDefault();
     
-    console.log("Hello");
-    createTable(document.getElementById("sizeSubmit").value, document.getElementById("modoliSubmit").value);
+    createTable(event.target["sizeSubmit"].value, event.target["modoliSubmit"].value);
+    
+}
+
+function createTableHTML (tableArray, tableSize) {
+    let oldTable = document.getElementById("table");
+    let newTable = document.createElement("table");
+    newTable.id = "table";
+
+
+    let headerRow = document.createElement("tr");
+    for (let i = 0; i < tableSize; i++) {
+        let header = document.createElement("th");
+        header.textContent = i;
+        headerRow.appendChild(header);
+    }
+    newTable.appendChild(headerRow);
+
+    //For each row
+    for (let rowIndex = 1; rowIndex < tableSize; rowIndex++) {
+        let row = document.createElement("tr");
+        let dataCell = document.createElement("td");
+        dataCell.textContent = rowIndex;
+        row.appendChild(dataCell);
+        for (let i = 1; i < tableSize; i++) {
+            let dataCell = document.createElement("td");
+            dataCell.textContent = tableArray[i][rowIndex];
+            row.appendChild(dataCell);
+        }
+        newTable.appendChild(row);
+    }
+
+
+    oldTable.replaceWith(newTable);
+
 }
 
 
-
-
 function createTable (sizeOfTable, mod) {
-    let arrayValues = [];
-    
-    calculateElements(arrayValues, sizeOfTable, mod);
+    let arrayValues = calculateElements(sizeOfTable, mod);
+    createTableHTML(arrayValues, sizeOfTable);
     showTable(arrayValues);
 
 }
 
-function calculateElements(arrayValues, size, mod) {
+function calculateElements(size, mod) {
+    let arrayValues = [];
     for (let i = 1; i < size; i++) {
         let column = [];
         for (let j = 1; j < size; j++) {
@@ -33,6 +64,7 @@ function calculateElements(arrayValues, size, mod) {
 
 
     }
+    return arrayValues;
 }
 
 function multiplicativeXOR (x1, x2, mod) {
