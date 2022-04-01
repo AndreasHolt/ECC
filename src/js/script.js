@@ -129,7 +129,6 @@ document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
     movePoint(e, myGraph);
 });
 
-// TODO add id's to button an interact with via their id instead of runOperation
 const operations = document.getElementsByClassName('operation');
 
 function init() {
@@ -151,23 +150,6 @@ function init() {
 
 init();
 
-function runOperation(ops) {
-    switch (ops) {
-    case 1:
-        pointAddition(myGraph);
-        break;
-    case 2:
-        pointDouble(myGraph);
-        break;
-    case 3:
-        console.log('Hey Chat!');
-        break;
-    default:
-        console.error('Run operation reached a point which it was not suppose to');
-        break;
-    }
-}
-
 document.getElementById('layer2').addEventListener('click', () => {
     const pointsOnGraph = document.getElementsByClassName('workingPoints');
 
@@ -175,7 +157,7 @@ document.getElementById('layer2').addEventListener('click', () => {
     if (operations[0].disabled) {
         if (pointsOnGraph.length === 1) {
             addPointOnClick(myGraph);
-            runOperation(1);
+            pointAddition(myGraph);
         } else if (pointsOnGraph.length === 0) {
             addPointOnClick(myGraph);
         } else {
@@ -184,7 +166,7 @@ document.getElementById('layer2').addEventListener('click', () => {
     } else if (operations[1].disabled) {
         if (pointsOnGraph.length === 0) {
             addPointOnClick(myGraph);
-            runOperation(2);
+            pointDouble(myGraph);
         } else if (pointsOnGraph.length === 1) {
             deletePoints();
         }
