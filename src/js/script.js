@@ -124,6 +124,9 @@ function deletePoints() {
             key[i - 1].remove();
         }
     });
+    if(isOnPage(document.getElementById('scalarFormsActive'))){
+        document.getElementById('scalarFormsActive').remove()
+    }
 
 }
 
@@ -192,15 +195,21 @@ document.getElementById('layer2').addEventListener('click', () => {
         }
     } else if(operations[2].disabled){
         if (pointsOnGraph.length === 0) {
-            let scalarForms = document.getElementById('scalarForms')
             let scalarFormsActive = document.getElementById('scalarFormsActive')
             if(!isOnPage(scalarFormsActive)){
+                const scalarFormsX = document.createElement("div")
+                document.body.appendChild(scalarFormsX)
+                scalarFormsX.setAttribute('id', 'scalarFormsActive')
+                let formPlaceholder = document.getElementById('formPlaceholder')
+                formPlaceholder.appendChild(document.getElementById('scalarFormsActive'))
+                console.log(document.getElementById('scalarFormsID'))
+
                 var html = "<label class='block tracking-wide text-gray-700 text-x font-bold mb-2' for='a'> Value for coefficient \(a\)</label>"
                 + "<input class='appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500' type='number' id='a' name='a' min='-5' placeholder='Ex: -4' value='-5'>"
 
-                scalarForms.setAttribute('id', 'scalarFormsActive')
+                document.getElementById('scalarFormsActive').innerHTML = html
+ 
 
-                scalarForms.innerHTML = html
 
 
 
