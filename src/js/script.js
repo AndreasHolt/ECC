@@ -124,6 +124,7 @@ function deletePoints() {
             key[i - 1].remove();
         }
     });
+
 }
 
 document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
@@ -189,8 +190,35 @@ document.getElementById('layer2').addEventListener('click', () => {
         } else if (pointsOnGraph.length === 1) {
             deletePoints();
         }
+    } else if(operations[2].disabled){
+        if (pointsOnGraph.length === 0) {
+            let scalarForms = document.getElementById('scalarForms')
+            let scalarFormsActive = document.getElementById('scalarFormsActive')
+            if(!isOnPage(scalarFormsActive)){
+                var html = "<label class='block tracking-wide text-gray-700 text-x font-bold mb-2' for='a'> Value for coefficient \(a\)</label>"
+                + "<input class='appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500' type='number' id='a' name='a' min='-5' placeholder='Ex: -4' value='-5'>"
+
+                scalarForms.setAttribute('id', 'scalarFormsActive')
+
+                scalarForms.innerHTML = html
+
+
+
+                
+                console.log('no')
+            }
+            addPointOnClick(myGraph);
+            runOperation(3);
+        } else if (pointsOnGraph.length === 1) {
+            deletePoints();
+        }
+
     }
 });
+
+function isOnPage(element){
+    return (element === document.body) ? false : document.body.contains(element);
+}
 
 function changeEquation(a, b) {
     let sign1 = '';
