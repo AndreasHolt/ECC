@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "eslint": "eslint --ext .js ./",
     "eslintfix": "eslint --ext .js ./ --fix",
-    "test": "jest"
+    "test": "cypress run",
+    "cypress": "cypress open"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.4",
