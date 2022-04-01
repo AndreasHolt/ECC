@@ -1,5 +1,6 @@
 import { pointDouble } from './realsDoubling';
 import { pointAddition } from './realsAddition';
+import { pointMultiplication } from './realsMultiplication'
 import {
     movePoint, graphToCoords, coordsToGraph, addPointOnClick,
 } from './graphHelpers';
@@ -110,6 +111,9 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
 /// ----------------------------------------------------------------------
 /// Draw points on graph
 /// ----------------------------------------------------------------------
+//
+const operations = document.getElementsByClassName('operation');
+
 function deletePoints() {
     const allSVG = [
         document.getElementsByClassName('workingPoints'),
@@ -123,13 +127,16 @@ function deletePoints() {
             key[i - 1].remove();
         }
     });
+
+    if(!operations[2].disabled && isOnPage(document.getElementById('scalarFormsActive'))){
+        document.getElementById('scalarFormsActive').remove()
+    }
+
 }
 
 document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
     movePoint(e, myGraph);
 });
-
-const operations = document.getElementsByClassName('operation');
 
 function init() {
     Array.from(operations).forEach((input) => {
@@ -170,8 +177,45 @@ document.getElementById('layer2').addEventListener('click', () => {
         } else if (pointsOnGraph.length === 1) {
             deletePoints();
         }
+    } else if(operations[2].disabled){
+        if (pointsOnGraph.length === 0) {
+            let scalarFormsActive = document.getElementById('scalarFormsActive')
+            if(!isOnPage(scalarFormsActive)){
+                const scalarFormsX = document.createElement("div")
+                document.body.appendChild(scalarFormsX)
+                scalarFormsX.setAttribute('id', 'scalarFormsActive')
+                let formPlaceholder = document.getElementById('formPlaceholder')
+                formPlaceholder.appendChild(document.getElementById('scalarFormsActive'))
+                console.log(document.getElementById('scalarFormsID'))
+
+                var html = "<p class='font-bold text-xl mb-2 text-gray-800 mb-10' id='parameters'>\\(nP = P + P + ... + P\\) \\((n \\; times)\\)</p>"
+                + "<label class='block tracking-wide text-gray-700 text-x font-bold mb-2' for='setScalar'> Choose a scalar \\(n\\)</label>"
+                + "<input class='mb-6 appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500' type='number' id='setScalar' name='setScalar' min='-5' placeholder='Ex: -4' value='-5'>"
+                + "<input class='bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mb-10' type='button' value='Perform multiplication'>"
+
+
+                document.getElementById('scalarFormsActive').innerHTML = html
+ 
+                MathJax.typeset()
+
+
+
+
+                
+                console.log('no')
+            }
+            addPointOnClick(myGraph);
+            pointMultiplication(myGraph);
+        } else if (pointsOnGraph.length === 1) {
+            deletePoints();
+        }
+
     }
 });
+
+function isOnPage(element){
+    return (element === document.body) ? false : document.body.contains(element);
+}
 
 function changeEquation(a, b) {
     let sign1 = '';
