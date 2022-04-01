@@ -111,6 +111,8 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
 /// ----------------------------------------------------------------------
 /// Draw points on graph
 /// ----------------------------------------------------------------------
+//
+const operations = document.getElementsByClassName('operation');
 function deletePoints() {
     const allSVG = [
         document.getElementsByClassName('workingPoints'),
@@ -124,7 +126,8 @@ function deletePoints() {
             key[i - 1].remove();
         }
     });
-    if(isOnPage(document.getElementById('scalarFormsActive'))){
+
+    if(!operations[2].disabled && isOnPage(document.getElementById('scalarFormsActive'))){
         document.getElementById('scalarFormsActive').remove()
     }
 
@@ -135,7 +138,6 @@ document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
 });
 
 // TODO add id's to button an interact with via their id instead of runOperation
-const operations = document.getElementsByClassName('operation');
 
 function init() {
     Array.from(operations).forEach((input) => {
