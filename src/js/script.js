@@ -27,10 +27,10 @@ function drawEquations() {
     drawEquation((x) => -myGraph.equationP(x), 'rgb(59,129,246)', 3, myGraph);
 }
 
-drawEquations();
-
 document.getElementById('pointSVG').addEventListener('wheel', (e) => {
     e.preventDefault();
+    movePoint(e, myGraph); // Move point when scrolling
+
     let graphPos; let
         graphPos2;
 
@@ -62,7 +62,6 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
 
     const points = document.querySelectorAll('.workingPoints,.calculatedPoints,.point');
 
-    // TODO when scrolling in and out the "point" is not at the cursor y pos
     for (let i = 0; i < points.length; i += 1) {
         const el = points[i];
 
@@ -112,7 +111,6 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
 /// Draw points on graph
 /// ----------------------------------------------------------------------
 //
-const operations = document.getElementsByClassName('operation');
 
 function deletePoints() {
     const allSVG = [
@@ -128,7 +126,7 @@ function deletePoints() {
         }
     });
 
-    if (!operations[2].disabled && isOnPage(document.getElementById('scalarFormsActive'))) {
+    if (!document.getElementById('pointMultiplication').disabled && isOnPage(document.getElementById('scalarFormsActive'))) {
         document.getElementById('scalarFormsActive').remove();
     }
 }
@@ -137,46 +135,33 @@ document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
     movePoint(e, myGraph);
 });
 
-function init() {
-    Array.from(operations).forEach((input) => {
-        input.addEventListener('click', (e) => {
-            Array.from(operations).forEach((buttons) => {
-                if (buttons.disabled === true) {
-                    // eslint-disable-next-line no-param-reassign
-                    buttons.disabled = false;
-                }
-            });
-
-            deletePoints();
-
-            e.target.disabled = true;
-        });
-    });
+function isOnPage(element) {
+    return (element === document.body) ? false : document.body.contains(element);
 }
 
-init();
+document.getElementById('layer2').addEventListener('click', (e) => {
+    movePoint(e, myGraph); // Ensures that the point is on the graph when clicked
 
-document.getElementById('layer2').addEventListener('click', () => {
     const pointsOnGraph = document.getElementsByClassName('workingPoints');
 
     // Delete the point on the graph that was placed first
-    if (operations[0].disabled) {
+    if (document.getElementById('pointAddition').disabled) {
         if (pointsOnGraph.length === 1) {
             addPointOnClick(myGraph);
-            pointAddition(myGraph);
+            pointAddition(myGraph); // TODO Zoom out if point is outside view
         } else if (pointsOnGraph.length === 0) {
             addPointOnClick(myGraph);
         } else {
             deletePoints();
         }
-    } else if (operations[1].disabled) {
+    } else if (document.getElementById('pointDoubling').disabled) {
         if (pointsOnGraph.length === 0) {
             addPointOnClick(myGraph);
             pointDouble(myGraph);
         } else if (pointsOnGraph.length === 1) {
             deletePoints();
         }
-    } else if (operations[2].disabled) {
+    } else if (document.getElementById('pointMultiplication').disabled) {
         if (pointsOnGraph.length === 0) {
             const scalarFormsActive = document.getElementById('scalarFormsActive');
             if (!isOnPage(scalarFormsActive)) {
@@ -206,10 +191,6 @@ document.getElementById('layer2').addEventListener('click', () => {
     }
 });
 
-function isOnPage(element) {
-    return (element === document.body) ? false : document.body.contains(element);
-}
-
 function changeEquation(a, b) {
     let sign1 = '';
     let sign2 = '';
@@ -226,8 +207,7 @@ function changeEquation(a, b) {
     MathJax.typeset();
 }
 
-const firstBox = document.getElementById('curve');
-firstBox[2].addEventListener('click', () => {
+document.getElementById('curve')[2].addEventListener('click', () => {
     const firstParameter = document.getElementById('a');
     const secondParameter = document.getElementById('b');
 
@@ -248,3 +228,26 @@ firstBox[2].addEventListener('click', () => {
     deletePoints();
     drawEquations();
 });
+
+function init() {
+    drawEquations();
+
+    const operations = document.querySelectorAll('#pointAddition, #pointDoubling, #pointMultiplication')
+
+    Array.from(operations).forEach((input) => {
+        input.addEventListener('click', (e) => {
+            Array.from(operations).forEach((buttons) => {
+                if (buttons.disabled === true) {
+                    // eslint-disable-next-line no-param-reassign
+                    buttons.disabled = false;
+                }
+            });
+
+            deletePoints();
+
+            e.target.disabled = true;
+        });
+    });
+}
+
+init();

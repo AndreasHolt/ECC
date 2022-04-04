@@ -1,6 +1,6 @@
 import { addCalculatedPoint } from './graphHelpers';
 import { pointDouble, calculateDouble } from './realsDoubling';
-import { pointAddition } from './realsAddition';
+import { pointAddition, calculateAddition } from './realsAddition';
 
 function convertToBinary(scalar) {
     let num = scalar;
@@ -18,15 +18,34 @@ function convertToBinary(scalar) {
 
 function pointMultiplication(myGraph) {
     const points = document.getElementsByClassName('workingPoints');
-    const point = [(points[0].getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, (points[0].getAttribute('cy') - myGraph.centerY) / myGraph.scaleY];
+    let point = [(points[0].getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, -(points[0].getAttribute('cy') - myGraph.centerY) / myGraph.scaleY];
 
-    const binary = convertToBinary(151);
-    console.log(binary);
+    const scalar = 3;
+    const binary = convertToBinary(scalar);
+    
+    console.log(binary)
+    console.log('This is the point: ', point, 'This is the scalar: ', scalar);
 
-    for (let i = binary.length - 1; i >= 0; i -= 1) {
-        let doubledPoint = calculateDouble(myGraph, point);
-        pointAddition(myGraph, point, doubledPoint)
+
+    let Q = [0, 0];
+    let R = point;
+    for (let i = 0; i < binary.length; i += 1) {
+        if (Number(binary[i]) === 1) {
+            console.log('adding');
+            let tempQ = Q;
+            Q = calculateAddition(myGraph, tempQ, R);
+        }
+        let tempR = R;
+        R = calculateDouble(myGraph, tempR);
+        console.log('doubling');
     }
+    
+    addCalculatedPoint(myGraph, R[0], R[1], 2);
+
+
+
+    console.log(R)
+    return R;
 }
 
 /*
