@@ -11,7 +11,7 @@ function convertToBinary(scalar) {
         binary = (num % 2) + (binary);
     }
 
-    const binaryArray = (`${binary}`).split('');
+    const binaryArray = (`${binary}`).split('').reverse();
 
     return binaryArray;
 }
@@ -20,7 +20,7 @@ function pointMultiplication(myGraph) {
     const points = document.getElementsByClassName('workingPoints');
     let point = [(points[0].getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, -(points[0].getAttribute('cy') - myGraph.centerY) / myGraph.scaleY];
 
-    const scalar = 4;
+    const scalar = 8;
     const binary = convertToBinary(scalar); // the array of bits, from msb to lsb
     
     console.log(binary)
