@@ -33,14 +33,13 @@ function movePoint(event, myGraph) {
     }
 }
 
-function coordsToGraph(myGraph, coordsX, coordsY) {
-    const x = myGraph.centerX + (coordsX * myGraph.scaleX);
-    const y = myGraph.centerY + (coordsY * myGraph.scaleY);
+function coordsToGraph(myGraph, point) {
+    const x = myGraph.centerX + (point[0] * myGraph.scaleX);
+    const y = myGraph.centerY + (point[0] * myGraph.scaleY);
     return { x, y };
 }
 
 function getPointPlacement(myGraph, x) {
-    // console.log("tihs has been used");
     const point1 = document.getElementsByClassName('workingPoints')[0];
     const point2 = document.getElementsByClassName('workingPoints')[1];
     const x1 = (point1.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX;
