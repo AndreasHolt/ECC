@@ -16,8 +16,8 @@ function mouseToGraph(myGraph, mouseX, mouseY) {
 }
 
 function graphToCoords(myGraph, graphX, graphY) {
-    const x = (graphX / myGraph.scaleX) - myGraph.rangeX / 2;
-    const y = (graphY / myGraph.scaleY) - myGraph.rangeY / 2;
+    const x = (graphX - myGraph.centerX) / myGraph.scaleX;
+    const y = (graphY - myGraph.centerY) / myGraph.scaleY;
 
     return { x, y };
 }
@@ -93,7 +93,7 @@ function drawLine(myGraph, operator, color, i, x, y, svg, pointOperation) {
     }
     const newLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     if (i === 0) {
-        newLine.setAttribute('x1', fromPoint.getAttribute('cx'));
+        newLine.setAttribute('x1', fromPoint.getAttribute('cx')); // TODO point addition clicking on the same spot causes fromPoint is null!
         newLine.setAttribute('y1', fromPoint.getAttribute('cy'));
     } else {
         newLine.setAttribute('x1', (x * myGraph.scaleX) + myGraph.centerX);

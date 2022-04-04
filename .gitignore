@@ -29,3 +29,4 @@ dist-ssr
 .vscode
 # Ignore videos created from cypress
 cypress/videos/*
+cypress/screenshot/*
