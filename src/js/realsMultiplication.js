@@ -27,7 +27,6 @@ function pointMultiplication(myGraph) {
 function sumOfPowers(scalar) {
 
     let binary = convertToBinary(scalar)
-    let raisedToPower = binary.length -1
 
 }
 
@@ -38,8 +37,10 @@ function convertToBinary(scalar) {
         num = parseInt(num / 2);
         binary =  (num % 2) + (binary);
     }
-    console.log(binary);
-    return binary
+
+    var binaryArray= (""+binary).split("");
+
+    return binaryArray
 }
 
 /*
