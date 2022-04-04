@@ -1,4 +1,4 @@
-import { addCalculatedPoint } from './graphHelpers';
+import { addCalculatedPoint, graphToCoords } from './graphHelpers';
 import { pointDouble, calculateDouble } from './realsDoubling';
 import { pointAddition, calculateAddition } from './realsAddition';
 
@@ -17,35 +17,28 @@ function convertToBinary(scalar) {
 }
 
 function pointMultiplication(myGraph) {
+    let res;
     const points = document.getElementsByClassName('workingPoints');
-    let point = [(points[0].getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, -(points[0].getAttribute('cy') - myGraph.centerY) / myGraph.scaleY];
+    const point = graphToCoords(myGraph, [points[0].getAttribute('cx'), points[0].getAttribute('cy')]);
 
     const scalar = 8;
     const binary = convertToBinary(scalar); // the array of bits, from msb to lsb
-    
-    console.log(binary)
-    console.log('This is the point: ', point, 'This is the scalar: ', scalar);
 
     let i = binary.length - 2;
-    let res = point;
 
     while (i >= 0) { // traversing from most significant bit to least significant bit
-        res = calculateDouble(myGraph, res) // double
-        
-        if (binary[i] == 1) {
-            res = calculateAddition(myGraph, res, point) // addition
+        res = calculateDouble(myGraph, point); // double
+
+        if (binary[i] === 1) {
+            res = calculateAddition(myGraph, res, point); // addition
         }
 
-        i = i - 1
-
+        i -= 1;
     }
-    
-    addCalculatedPoint(myGraph, res[0], -res[1], 2);
 
+    addCalculatedPoint(myGraph, res.x, -res.y, 2);
 
-
-    res[1] = -res[1]
-    console.log(res)
+    res.y = -res.y;
     return res;
 }
 
