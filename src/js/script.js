@@ -215,7 +215,7 @@ function changeEquation(a, b) {
     let sign2 = '';
 
     if (a >= 0) {
-        sign1 = '';
+        sign1 = '+';
     }
     if (b >= 0) {
         sign2 = '+';
