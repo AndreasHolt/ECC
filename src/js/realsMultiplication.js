@@ -20,32 +20,33 @@ function pointMultiplication(myGraph) {
     const points = document.getElementsByClassName('workingPoints');
     let point = [(points[0].getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, -(points[0].getAttribute('cy') - myGraph.centerY) / myGraph.scaleY];
 
-    const scalar = 3;
-    const binary = convertToBinary(scalar);
+    const scalar = 4;
+    const binary = convertToBinary(scalar); // the array of bits, from msb to lsb
     
     console.log(binary)
     console.log('This is the point: ', point, 'This is the scalar: ', scalar);
 
+    let i = binary.length - 2;
+    let res = point;
 
-    let Q = [0, 0];
-    let R = point;
-    for (let i = 0; i < binary.length; i += 1) {
-        if (Number(binary[i]) === 1) {
-            console.log('adding');
-            let tempQ = Q;
-            Q = calculateAddition(myGraph, tempQ, R);
+    while (i >= 0) { // traversing from most significant bit to least significant bit
+        res = calculateDouble(myGraph, res) // double
+        
+        if (binary[i] == 1) {
+            res = calculateAddition(myGraph, res, point) // addition
         }
-        let tempR = R;
-        R = calculateDouble(myGraph, tempR);
-        console.log('doubling');
+
+        i = i - 1
+
     }
     
-    addCalculatedPoint(myGraph, R[0], R[1], 2);
+    addCalculatedPoint(myGraph, res[0], -res[1], 2);
 
 
 
-    console.log(R)
-    return R;
+    res[1] = -res[1]
+    console.log(res)
+    return res;
 }
 
 /*
