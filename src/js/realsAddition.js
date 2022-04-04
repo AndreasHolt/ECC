@@ -59,6 +59,30 @@ function pointAdditionSteps(myGraph, points, lambdaI, x, y) {
     addCalculatedPoint(myGraph, newX, newY, 1);
 }
 
+function calculateAddition(myGraph, point1, point2) {
+    const lambda = ((point2[1] - point1[1]) / (point2[0] - point1[0]));
+    let newX = (lambda * lambda) - point2[0] - point1[0];
+    let newY = 0;
+
+    
+    // Handle edge case: same x coordinate for both points, but not same y coordinate
+    if (point2[0] === point1[0] && point1[1] !== point2[1]) {
+        newY = 9999999; // TODO find javascript value for this
+        newX = point1[0];
+        return [newX, newY];
+    } if (point2[0] === point1[0] && point1[1] === point2[1]) {
+        pointDouble(myGraph); // Handle edge case: both points are the same, so double the point
+
+        // TODO: pointDoublingSteps when implemented
+    } else {
+        newY = point2[1] + lambda * newX + lambda * (-point2[0]);
+        return [newX, newY];
+    }
+
+    console.log('test');
+    return 0;
+}
+
 function pointAddition(myGraph) {
     const points = document.getElementsByClassName('workingPoints');
 
@@ -66,33 +90,21 @@ function pointAddition(myGraph) {
         point1: [points[0].getAttribute('cx'), points[0].getAttribute('cy')],
         point2: [points[1].getAttribute('cx'), points[1].getAttribute('cy')],
     };
-    const x1 = (storePoints.point1[0] - myGraph.centerX) / myGraph.scaleX; const
-        y1 = (storePoints.point1[1] - myGraph.centerY) / myGraph.scaleY;
-    const x2 = (storePoints.point2[0] - myGraph.centerX) / myGraph.scaleX; const
-        y2 = (storePoints.point2[1] - myGraph.centerY) / myGraph.scaleY;
+    const x1 = (storePoints.point1[0] - myGraph.centerX) / myGraph.scaleX;
+    const y1 = (storePoints.point1[1] - myGraph.centerY) / myGraph.scaleY;
+    const x2 = (storePoints.point2[0] - myGraph.centerX) / myGraph.scaleX;
+    const y2 = (storePoints.point2[1] - myGraph.centerY) / myGraph.scaleY;
 
     const lambda = ((y2 - y1) / (x2 - x1));
+    const point1Arr = [x1, y1];
+    const point2Arr = [x2, y2];
 
-    let newX = (lambda * lambda) - x2 - x1;
-    let newY = 0;
+    const thirdPoint = calculateAddition(myGraph, point1Arr, point2Arr);
 
-    // Handle edge case: same x coordinate for both points (i.e. vertical line), but not same y coordinate
-    if (x2 === x1 && y1 !== y2) {
-        newY = 9999999;
-        newX = x1;
-    } else if (x2 === x1 && y1 === y2) {
-        pointDouble(myGraph); // Handle edge case: both points are the same, so double the point instead
+    const listedPoints = listPoints(myGraph, storePoints, thirdPoint[0], thirdPoint[1], 'addition');
+    pointAdditionSteps(myGraph, listedPoints, lambda, thirdPoint[0], thirdPoint[1]);
 
-        // TODO: pointDoublingSteps when implemented
-        return;
-    } else {
-        newY = y2 + lambda * newX + lambda * (-x2);
-    }
-
-    const listedPoints = listPoints(myGraph, storePoints, newX, newY, 'addition');
-    pointAdditionSteps(myGraph, listedPoints, lambda, newX, newY);
-
-    addCalculatedPoint(myGraph, newX, newY, 1);
+    addCalculatedPoint(myGraph, thirdPoint[0], thirdPoint[1], 1);
 }
 
 export { pointAddition, listPoints, pointAdditionSteps };

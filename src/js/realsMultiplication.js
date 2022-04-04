@@ -1,46 +1,32 @@
 import { addCalculatedPoint } from './graphHelpers';
-import { pointDouble } from './realsDoubling';
+import { pointDouble, calculateDouble } from './realsDoubling';
 import { pointAddition } from './realsAddition';
-
-
-
-
-function pointMultiplication(myGraph) {
-    console.log('tes')
-    const points = document.getElementsByClassName('workingPoints');
-    const storePoints = {
-        point1: [points[0].getAttribute('cx'), points[0].getAttribute('cy')],
-    };
-
-    const x = (storePoints.point1[0] - myGraph.centerX) / myGraph.scaleX;
-    const y = -(storePoints.point1[1] - myGraph.centerY) / myGraph.scaleY;
-
-    const lambda = (3 * x * x + myGraph.parameterA) / (2 * y);
-    const newX = lambda * lambda - 2 * x;
-
-    sumOfPowers(151)
-
-}
-
-
-
-function sumOfPowers(scalar) {
-
-    let binary = convertToBinary(scalar)
-
-}
 
 function convertToBinary(scalar) {
     let num = scalar;
     let binary = (num % 2).toString();
-    for (; num > 1; ) {
-        num = parseInt(num / 2);
-        binary =  (num % 2) + (binary);
+
+    while (num > 1) {
+        num = parseInt(num / 2, 10);
+        binary = (num % 2) + (binary);
     }
 
-    var binaryArray= (""+binary).split("");
+    const binaryArray = (`${binary}`).split('');
 
-    return binaryArray
+    return binaryArray;
+}
+
+function pointMultiplication(myGraph) {
+    const points = document.getElementsByClassName('workingPoints');
+    const point = [(points[0].getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, (points[0].getAttribute('cy') - myGraph.centerY) / myGraph.scaleY];
+
+    const binary = convertToBinary(151);
+    console.log(binary);
+
+    for (let i = binary.length - 1; i >= 0; i -= 1) {
+        let doubledPoint = calculateDouble(myGraph, point);
+        pointAddition(myGraph, point, doubledPoint)
+    }
 }
 
 /*
@@ -80,4 +66,3 @@ function pointAddition(myGraph) {
 }
 */
 export { pointMultiplication };
-
