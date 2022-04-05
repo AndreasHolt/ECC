@@ -1,19 +1,87 @@
+
 let form = document.querySelector("#form");
+const canvas = document.getElementById("curveGraph");
+const ctx = canvas.getContext("2d");
 //let table = document.querySelector("#table");
 
 form.addEventListener("submit", handleSubmit);
+
+
+//Curve function //Form y^2 + cxy + dy = x^3 + ax + b
+let curve = {
+    "a": 1,
+    "b": 2,
+    "c": 4,
+    "d": 4,
+    points: [],
+    drawDots: (size) => {
+        //console.log("Hello");
+        for (let element of curve.points) {
+            //console.log("Hello1");
+            ctx.beginPath();
+            ctx.arc(element.x * canvas.width / size, canvas.height - (element.y * canvas.height / size), 5, 0, 2 * Math.PI);
+            ctx.fillStyle = "black";
+            ctx.fill();
+            ctx.stroke();
+        }
+    }
+};
+
+//element = {x}
+let elements = [];
+
+function createPoints (curve, finiteFieldSize, mod) {
+    for (let x = 0; x < finiteFieldSize; x++) {
+        let y;
+        for (y = 0; y < finiteFieldSize; y++) {
+            if (additiveXOR(
+                    additiveXOR(
+                        multiplicativeXOR(y, y, mod),
+                        multiplicativeXOR(curve.c, multiplicativeXOR(x, y, mod), mod)
+                    ),
+                    multiplicativeXOR(curve.d, y, mod)
+                ) === 
+                additiveXOR(
+                    additiveXOR(
+                        multiplicativeXOR(x, multiplicativeXOR(x, x, mod), mod),
+                        multiplicativeXOR(curve.a, x, mod)
+                    ),
+                    curve.b
+                )
+            ) {
+                curve.points.push({x:x, y:y});
+                break;
+                //console.log(curve.points[curve.points.length - 1]);
+            }
+        }
+        if (y === finiteFieldSize) {
+            console.log("Error!");
+        }
+        console.log(`Progress: ${(x / finiteFieldSize)*100}%`);
+    }
+    curve.points.reverse();
+}
 
 function handleSubmit (event) {
     event.preventDefault();
     let sizeOfTable = event.target["sizeSubmit"].value;
     let modoli = event.target["modoliSubmit"].value;
-    let optionsList = [{mode:"additive"}, {mode:"multiplicative"}];
+    let optionsList = [{mode:"multiplicative"},{mode:"additive"}];
     for (let options of optionsList) {
-        let arrayValues = createTable(sizeOfTable, modoli, options);
-        createTableHTML(arrayValues, sizeOfTable, options.mode);
+        //let arrayValues = createTable(sizeOfTable, modoli, options);
+        //createTableHTML(arrayValues, sizeOfTable, options.mode);
     }
-    findInverse(4, modoli);
+    
+    createPoints(curve, sizeOfTable, modoli);
+    curve.drawDots(sizeOfTable);
+
 }
+
+/*for (let letter of "hej med dig!") {
+    var charCode = letter.charCodeAt(0);
+    console.log(charCode);
+    console.log(letter);
+}*/
 
 function createTableHTML (tableArray, tableSize, htmlID) {
     let oldTable = document.getElementById(htmlID);
@@ -85,20 +153,68 @@ function calculateElements(size, mod, combinationFunction) {
 
 function multiplicativeXOR (x1, x2, mod) {
     let tempResult = 0;
-    for (let i = 0; i <= Math.floor(Math.log2(x2)) + 1; i++) {
+    let x2bitLength = numberOfBits2(x2);
+    //console.log(`${x2} has ${x2bitLength} bits`);
+    for (let i = 0; i <= x2bitLength; i++) {
         if (x2 >> i & 1 === 1) {
             let leftshiftedValue = x1 << i;
             tempResult = additiveXOR(leftshiftedValue, tempResult);
         }
     }
-    while (numberOfBits(tempResult) >= numberOfBits(mod)) {
+    while (numberOfBits2(tempResult) >= numberOfBits2(mod)) {
         tempResult = polyMod(tempResult, mod);
     }
     return tempResult;
 }
 
-function numberOfBits (val) {
+function multiplicativeXOR2 (a,b, mod) {
+    let result = 0;
+    while (a !== 0) {
+        if (a & 1 === 1) {
+            result ^=b
+        }
+        a = a >> 1;
+        b = b << 1;
+    }
+    return result;
+}
+
+function numberOfBits2 (val) {
     return Math.floor(Math.log2(val)) + 1;
+}
+function numberOfBits (val) {
+    if (val === 0) {
+        return 1;
+    }
+    let i = 0;
+    while (val >> i != 0) {
+        i++;
+    }
+    return i;
+}
+
+function bitCount (n) {
+    if (n > 0) {
+        n = n - ((n >> 1) & 0x55555555);
+        n = (n & 0x33333333) + ((n >> 2) & 0x33333333);
+        return ((n + (n >> 4) & 0xF0F0F0F) * 0x1010101) >> 24;
+    } else {
+        return 1;
+    }
+}
+
+function count1s32(i) {
+    /*
+    var count = 0;
+    i = i - ((i >> 1) & 0x55555555);
+    i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
+    i = (i + (i >> 4)) & 0x0f0f0f0f;
+    i = i + (i >> 8);
+    i = i + (i >> 16);
+    count += i & 0x3f;
+    return count;
+    */
+    return i.toString(2).length;
 }
 
 
@@ -208,7 +324,7 @@ function calcIreduciblePoly (size) {
 }
 //Performs modulo operation on the polynomial.
 function polyMod (value, mod) {
-    return value ^ (mod << (numberOfBits(value) - numberOfBits(mod)));
+    return value ^ (mod << (numberOfBits2(value) - numberOfBits2(mod)));
 }
 
 
@@ -218,6 +334,10 @@ function polyMod (value, mod) {
 function showTable(arrayValues) {
     console.log(arrayValues);
 }
+
+
+
+
 
 
 
