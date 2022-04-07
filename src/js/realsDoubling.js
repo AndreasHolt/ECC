@@ -1,7 +1,5 @@
 import { graphToCoords, addCalculatedPoint } from './graphHelpers';
-import { twoDecimalRound, listPoints } from './realsAddition'
-
-
+import { twoDecimalRound, listPoints } from './realsAddition';
 
 function pointDouble(myGraph) {
     const pointArr = [];
@@ -19,18 +17,13 @@ function pointDouble(myGraph) {
 
     const lambda = (3 * newPointArr[0] * newPointArr[0] + myGraph.parameterA) / (2 * newPointArr[1]);
 
-    const listedPoints = listPoints(myGraph, storePoints, newPointArr[0], newPointArr[1], 'doubling');
-    console.log(listPoints)
+    const listedPoints = listPoints(myGraph, { "x": storePoints.point1[0], "y": storePoints.point1[1] }, newPointArr[0], newPointArr[1], 'doubling');
     pointDoublingSteps(myGraph, listedPoints, lambda, newPointArr[0], newPointArr[1]);
-
 
     addCalculatedPoint(myGraph, newPointArr[0], newPointArr[1], 2);
 }
 
 function pointDoublingSteps(myGraph, points, lambdaI, x, y) {
-    console.log('test: ', points.x)
-
-    console.log('test: ', points.y)
     points.x = twoDecimalRound(points.x);
     points.y = twoDecimalRound(points.y);
 
@@ -50,11 +43,7 @@ function pointDoublingSteps(myGraph, points, lambdaI, x, y) {
 
     // eslint-disable-next-line no-undef
     MathJax.typeset();
-
 }
-
-
-
 
 function calculateDouble(myGraph, point) {
     const newPointArr = [];
