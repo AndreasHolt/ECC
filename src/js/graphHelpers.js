@@ -15,16 +15,20 @@ function mouseToGraph(myGraph, mouseX, mouseY) {
     return { x, y };
 }
 
-function graphToCoords(myGraph, graphX, graphY) {
-    const x = (graphX - myGraph.centerX) / myGraph.scaleX;
-    const y = (graphY - myGraph.centerY) / myGraph.scaleY;
+function convertToXY(point) {
+    return { x: point[0], y: point[1] };
+}
+
+function graphToCoords(myGraph, point) { // DONE
+    const x = (point.x - myGraph.centerX) / myGraph.scaleX;
+    const y = (point.y - myGraph.centerY) / myGraph.scaleY;
 
     return { x, y };
 }
 
 function movePoint(event, myGraph) {
     const mousePos = mouseToGraph(myGraph, event.clientX, event.clientY);
-    const coords = graphToCoords(myGraph, mousePos.x, mousePos.y);
+    const coords = graphToCoords(myGraph, mousePos); // DONE
 
     if (mousePos.y > myGraph.centerY) {
         moveSection('point', mousePos.x, myGraph.centerY - (-myGraph.equationP(coords.x) * myGraph.scaleY));
@@ -177,6 +181,14 @@ function addPointOnClick() {
     svg.appendChild(circle);
 }
 
+function getXY(el) {
+    const x = parseInt(el.getAttribute('cx'), 10);
+    const y = parseInt(el.getAttribute('cy'), 10);
+    return { x, y };
+}
+
 export {
-    movePoint, moveSection, mouseToGraph, graphToCoords, coordsToGraph, getPointPlacement, addCalculatedPoint, logicPointAddition, drawLine, addPointOnClick,
+    movePoint, moveSection, mouseToGraph, convertToXY, graphToCoords, coordsToGraph,
+    getPointPlacement, addCalculatedPoint, logicPointAddition, drawLine, addPointOnClick,
+    getXY,
 };
