@@ -67,12 +67,12 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
 
         const cx = el.getAttribute('cx');
         const cy = el.getAttribute('cy');
-        const coords = graphToCoords(myGraph, [cx, cy]);
+        const coords = graphToCoords(myGraph, cx, cy);
 
         if (e.deltaY < 0) { // Zoom in
-            graphPos = coordsToGraph(myGraph, [coords.x * 1.02, coords.y * 1.02]);
+            graphPos = coordsToGraph(myGraph, coords.x * 1.02, coords.y * 1.02);
         } else { // Zoom out
-            graphPos = coordsToGraph(myGraph, [coords.x / 1.02, coords.y / 1.02]);
+            graphPos = coordsToGraph(myGraph, coords.x / 1.02, coords.y / 1.02);
         }
 
         el.setAttribute('cx', graphPos.x);
@@ -89,15 +89,15 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
         const x2 = el.getAttribute('x2');
         const y2 = el.getAttribute('y2');
 
-        const coords1 = graphToCoords(myGraph, [x1, y1]);
-        const coords2 = graphToCoords(myGraph, [x2, y2]);
+        const coords1 = graphToCoords(myGraph, x1, y1);
+        const coords2 = graphToCoords(myGraph, x2, y2);
 
         if (e.deltaY < 0) { // Zoom in
-            graphPos = coordsToGraph(myGraph, [coords1.x * 1.02, coords1.y * 1.02]);
-            graphPos2 = coordsToGraph(myGraph, [coords2.x * 1.02, coords2.y * 1.02]);
+            graphPos = coordsToGraph(myGraph, coords1.x * 1.02, coords1.y * 1.02);
+            graphPos2 = coordsToGraph(myGraph, coords2.x * 1.02, coords2.y * 1.02);
         } else { // Zoom out
-            graphPos = coordsToGraph(myGraph, [coords1.x / 1.02, coords1.y / 1.02]);
-            graphPos2 = coordsToGraph(myGraph, [coords2.x / 1.02, coords2.y / 1.02]);
+            graphPos = coordsToGraph(myGraph, coords1.x / 1.02, coords1.y / 1.02);
+            graphPos2 = coordsToGraph(myGraph, coords2.x / 1.02, coords2.y / 1.02);
         }
 
         el.setAttribute('x1', graphPos.x);
