@@ -23,9 +23,6 @@ function pointMultiplication(myGraph) {
     const scalar = document.getElementById('scalarForm').value;
     const binary = convertToBinary(scalar); // the array of bits, from msb to lsb
 
-    console.log(binary);
-    console.log('This is the point: ', point, 'This is the scalar: ', scalar);
-
     let i = binary.length - 2;
     let res = point;
 
@@ -42,7 +39,6 @@ function pointMultiplication(myGraph) {
     addCalculatedPoint(myGraph, res[0], -res[1], 2);
 
     res[1] = -res[1];
-    console.log(res);
     return res;
 }
 
