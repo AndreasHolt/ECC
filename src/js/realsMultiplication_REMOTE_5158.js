@@ -11,7 +11,7 @@ function convertToBinary(scalar) {
         binary = (num % 2) + (binary);
     }
 
-    const binaryArray = (`${binary}`).split('').reverse();
+    const binaryArray = (`${binary}`).split('');
 
     return binaryArray;
 }
@@ -35,13 +35,6 @@ function pointMultiplication(myGraph) {
 
         i -= 1;
     }
-<<<<<<< HEAD
-    
-    console.log('Calculated points: ', res[0], -res[1])
-    addCalculatedPoint(myGraph, res[0], res[1], 3);
-
-=======
->>>>>>> 12d400c7f844850f7a3318619cb6ec787f0b45b1
 
     addCalculatedPoint(myGraph, res[0], -res[1], 2);
 
