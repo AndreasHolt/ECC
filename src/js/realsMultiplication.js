@@ -35,15 +35,9 @@ function pointMultiplication(myGraph) {
 
         i -= 1;
     }
-<<<<<<< HEAD
-    
-    console.log('Calculated points: ', res[0], -res[1])
+
+    console.log('Calculated points: ', res[0], -res[1]);
     addCalculatedPoint(myGraph, res[0], res[1], 3);
-
-=======
->>>>>>> 12d400c7f844850f7a3318619cb6ec787f0b45b1
-
-    addCalculatedPoint(myGraph, res[0], -res[1], 2);
 
     res[1] = -res[1];
     return res;
