@@ -1,6 +1,6 @@
 import { addCalculatedPoint } from './graphHelpers';
-import { pointDouble, calculateDouble } from './realsDoubling';
-import { pointAddition, calculateAddition } from './realsAddition';
+import { calculateDouble } from './realsDoubling';
+import { calculateAddition } from './realsAddition';
 
 function convertToBinary(scalar) {
     let num = scalar;
@@ -29,7 +29,7 @@ function pointMultiplication(myGraph) {
     while (i >= 0) { // traversing from most significant bit to least significant bit
         res = calculateDouble(myGraph, res); // double
 
-        if (binary[i] == 1) {
+        if (binary[i] === 1) {
             res = calculateAddition(myGraph, res, point); // addition
         }
 
