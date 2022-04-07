@@ -187,8 +187,28 @@ function getXY(el) {
     return { x, y };
 }
 
+function addPointByInput(idX, myGraph) {
+    console.log('Test1');
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const x = document.getElementById(idX).value;
+    const y = document.getElementById(`${idX[0]}y`);
+    console.log('Test2');
+
+    const circle = document.createElementNS(svgNS, 'circle');
+    circle.setAttribute('fill', 'red');
+    circle.setAttribute('cx', myGraph.centerX + (x * myGraph.scaleX));
+    circle.setAttribute('cy', myGraph.centerY + (myGraph.scaleY * -myGraph.equationP(x)));
+    circle.classList.add('workingPoints');
+    circle.setAttribute('r', 5);
+
+    y.value = `${myGraph.equationP(x)}`;
+    const svg = document.querySelector('svg');
+    svg.appendChild(circle);
+    console.log('Test3');
+}
+
 export {
     movePoint, moveSection, mouseToGraph, convertToXY, graphToCoords, coordsToGraph,
     getPointPlacement, addCalculatedPoint, logicPointAddition, drawLine, addPointOnClick,
-    getXY,
+    getXY, addPointByInput,
 };
