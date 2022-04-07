@@ -15,16 +15,16 @@ function mouseToGraph(myGraph, mouseX, mouseY) {
     return { x, y };
 }
 
-function graphToCoords(myGraph, point) {
-    const x = (point[0] - myGraph.centerX) / myGraph.scaleX;
-    const y = (point[1] - myGraph.centerY) / myGraph.scaleY;
+function graphToCoords(myGraph, graphX, graphY) {
+    const x = (graphX - myGraph.centerX) / myGraph.scaleX;
+    const y = (graphY - myGraph.centerY) / myGraph.scaleY;
 
     return { x, y };
 }
 
 function movePoint(event, myGraph) {
     const mousePos = mouseToGraph(myGraph, event.clientX, event.clientY);
-    const coords = graphToCoords(myGraph, [mousePos.x, mousePos.y]);
+    const coords = graphToCoords(myGraph, mousePos.x, mousePos.y);
 
     if (mousePos.y > myGraph.centerY) {
         moveSection('point', mousePos.x, myGraph.centerY - (-myGraph.equationP(coords.x) * myGraph.scaleY));
@@ -33,9 +33,9 @@ function movePoint(event, myGraph) {
     }
 }
 
-function coordsToGraph(myGraph, point) {
-    const x = myGraph.centerX + (point[0] * myGraph.scaleX);
-    const y = myGraph.centerY + (point[0] * myGraph.scaleY);
+function coordsToGraph(myGraph, coordsX, coordsY) {
+    const x = myGraph.centerX + (coordsX * myGraph.scaleX);
+    const y = myGraph.centerY + (coordsY * myGraph.scaleY);
     return { x, y };
 }
 
@@ -44,7 +44,6 @@ function getPointPlacement(myGraph, x) {
     const point2 = document.getElementsByClassName('workingPoints')[1];
     const x1 = (point1.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX;
     const x2 = (point2.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX;
-
     let returnValue;
 
     if ((x > x1) && (x > x2)) {
