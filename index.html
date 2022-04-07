@@ -53,8 +53,53 @@
                             type="number" id="b" name="b" placeholder="Ex: 15" value="15">
                     </div>
                 </div>
+                <div class="left-right-col basis-1/3">
+                    <h3>To perform the operation, click on the graph or enter points:</h3>
+                    <form id="typePoints">
+                        <div id="pointP">
+                            <div>
+                                <label>P: \(x\)</label>
+                                <input class="border-solid border-2 border-black h-10 w-14"
+                                type="number" id="Px" name="Px" placeholder="Ex: 0" value="">
+                            
+                                <label> \(y\)</label>
+                                <input class="border-solid border-2 border-black h-10 w-14"
+                                type="number" id="Py" name="Py" readonly="True" value="">
+                            </div>
+                        </div>
+                        <div id="pointQ">
+                            <div>
+                                <label>Q: \(x\)</label>
+                                <input class="border-solid border-2 border-black h-10 w-14"
+                                type="number" id="Qx" name="Qx" placeholder="Ex: 0" value="">
+                            
+                                <label> \(y\)</label>
+                                <input class="border-solid border-2 border-black h-10 w-14"
+                                type="number" id="Qy" name="Qy" readonly="True" value="">
+                            </div>
+                        </div>
+                        <div id="pointR">
+                            <label>R: \(x\)</label>
+                            <input class="border-solid border-2 border-black h-10 w-14"
+                            type="number" id="Rx" name="Rx" value="0" readonly="True">
+        
+                            <label> \(y\)</label>
+                            <input class="border-solid border-2 border-black h-10 w-14"
+                            type="number" id="Ry" name="Ry" value="0" readonly="True">
+                        </div>
+                        <div class="pointNegR">
+                            <label>-R: \(x\)</label>
+                            <input class="border-solid border-2 border-black h-10 w-14"
+                            type="number" id="negRx" name="negRx" value="0" readonly="True">
+        
+                            <label> \(y\)</label>
+                            <input class="border-solid border-2 border-black h-10 w-14"
+                            type="number" id="negRy" name="negRy" value="0" readonly="True">
+                        </div>
+                    </form>
+                </div>
 
-                <input
+                <!-- <input
                     class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mb-10"
                     type="button" value="Submit Parameters">
                 <p class="font-bold text-xl mb-2 text-gray-800">Or choose a pre-determined polynomial:</p>
@@ -71,7 +116,7 @@
                         <option value="4">funny</option>
                     </optgroup>
 
-                </select>
+                </select> -->
             </form>
         </div>
         <div class="container basis-1/3">
