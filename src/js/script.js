@@ -84,13 +84,8 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
     for (let i = 0; i < lines.length; i += 1) {
         const el = lines[i];
 
-        const x1 = el.getAttribute('x1');
-        const y1 = el.getAttribute('y1');
-        const x2 = el.getAttribute('x2');
-        const y2 = el.getAttribute('y2');
-
-        const coords1 = graphToCoords(myGraph, x1, y1);
-        const coords2 = graphToCoords(myGraph, x2, y2);
+        const coords1 = graphToCoords(myGraph, { x: el.getAttribute('x1'), y: el.getAttribute('y1') });
+        const coords2 = graphToCoords(myGraph, { x: el.getAttribute('x2'), y: el.getAttribute('y2') });
 
         if (e.deltaY < 0) { // Zoom in
             graphPos = coordsToGraph(myGraph, coords1.x * 1.02, coords1.y * 1.02);
