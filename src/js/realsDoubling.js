@@ -1,6 +1,19 @@
 import { graphToCoords, addCalculatedPoint } from './graphHelpers';
 import { twoDecimalRound, listPoints } from './realsAddition'
 
+function calculateDouble(myGraph, point) {
+    const newPointArr = [];
+
+    const lambda = (3 * point[0] * point[0] + myGraph.parameterA) / (2 * point[1]);
+    const newX = lambda * lambda - 2 * point[0];
+    const newY = -point[1] + lambda * (point[0] - newX);
+
+    newPointArr[0] = newX;
+    newPointArr[1] = newY;
+
+    return newPointArr;
+}
+
 function pointDouble(myGraph) {
     const pointArr = [];
     let newPointArr = [];

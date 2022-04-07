@@ -112,6 +112,10 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
 /// ----------------------------------------------------------------------
 //
 
+function isOnPage(element) {
+    return (element === document.body) ? false : document.body.contains(element);
+}
+
 function deletePoints() {
     const allSVG = [
         document.getElementsByClassName('workingPoints'),
@@ -134,10 +138,6 @@ function deletePoints() {
 document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
     movePoint(e, myGraph);
 });
-
-function isOnPage(element) {
-    return (element === document.body) ? false : document.body.contains(element);
-}
 
 document.getElementById('layer2').addEventListener('click', (e) => {
     movePoint(e, myGraph); // Ensures that the point is on the graph when clicked
@@ -179,7 +179,7 @@ document.getElementById('layer2').addEventListener('click', (e) => {
                 document.getElementById('scalarFormsActive').innerHTML = html;
 
                 document.getElementById('scalarForm').addEventListener('input', () => {
-                    pointMultiplication(myGraph)
+                    pointMultiplication(myGraph);
                 });
 
                 MathJax.typeset();
@@ -193,8 +193,6 @@ document.getElementById('layer2').addEventListener('click', (e) => {
         }
     }
 });
-
-
 
 function changeEquation(a, b) {
     let sign1 = '';
@@ -237,7 +235,7 @@ document.getElementById('curve')[2].addEventListener('click', () => {
 function init() {
     drawEquations();
 
-    const operations = document.querySelectorAll('#pointAddition, #pointDoubling, #pointMultiplication')
+    const operations = document.querySelectorAll('#pointAddition, #pointDoubling, #pointMultiplication');
 
     Array.from(operations).forEach((input) => {
         input.addEventListener('click', (e) => {
