@@ -115,5 +115,5 @@ function pointAddition(myGraph) {
 }
 
 export {
-    pointAddition, listPoints, pointAdditionSteps, calculateAddition,
+    pointAddition, listPoints, pointAdditionSteps, calculateAddition, twoDecimalRound
 };
