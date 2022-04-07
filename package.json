@@ -10,7 +10,6 @@
     "eslint": "eslint --ext .js ./",
     "eslintfix": "eslint --ext .js ./ --fix",
     "test": "concurrently -k 'wait-on http://localhost:3000/ & cypress run' 'npm run dev'",
-    "cypress:run": "cypress run",
     "cypress": "cypress open"
   },
   "devDependencies": {
