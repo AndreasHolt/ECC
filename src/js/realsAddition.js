@@ -5,14 +5,14 @@ function twoDecimalRound(val) {
     return Math.round(val * 100) / 100;
 }
 
-function listPoints(myGraph, point1, point2, calculatedX, calculatedY, operation) {
-    const pObj = graphToCoords(myGraph, point1);
+function listPoints(myGraph, points, calculatedX, calculatedY, operation) {
+    const pObj = graphToCoords(myGraph, points);
     const P = `${twoDecimalRound(pObj.x)}, ${twoDecimalRound(-pObj.y)}`;
 
     let Q;
     let qObj;
     if (operation === 'addition') {
-        qObj = graphToCoords(myGraph, point2);
+        qObj = graphToCoords(myGraph, points[1]);
         Q = `${twoDecimalRound(qObj.x)}, ${twoDecimalRound(-qObj.y)}`;
     }
 
@@ -88,17 +88,18 @@ function calculateAddition(myGraph, point1, point2) {
 }
 
 function pointAddition(myGraph) {
-    const points = document.getElementsByClassName('workingPoints');
+    const wPoints = document.getElementsByClassName('workingPoints');
 
-    const point1 = getXY(points[0]);
-    const point2 = getXY(points[1]);
+    const points = [getXY(wPoints[0]), getXY(wPoints[1])]
+    // const point1 = getXY(points[0]);
+    // const point2 = getXY(points[1]);
 
     // graphToCoords(myGraph, graphX, graphY)
     // const p1 = graphToCoords(myGraph, )
-    const x1 = (point1.x - myGraph.centerX) / myGraph.scaleX;
-    const y1 = (point1.y - myGraph.centerY) / myGraph.scaleY;
-    const x2 = (point2.x - myGraph.centerX) / myGraph.scaleX;
-    const y2 = (point2.y - myGraph.centerY) / myGraph.scaleY;
+    const x1 = (points[0].x - myGraph.centerX) / myGraph.scaleX;
+    const y1 = (points[0].y - myGraph.centerY) / myGraph.scaleY;
+    const x2 = (points[1].x - myGraph.centerX) / myGraph.scaleX;
+    const y2 = (points[1].y - myGraph.centerY) / myGraph.scaleY;
 
     const lambda = ((y2 - y1) / (x2 - x1));
     const point1Arr = [x1, y1];
@@ -106,7 +107,7 @@ function pointAddition(myGraph) {
 
     const thirdPoint = calculateAddition(myGraph, point1Arr, point2Arr);
 
-    const listedPoints = listPoints(myGraph, point1, point2, thirdPoint[0], thirdPoint[1], 'addition');
+    const listedPoints = listPoints(myGraph, points, thirdPoint[0], thirdPoint[1], 'addition');
     pointAdditionSteps(myGraph, listedPoints, lambda, thirdPoint[0], thirdPoint[1]);
 
     addCalculatedPoint(myGraph, thirdPoint[0], thirdPoint[1], 1);

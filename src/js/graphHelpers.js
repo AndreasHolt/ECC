@@ -37,6 +37,12 @@ function movePoint(event, myGraph) {
     }
 }
 
+function getXY(el) {
+    const x = parseInt(el.getAttribute('cx'), 10);
+    const y = parseInt(el.getAttribute('cy'), 10);
+    return { x, y };
+}
+
 function coordsToGraph(myGraph, coordsX, coordsY) {
     const x = myGraph.centerX + (coordsX * myGraph.scaleX);
     const y = myGraph.centerY + (coordsY * myGraph.scaleY);
@@ -44,10 +50,11 @@ function coordsToGraph(myGraph, coordsX, coordsY) {
 }
 
 function getPointPlacement(myGraph, x) {
-    const point1 = document.getElementsByClassName('workingPoints')[0];
-    const point2 = document.getElementsByClassName('workingPoints')[1];
-    const x1 = (point1.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX;
-    const x2 = (point2.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX;
+    const points = document.getElementsByClassName('workingPoints');
+
+    const x1 = (getXY(points[0]).x - myGraph.centerX) / myGraph.scaleX;
+    const x2 = (getXY(points[1]).x - myGraph.centerX) / myGraph.scaleX;
+
     let returnValue;
 
     if ((x > x1) && (x > x2)) {
@@ -57,6 +64,7 @@ function getPointPlacement(myGraph, x) {
     } else if (x1 >= x && x2 >= x) {
         returnValue = 3;
     }
+
     return returnValue;
 }
 
@@ -181,18 +189,10 @@ function addPointOnClick() {
     svg.appendChild(circle);
 }
 
-function getXY(el) {
-    const x = parseInt(el.getAttribute('cx'), 10);
-    const y = parseInt(el.getAttribute('cy'), 10);
-    return { x, y };
-}
-
 function addPointByInput(idX, myGraph) {
-    console.log('Test1');
     const svgNS = 'http://www.w3.org/2000/svg';
     const x = document.getElementById(idX).value;
     const y = document.getElementById(`${idX[0]}y`);
-    console.log('Test2');
 
     const circle = document.createElementNS(svgNS, 'circle');
     circle.setAttribute('fill', 'red');
@@ -204,7 +204,6 @@ function addPointByInput(idX, myGraph) {
     y.value = `${myGraph.equationP(x)}`;
     const svg = document.querySelector('svg');
     svg.appendChild(circle);
-    console.log('Test3');
 }
 
 export {

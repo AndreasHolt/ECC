@@ -120,7 +120,6 @@ function deletePoints() {
 
     Array.from(allSVG).forEach((key) => {
         for (let i = key.length; i > 0; i -= 1) {
-            // console.log(key[i-1])
             key[i - 1].remove();
         }
     });
