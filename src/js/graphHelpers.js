@@ -121,10 +121,19 @@ function addCalculatedPoint(myGraph, x, y, pointOperation) {
 
         document.getElementsByClassName('linesConnecting')[1].remove();
         document.getElementsByClassName('linesConnecting')[0].remove();
+    } else if(pointOperation === 3 && document.getElementsByClassName('calculatedPoints').length === 1){
+        document.getElementsByClassName('calculatedPoints')[0].remove();
     }
     const svgNS = 'http://www.w3.org/2000/svg';
 
-    const arrayIntersectInverted = [y, -y];
+    let arrayIntersectInverted; 
+
+    if(pointOperation === 3){
+        arrayIntersectInverted = [y];
+        console.log('arrayInt')
+    } else {
+        arrayIntersectInverted = [y, -y];
+    }
 
     for (let i = 0; i < arrayIntersectInverted.length; i += 1) {
         const circle = document.createElementNS(svgNS, 'circle');
@@ -143,7 +152,9 @@ function addCalculatedPoint(myGraph, x, y, pointOperation) {
         const svg = document.querySelector('svg');
         svg.appendChild(circle);
 
-        if (i === 0) {
+        if(pointOperation === 3){
+            return 0;
+        } else if (i === 0) {
             drawLine(myGraph, '+', 'fuchsia', i, x, y, svg, pointOperation);
         } else {
             drawLine(myGraph, '-', 'orange', i, x, y, svg, pointOperation);
