@@ -20,7 +20,7 @@ function pointMultiplication(myGraph) {
     const points = document.getElementsByClassName('workingPoints');
     const point = [(points[0].getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, -(points[0].getAttribute('cy') - myGraph.centerY) / myGraph.scaleY];
 
-    const scalar = 4;
+    const scalar = document.getElementById('scalarForm').value;
     const binary = convertToBinary(scalar); // the array of bits, from msb to lsb
 
     console.log(binary);
