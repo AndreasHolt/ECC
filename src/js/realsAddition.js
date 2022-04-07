@@ -1,7 +1,6 @@
 import { graphToCoords, addCalculatedPoint } from './graphHelpers';
 import { pointDouble } from './realsDoubling';
 
-
 function twoDecimalRound(val) {
     return Math.round(val * 100) / 100;
 }
@@ -115,4 +114,6 @@ function pointAddition(myGraph) {
     addCalculatedPoint(myGraph, thirdPoint[0], thirdPoint[1], 1);
 }
 
-export { pointAddition, listPoints, pointAdditionSteps, calculateAddition };
+export {
+    pointAddition, listPoints, pointAdditionSteps, calculateAddition,
+};
