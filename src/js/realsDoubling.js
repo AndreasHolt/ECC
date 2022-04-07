@@ -1,4 +1,7 @@
-import { addCalculatedPoint } from './graphHelpers';
+import { graphToCoords, addCalculatedPoint } from './graphHelpers';
+import { twoDecimalRound, listPoints } from './realsAddition'
+
+
 
 function pointDouble(myGraph) {
     const pointArr = [];
@@ -12,10 +15,46 @@ function pointDouble(myGraph) {
     pointArr[0] = (storePoints.point1[0] - myGraph.centerX) / myGraph.scaleX;
     pointArr[1] = -(storePoints.point1[1] - myGraph.centerY) / myGraph.scaleY;
 
-    newPointArr = calculateDouble(myGraph, pointArr); 
+    newPointArr = calculateDouble(myGraph, pointArr);
+
+    const lambda = (3 * newPointArr[0] * newPointArr[0] + myGraph.parameterA) / (2 * newPointArr[1]);
+
+    const listedPoints = listPoints(myGraph, storePoints, newPointArr[0], newPointArr[1], 'doubling');
+    console.log(listPoints)
+    pointDoublingSteps(myGraph, listedPoints, lambda, newPointArr[0], newPointArr[1]);
+
 
     addCalculatedPoint(myGraph, newPointArr[0], newPointArr[1], 2);
 }
+
+function pointDoublingSteps(myGraph, points, lambdaI, x, y) {
+    console.log('test: ', points.x)
+
+    console.log('test: ', points.y)
+    points.x = twoDecimalRound(points.x);
+    points.y = twoDecimalRound(points.y);
+
+    // If so we should use Number.toFixed
+    const lambda = twoDecimalRound(lambdaI);
+    const newX = twoDecimalRound(x);
+    const newY = twoDecimalRound(y);
+
+    const stepRows = document.getElementsByClassName('steps');
+    stepRows[0].innerHTML = `If P and Q are distinct \\((x_P \\neq x_Q)\\), the line through them has slope: <br>
+                            \\(m =  \\frac{3 \\cdot x_P^2 + a}{2 \\cdot y_P} = \\frac{3 \\cdot ${points.x}^2 + ${myGraph.parameterA}}{2 \\cdot ${points.y}} = \\underline{${lambda}}\\)`;
+
+    stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a new point \\(R = (x_R, y_R):\\) <br>
+                            \\(x_R = m^2 - 2x_P = ${lambda}^2 - 2 \\cdot ${points.x}  = \\underline{${newX}}\\) <br>
+                            \\(y_R = -y_P + m(x_P - x_R) = -${points.y} + ${lambda}(${points.x} -  ${newX}) = \\underline{${newY}}\\) <br> <br>
+                            \\(\\textbf{R = (${newX}, ${newY})}\\)`;
+
+    // eslint-disable-next-line no-undef
+    MathJax.typeset();
+
+}
+
+
+
 
 function calculateDouble(myGraph, point) {
     const newPointArr = [];
