@@ -12,7 +12,7 @@ function pointDouble(myGraph) {
     pointArr[0] = (storePoints.point1[0] - myGraph.centerX) / myGraph.scaleX;
     pointArr[1] = -(storePoints.point1[1] - myGraph.centerY) / myGraph.scaleY;
 
-    newPointArr = calculateDouble(myGraph, pointArr); 
+    newPointArr = calculateDouble(myGraph, pointArr);
 
     addCalculatedPoint(myGraph, newPointArr[0], newPointArr[1], 2);
 }

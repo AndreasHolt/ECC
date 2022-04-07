@@ -1,7 +1,6 @@
 import { graphToCoords, addCalculatedPoint } from './graphHelpers';
 import { pointDouble } from './realsDoubling';
 
-
 function twoDecimalRound(val) {
     return Math.round(val * 100) / 100;
 }
@@ -99,7 +98,6 @@ function pointAddition(myGraph) {
     // graphToCoords(myGraph, graphX, graphY)
     // const p1 = graphToCoords(myGraph, )
     const x1 = (storePoints.point1[0] - myGraph.centerX) / myGraph.scaleX;
-    console.log("This ", storePoints.point1[0], x1);
     const y1 = (storePoints.point1[1] - myGraph.centerY) / myGraph.scaleY;
     const x2 = (storePoints.point2[0] - myGraph.centerX) / myGraph.scaleX;
     const y2 = (storePoints.point2[1] - myGraph.centerY) / myGraph.scaleY;
@@ -116,4 +114,6 @@ function pointAddition(myGraph) {
     addCalculatedPoint(myGraph, thirdPoint[0], thirdPoint[1], 1);
 }
 
-export { pointAddition, listPoints, pointAdditionSteps, calculateAddition };
+export {
+    pointAddition, listPoints, pointAdditionSteps, calculateAddition,
+};
