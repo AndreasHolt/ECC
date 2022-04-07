@@ -1,17 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+    <head>
 
-</head>
-<body>
-    <form id="form">
-        <input type="number" name="size" id="sizeSubmit">
-        <input type="number" name="modoli" id="modoliSubmit">
-        <input type="submit">
-    </form>
-    <canvas id="curveGraph" width="800" height="800" style="border:1px solid #000000;">
+    </head>
+    <body>
+        <div id="inputDiv">
+            <form id="form">
+                <label for="prime">Prime: </label>
+                <input type="number" name="prime" id="prime" value="2"><br>
+                <label for="power">Power: </label>
+                <input type="number" name="power" id="power" value="4"><br>
+                <div id="modoliDiv" hidden="false">
+                    <label for="modoli">Modoli: </label>
+                    <input type="number" name="modoli" id="modoli" value="19"><br>
+                </div>
+                <input type="submit">
+            </form>
+            <form id="pointForm">
+                <label for="index1">Index1: </label>
+                <input type="number" name="index1" id="index1" value="2"><br>
+                <label for="index2">Index2: </label>
+                <input type="number" name="index2" id="index2" value="2"><br>
+                <input type="submit">
+            </form>
+        </div>
         
-    </canvas>
-    <script defer src="src/js/FiniteFieldTablePolynomialModuli.js"></script>
-</body>
+        <canvas id="curveGraph" width="800" height="800" style="border:1px solid #000000;">
+            
+        </canvas>
+        <script defer src="src/js/FiniteFieldTablePolynomialModuli.js"></script>
+    </body>
 </html>
