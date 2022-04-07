@@ -112,6 +112,10 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
 /// ----------------------------------------------------------------------
 //
 
+function isOnPage(element) {
+    return (element === document.body) ? false : document.body.contains(element);
+}
+
 function deletePoints() {
     const allSVG = [
         document.getElementsByClassName('workingPoints'),
@@ -221,12 +225,15 @@ document.getElementById('layer2').addEventListener('click', (e) => {
                 formPlaceholder.appendChild(document.getElementById('scalarFormsActive'));
                 console.log(document.getElementById('scalarFormsID'));
 
-                const html = "<p class='font-bold text-xl mb-2 text-gray-800 mb-10' id='parameters'>\\(nP = P + P + ... + P\\) \\((n \\; times)\\)</p>"
+                const html = "<p class='font-bold text-xl text-gray-800 mb-10' id='parameters'>\\(nP = P + P + ... + P\\) \\((n \\; times)\\)</p>"
                 + "<label class='block tracking-wide text-gray-700 text-x font-bold mb-2' for='setScalar'> Choose a scalar \\(n\\)</label>"
-                + "<input class='mb-6 appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500' type='number' id='setScalar' name='setScalar' min='-5' placeholder='Ex: -4' value='-5'>"
-                + "<input class='bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mb-10' type='button' value='Perform multiplication'>";
+                + "<input class='mb-6 appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500' type='number' id='scalarForm' name='setScalar' min='-5' placeholder='Ex: 4' value='4'>";
 
                 document.getElementById('scalarFormsActive').innerHTML = html;
+
+                document.getElementById('scalarForm').addEventListener('input', () => {
+                    pointMultiplication(myGraph);
+                });
 
                 MathJax.typeset();
 
@@ -281,7 +288,7 @@ document.getElementById('curve')[2].addEventListener('click', () => {
 function init() {
     drawEquations();
 
-    const operations = document.querySelectorAll('#pointAddition, #pointDoubling, #pointMultiplication')
+    const operations = document.querySelectorAll('#pointAddition, #pointDoubling, #pointMultiplication');
 
     Array.from(operations).forEach((input) => {
         input.addEventListener('click', (e) => {
