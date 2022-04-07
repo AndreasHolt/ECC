@@ -172,7 +172,7 @@ document.getElementById('layer2').addEventListener('click', (e) => {
                 formPlaceholder.appendChild(document.getElementById('scalarFormsActive'));
                 console.log(document.getElementById('scalarFormsID'));
 
-                const html = "<p class='font-bold text-xl mb-2 text-gray-800 mb-10' id='parameters'>\\(nP = P + P + ... + P\\) \\((n \\; times)\\)</p>"
+                const html = "<p class='font-bold text-xl text-gray-800 mb-10' id='parameters'>\\(nP = P + P + ... + P\\) \\((n \\; times)\\)</p>"
                 + "<label class='block tracking-wide text-gray-700 text-x font-bold mb-2' for='setScalar'> Choose a scalar \\(n\\)</label>"
                 + "<input class='mb-6 appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500' type='number' id='scalarForm' name='setScalar' min='-5' placeholder='Ex: 4' value='4'>";
 
