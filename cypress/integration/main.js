@@ -1,8 +1,13 @@
 /// <reference types="cypress" />
 /* eslint-disable no-undef */
 import {
-    movePoint, moveSection, mouseToGraph, graphToCoords, coordsToGraph, getPointPlacement, addCalculatedPoint, logicPointAddition, drawLine, addPointOnClick,
+    movePoint, moveSection, mouseToGraph, graphToCoords, coordsToGraph, getPointPlacement,
+    addCalculatedPoint, logicPointAddition, drawLine, addPointOnClick,
 } from '../../src/js/graphHelpers';
+
+import { calculateAddition } from '../../src/js/realsAddition';
+
+import { calculateDouble } from '../../src/js/realsDoubling';
 
 const myGraph = {
     canvas: {},
@@ -127,76 +132,106 @@ describe('Unit Test Application Code', () => {
         });
     });
 
-    // context('graphHelpers.js', () => {
-    //     // moveSection
-    //     it('moveSection is function', () => {
-    //         expect(moveSection, 'moveSection').to.be.a('function');
-    //     });
+    context('graphHelpers.js', () => {
+        // moveSection
+        it('moveSection is function', () => {
+            expect(moveSection, 'moveSection').to.be.a('function');
+        });
 
-    //     // mouseToGraph
-    //     it('mouseToGraph is function', () => {
-    //         expect(mouseToGraph, 'mouseToGraph').to.be.a('function');
-    //     });
+        // mouseToGraph
+        it('mouseToGraph is function', () => {
+            expect(mouseToGraph, 'mouseToGraph').to.be.a('function');
+        });
 
-    //     it('mouseToGraph X coordinate', () => {
-    //         expect(mouseToGraph(myGraph, 1, 2).x).to.eq(-264);
-    //     });
+        it('mouseToGraph X coordinate', () => {
+            expect(mouseToGraph(myGraph, 1, 2).x).to.eq(-264);
+        });
 
-    //     it('mouseToGraph Y coordinate', () => {
-    //         expect(mouseToGraph(myGraph, 1, 2).y).to.eq(-120);
-    //     });
+        it('mouseToGraph Y coordinate', () => {
+            expect(mouseToGraph(myGraph, 1, 2).y).to.eq(-120);
+        });
 
-    //     // movePoint
-    //     it('movePoint is function', () => {
-    //         expect(movePoint, 'movePoint').to.be.a('function');
-    //     });
+        // movePoint
+        it('movePoint is function', () => {
+            expect(movePoint, 'movePoint').to.be.a('function');
+        });
 
-    //     // coordsToGraph
-    //     it('coordsToGraph is function', () => {
-    //         expect(coordsToGraph, 'coordsToGraph').to.be.a('function');
-    //     });
+        // coordsToGraph
+        it('coordsToGraph is function', () => {
+            expect(coordsToGraph, 'coordsToGraph').to.be.a('function');
+        });
 
-    //     it('coordsToGraph X coordinate', () => {
-    //         expect(coordsToGraph(myGraph, 1, 2).x).to.eq(413.05);
-    //     });
+        it('coordsToGraph X coordinate', () => {
+            expect(coordsToGraph(myGraph, 1, 2).x).to.eq(413.05);
+        });
 
-    //     it('coordsToGraph Y coordinate', () => {
-    //         expect(coordsToGraph(myGraph, 1, 2).y).to.eq(234);
-    //     });
+        it('coordsToGraph Y coordinate', () => {
+            expect(coordsToGraph(myGraph, 1, 2).y).to.eq(234);
+        });
 
-    //     // getPointPlacement
-    //     it('getPointPlacement is function', () => {
-    //         expect(getPointPlacement, 'getPointPlacement').to.be.a('function');
-    //     });
+        // getPointPlacement
+        it('getPointPlacement is function', () => {
+            expect(getPointPlacement, 'getPointPlacement').to.be.a('function');
+        });
 
-    //     // TODO Unable to run due to getAttribute might be another way to run it
-    //     // it('getPointPlacement point position', () => {
-    //     //     expect(getPointPlacement(myGraph, 99).x).to.eq(413.05);
-    //     // });
+        // TODO Unable to run due to getAttribute might be another way to run it
+        // it('getPointPlacement point position', () => {
+        //     expect(getPointPlacement(myGraph, 99).x).to.eq(413.05);
+        // });
 
-    //     // logicPointAddition
-    //     it('logicPointAddition is function', () => {
-    //         expect(logicPointAddition, 'logicPointAddition').to.be.a('function');
-    //     });
+        // logicPointAddition
+        it('logicPointAddition is function', () => {
+            expect(logicPointAddition, 'logicPointAddition').to.be.a('function');
+        });
 
-    //     // TODO Unable to run due to getAttribute might be another way to run it
-    //     // it('logicPointAddition point position', () => {
-    //     //     expect(logicPointAddition(myGraph, 99).x).to.eq(413.05);
-    //     // });
+        // TODO Unable to run due to getAttribute might be another way to run it
+        // it('logicPointAddition point position', () => {
+        //     expect(logicPointAddition(myGraph, 99).x).to.eq(413.05);
+        // });
 
-    //     // drawLine
-    //     it('drawLine is function', () => {
-    //         expect(drawLine, 'drawLine').to.be.a('function');
-    //     });
+        // drawLine
+        it('drawLine is function', () => {
+            expect(drawLine, 'drawLine').to.be.a('function');
+        });
 
-    //     // addCalculatedPoint
-    //     it('addCalculatedPoint is function', () => {
-    //         expect(addCalculatedPoint, 'addCalculatedPoint').to.be.a('function');
-    //     });
+        // addCalculatedPoint
+        it('addCalculatedPoint is function', () => {
+            expect(addCalculatedPoint, 'addCalculatedPoint').to.be.a('function');
+        });
 
-    //     // addPointOnClick
-    //     it('addPointOnClick is function', () => {
-    //         expect(addPointOnClick, 'addPointOnClick').to.be.a('function');
-    //     });
-    // });
+        // addPointOnClick
+        it('addPointOnClick is function', () => {
+            expect(addPointOnClick, 'addPointOnClick').to.be.a('function');
+        });
+    });
+
+    context('ECC calculations', () => {
+        it('calculateAddition x coordinate', () => {
+            const point1 = [0.8388814913448736, -3.3757861359141805];
+            const point2 = [-1.7177097203728364, 4.303533459549233];
+
+            expect(calculateAddition(myGraph, point1, point2)[0]).to.eq(9.90124534636108);
+        });
+
+        it('calculateAddition y coordinate', () => {
+            const point1 = [0.8388814913448736, -3.3757861359141805];
+            const point2 = [-1.7177097203728364, 4.303533459549233];
+
+            expect(calculateAddition(myGraph, point1, point2)[1]).to.eq(-30.596715322433464);
+        });
+
+        it('calculateDouble x coordinate', () => {
+            const point1 = [-1.2916111850865513, -4.393553613618751];
+            expect(calculateDouble(myGraph, point1)[0]).to.eq(2.5832226658830533);
+        });
+
+        it('calculateDouble y coordinate', () => {
+            const point1 = [-1.2916111850865513, -4.393553613618751];
+            expect(calculateDouble(myGraph, point1)[1]).to.eq(4.395660718021738);
+        });
+
+        it('test y coordinate', () => {
+        });
+        // [ -1.2916111850865513, -4.393553613618751 ]
+    });
 });
