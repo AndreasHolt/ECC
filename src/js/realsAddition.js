@@ -1,18 +1,19 @@
 import { graphToCoords, addCalculatedPoint } from './graphHelpers';
 import { pointDouble } from './realsDoubling';
 
+
 function twoDecimalRound(val) {
     return Math.round(val * 100) / 100;
 }
 
 function listPoints(myGraph, placedPoints, calculatedX, calculatedY, operation) {
-    const pObj = graphToCoords(myGraph, placedPoints.point1);
+    const pObj = graphToCoords(myGraph, placedPoints.point1[0], placedPoints.point1[1]);
     const P = `${twoDecimalRound(pObj.x)}, ${twoDecimalRound(-pObj.y)}`;
 
     let Q;
     let qObj;
     if (operation === 'addition') {
-        qObj = graphToCoords(myGraph, placedPoints.point2);
+        qObj = graphToCoords(myGraph, placedPoints.point2[0], placedPoints.point2[1]);
         Q = `${twoDecimalRound(qObj.x)}, ${twoDecimalRound(-qObj.y)}`;
     }
 
@@ -95,12 +96,17 @@ function pointAddition(myGraph) {
         point2: [points[1].getAttribute('cx'), points[1].getAttribute('cy')],
     };
 
-    const p1 = graphToCoords(myGraph, storePoints.point1);
-    const p2 = graphToCoords(myGraph, storePoints.point2);
+    // graphToCoords(myGraph, graphX, graphY)
+    // const p1 = graphToCoords(myGraph, )
+    const x1 = (storePoints.point1[0] - myGraph.centerX) / myGraph.scaleX;
+    console.log("This ", storePoints.point1[0], x1);
+    const y1 = (storePoints.point1[1] - myGraph.centerY) / myGraph.scaleY;
+    const x2 = (storePoints.point2[0] - myGraph.centerX) / myGraph.scaleX;
+    const y2 = (storePoints.point2[1] - myGraph.centerY) / myGraph.scaleY;
 
-    const lambda = ((p2.y - p1.y) / (p2.x - p1.x));
-    const point1Arr = [p1.x, p1.y];
-    const point2Arr = [p2.x, p2.y];
+    const lambda = ((y2 - y1) / (x2 - x1));
+    const point1Arr = [x1, y1];
+    const point2Arr = [x2, y2];
 
     const thirdPoint = calculateAddition(myGraph, point1Arr, point2Arr);
 
@@ -110,6 +116,4 @@ function pointAddition(myGraph) {
     addCalculatedPoint(myGraph, thirdPoint[0], thirdPoint[1], 1);
 }
 
-export {
-    pointAddition, listPoints, pointAdditionSteps, calculateAddition,
-};
+export { pointAddition, listPoints, pointAdditionSteps, calculateAddition };
