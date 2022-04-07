@@ -139,10 +139,6 @@ document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
         movePoint(e, myGraph);
 }); 
 
-function isOnPage(element) {
-        return (element === document.body) ? false : document.body.contains(element);
-}   
-
 document.getElementById('pointP').addEventListener('keypress', (e) => {
     if(e.key === 'Enter') {
         const pointsOnGraph = document.getElementsByClassName('workingPoints');
