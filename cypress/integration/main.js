@@ -38,30 +38,29 @@ const myGraph = {
 };
 
 describe('Unit Test Application Code', () => {
-    // Currently performance visit the site so no need for this
-    // before(() => {
-    //     // check if the import worked correctly
-    //     // expect(moveSection, 'moveSection').to.be.a('function');
-    //     cy.visit('http://localhost:3000/');
-    // });
-
-    context('Performance', () => {
-        it('Check page load time', () => {
-            cy.visit('http://localhost:3000/', {
-                onBeforeLoad: (win) => {
-                    win.performance.mark('start-loading');
-                },
-                onLoad: (win) => {
-                    win.performance.mark('end-loading');
-                },
-            }).its('performance').then((p) => {
-                p.measure('pageLoad', 'start-loading', 'end-loading');
-                const measure = p.getEntriesByName('pageLoad')[0];
-
-                assert.isAtMost(measure.duration, 2000);
-            });
-        });
+    before(() => {
+        // check if the import worked correctly
+        // expect(moveSection, 'moveSection').to.be.a('function');
+        cy.visit('http://localhost:3000/');
     });
+
+    // context('Performance', () => {
+    //     it('Check page load time', () => {
+    //         cy.visit('http://localhost:3000/', {
+    //             onBeforeLoad: (win) => {
+    //                 win.performance.mark('start-loading');
+    //             },
+    //             onLoad: (win) => {
+    //                 win.performance.mark('end-loading');
+    //             },
+    //         }).its('performance').then((p) => {
+    //             p.measure('pageLoad', 'start-loading', 'end-loading');
+    //             const measure = p.getEntriesByName('pageLoad')[0];
+
+    //             assert.isAtMost(measure.duration, 2000);
+    //         });
+    //     });
+    // });
 
     context('Interface', () => {
         context('Point Addition', () => {
