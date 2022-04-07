@@ -1,5 +1,18 @@
 import { addCalculatedPoint } from './graphHelpers';
 
+function calculateDouble(myGraph, point) {
+    const newPointArr = [];
+
+    const lambda = (3 * point[0] * point[0] + myGraph.parameterA) / (2 * point[1]);
+    const newX = lambda * lambda - 2 * point[0];
+    const newY = -point[1] + lambda * (point[0] - newX);
+
+    newPointArr[0] = newX;
+    newPointArr[1] = newY;
+
+    return newPointArr;
+}
+
 function pointDouble(myGraph) {
     const pointArr = [];
     let newPointArr = [];
@@ -15,19 +28,6 @@ function pointDouble(myGraph) {
     newPointArr = calculateDouble(myGraph, pointArr);
 
     addCalculatedPoint(myGraph, newPointArr[0], newPointArr[1], 2);
-}
-
-function calculateDouble(myGraph, point) {
-    const newPointArr = [];
-
-    const lambda = (3 * point[0] * point[0] + myGraph.parameterA) / (2 * point[1]);
-    const newX = lambda * lambda - 2 * point[0];
-    const newY = -point[1] + lambda * (point[0] - newX);
-
-    newPointArr[0] = newX;
-    newPointArr[1] = newY;
-
-    return newPointArr;
 }
 
 export { pointDouble, calculateDouble };
