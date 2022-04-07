@@ -58,7 +58,7 @@ describe('Unit Test Application Code', () => {
                 p.measure('pageLoad', 'start-loading', 'end-loading');
                 const measure = p.getEntriesByName('pageLoad')[0];
 
-                assert.isAtMost(measure.duration, 1000);
+                assert.isAtMost(measure.duration, 2000);
             });
         });
     });
