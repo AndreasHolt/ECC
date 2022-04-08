@@ -5,14 +5,15 @@ function twoDecimalRound(val) {
     return Math.round(val * 100) / 100;
 }
 
-function listPoints(myGraph, points, calculatedX, calculatedY, operation) {
-    const pObj = graphToCoords(myGraph, points[0]);
+function listPoints(myGraph, placedPoints, calculatedX, calculatedY, operation) {
+    console.log(placedPoints);
+    const pObj = graphToCoords(myGraph, placedPoints[0]);
     const P = `${twoDecimalRound(pObj.x)}, ${twoDecimalRound(-pObj.y)}`;
 
     let Q;
     let qObj;
     if (operation === 'addition') {
-        qObj = graphToCoords(myGraph, points[1]);
+        qObj = graphToCoords(myGraph, placedPoints[1]);
         Q = `${twoDecimalRound(qObj.x)}, ${twoDecimalRound(-qObj.y)}`;
     }
 
