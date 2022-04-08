@@ -7,17 +7,24 @@ const ctx = canvas.getContext("2d");
 form.addEventListener("submit", handleSubmit);
 document.getElementById("pointForm").addEventListener("submit", (event) => {
     event.preventDefault();
-    let index1 = Number(event.target["index1"].value);
-    let index2 = Number(event.target["index2"].value);
-    let options = {};
-    if (curve.mod === curve.fieldOrder) {
-        options.prime = true;
-    } else {
-        options.prime = false;
+    try {
+        let index1 = Number(event.target["index1"].value);
+        let index2 = Number(event.target["index2"].value);
+        let options = {};
+        if (curve.mod === curve.fieldOrder) {
+            options.prime = true;
+        } else {
+            options.prime = false;
+        }
+        let newPoint =curve.calcPointAddition(index1, index2, options, curve.mod); 
+        drawPoint(newPoint, curve.fieldOrder, 5, "red");
+        drawPoint(curve.points[index1],curve.fieldOrder, 5, "blue");
+        drawPoint(curve.points[index2],curve.fieldOrder, 5, "yellow");
+        drawLine(curve.points[index1], newPoint,0);
+    } catch (e) {
+        console.log("Error! find selv ud af det!");
+        console.log(e);
     }
-    drawPoint(curve.calcPointAddition(index1, index2, options, curve.mod),curve.fieldOrder, "red");
-    drawPoint(curve.points[index1],curve.fieldOrder, "blue");
-    drawPoint(curve.points[index2],curve.fieldOrder, "yellow");
 });
 document.getElementById("power").addEventListener("change", () => {
     if (document.getElementById("power").value > 1) {
@@ -27,11 +34,20 @@ document.getElementById("power").addEventListener("change", () => {
     }
 });
 
+function drawLine (point1, point3, progress) {
+    if (progress < curve.fieldOrder) {
+        setTimeout(() => {drawLine(point1, point3, progress + 0.01)}, 0.1);
+        let newPoint = {"x":Mod(point1.x + (progress),curve.fieldOrder), "y":Mod(point1.y+(point3.alfa*progress),curve.fieldOrder)};
+        drawPoint(newPoint, curve.fieldOrder, 1, "green");
+    }
+}
 
-function drawPoint (point, size, color) {
+
+
+function drawPoint (point, size, pointSize, color) {
     //console.log("Hello1");
     ctx.beginPath();
-    ctx.arc(point.x * canvas.width / size, canvas.height - (point.y * canvas.height / size), 5, 0, 2 * Math.PI);
+    ctx.arc(point.x * canvas.width / size, canvas.height - (point.y * canvas.height / size), pointSize, 0, 2 * Math.PI);
     ctx.fillStyle = color;
     ctx.fill();
     ctx.stroke();
@@ -40,16 +56,16 @@ function drawPoint (point, size, color) {
 //Curve function //Form y^2 + cxy + dy = x^3 + ax + b
 let curve = {
     "a": 1,
-    "b": 2,
-    "c": 3,
-    "d": 4,
+    "b": 1,
+    "c": 1,
+    "d": 1,
     "mod": 0,
     "fieldOrder": 0,
     points: [],
     drawDots: (size) => {
         //console.log("Hello");
         for (let element of curve.points) {
-            drawPoint(element, size, "black");
+            drawPoint(element, size, 5, "black");
         }
     },
     calcPointDouble: (index, options, mod) => {
@@ -102,7 +118,7 @@ let curve = {
                     additiveXOR(
                         multiplicativeXOR(this.c, xR, mod), y)
                 );
-                let R = {x: xR, y: yR}
+                let R = {x: xR, y: yR, alfa:alfa};
                 return R;
             }
         } else {
@@ -111,7 +127,7 @@ let curve = {
                 let point2 = this.points[index2];
                 let alfa = Mod(((point2.y - point1.y)*inversePrime(Mod(point2.x-point1.x, mod), mod)), mod);
                 let xR = Mod((-point1.x - point2.x + alfa*alfa), mod);
-                let yR = Mod((-point1.y + alfa*(point1.x-xR)), mod);
+                let yR = Mod(-point1.y + alfa*(point1.x-xR), mod);
                 let R = {x:xR, y: yR}
                 return R;
             } else {
@@ -129,26 +145,27 @@ let curve = {
                 additiveXOR(
                     additiveXOR(
                         multiplicativeXOR(alfa,alfa, mod),
-                        additiveXOR(x,x)
+                        additiveXOR(point1.x, point2.x)
                     ),
                     multiplicativeXOR(this.c, alfa, mod)
                 );
                 let yR = 
                 additiveXOR(
                     additiveXOR(
-                        y,
+                        point1.y,
                         multiplicativeXOR(
                             alfa, 
-                            additiveXOR(x, xR),
+                            additiveXOR(point1.x, xR),
                             mod
                         )
                     ),
                     additiveXOR(
                         multiplicativeXOR(this.c, xR, mod),
-                        y
+                        this.d
                     )
                 );
-                let R = {x: xR, y: yR}
+                alert("HELLO!");
+                let R = {x: xR, y: yR, alfa:alfa}
                 return R;
             }
         }
