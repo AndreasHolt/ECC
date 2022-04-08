@@ -67,7 +67,7 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
 
         const cx = el.getAttribute('cx');
         const cy = el.getAttribute('cy');
-        const coords = graphToCoords(myGraph, cx, cy);
+        const coords = graphToCoords(myGraph, { x: cx, y: cy });
 
         if (e.deltaY < 0) { // Zoom in
             graphPos = coordsToGraph(myGraph, coords.x * 1.02, coords.y * 1.02);
@@ -130,11 +130,11 @@ function deletePoints() {
 }
 
 document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
-        movePoint(e, myGraph);
-}); 
+    movePoint(e, myGraph);
+});
 
 document.getElementById('pointP').addEventListener('keypress', (e) => {
-    if(e.key === 'Enter') {
+    if (e.key === 'Enter') {
         const pointsOnGraph = document.getElementsByClassName('workingPoints');
 
         // Delete the point on the graph that was placed first
@@ -180,7 +180,7 @@ document.getElementById('pointP').addEventListener('keypress', (e) => {
             }
         }
     }
-}); 
+});
 
 document.getElementById('layer2').addEventListener('click', (e) => {
     movePoint(e, myGraph); // Ensures that the point is on the graph when clicked

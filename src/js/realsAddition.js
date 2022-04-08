@@ -6,7 +6,7 @@ function twoDecimalRound(val) {
 }
 
 function listPoints(myGraph, points, calculatedX, calculatedY, operation) {
-    const pObj = graphToCoords(myGraph, points);
+    const pObj = graphToCoords(myGraph, points[0]);
     const P = `${twoDecimalRound(pObj.x)}, ${twoDecimalRound(-pObj.y)}`;
 
     let Q;

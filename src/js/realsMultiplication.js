@@ -29,7 +29,8 @@ function pointMultiplication(myGraph) {
     while (i >= 0) { // traversing from most significant bit to least significant bit
         res = calculateDouble(myGraph, res); // double
 
-        if (binary[i] === 1) {
+        // eslint-disable-next-line eqeqeq
+        if (binary[i] == 1) {
             res = calculateAddition(myGraph, res, point); // addition
         }
 
