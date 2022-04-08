@@ -279,7 +279,12 @@ document.getElementById('curve')[2].addEventListener('click', () => {
 });
 
 document.getElementById('explanationExpand').addEventListener('click', () => {
-    document.getElementById('explanationContainer').style.display = '';
+    const container = document.getElementById('explanationContainer');
+    if (container.style.display === 'none') {
+        container.style.display = '';
+    } else {
+        container.style.display = 'none ';
+    }
 });
 
 function init() {
@@ -294,7 +299,12 @@ function init() {
                     // eslint-disable-next-line no-param-reassign
                     buttons.disabled = false;
                 }
+
+
+
             });
+
+            document.getElementById('explanationContainer').style.display = 'none';
 
             deletePoints();
 
