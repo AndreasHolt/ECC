@@ -7,9 +7,6 @@ function pointDouble(myGraph) {
 
     const point = document.getElementsByClassName('workingPoints')[0];
     const storePoint = [getXY(point)];
-    // const storePoints = [
-    //     { x: points[0].getAttribute('cx'), y: points[0].getAttribute('cy') },
-    // ];
 
     pointArr[0] = (storePoint[0].x - myGraph.centerX) / myGraph.scaleX;
     pointArr[1] = -(storePoint[0].y - myGraph.centerY) / myGraph.scaleY;
