@@ -1,24 +1,17 @@
 import { graphToCoords, addCalculatedPoint, getXY } from './graphHelpers';
 import { twoDecimalRound, listPoints } from './realsAddition';
 
-function pointDouble(myGraph) {
-    const pointArr = [];
-    let newPointArr = [];
+function calculateDouble(myGraph, point) {
+    const newPointArr = [];
 
-    const point = document.getElementsByClassName('workingPoints')[0];
-    const storePoint = [getXY(point)];
+    const lambda = (3 * point[0] * point[0] + myGraph.parameterA) / (2 * point[1]);
+    const newX = lambda * lambda - 2 * point[0];
+    const newY = -point[1] + lambda * (point[0] - newX);
 
-    pointArr[0] = (storePoint[0].x - myGraph.centerX) / myGraph.scaleX;
-    pointArr[1] = -(storePoint[0].y - myGraph.centerY) / myGraph.scaleY;
+    newPointArr[0] = newX;
+    newPointArr[1] = newY;
 
-    newPointArr = calculateDouble(myGraph, pointArr);
-
-    const lambda = (3 * newPointArr[0] * newPointArr[0] + myGraph.parameterA) / (2 * newPointArr[1]);
-
-    const listedPoints = listPoints(myGraph, storePoint, newPointArr[0], newPointArr[1], 'doubling');
-    pointDoublingSteps(myGraph, listedPoints, lambda, newPointArr[0], newPointArr[1]);
-
-    addCalculatedPoint(myGraph, newPointArr[0], newPointArr[1], 2);
+    return newPointArr;
 }
 
 function pointDoublingSteps(myGraph, points, lambdaI, x, y) {
@@ -43,17 +36,26 @@ function pointDoublingSteps(myGraph, points, lambdaI, x, y) {
     MathJax.typeset();
 }
 
-function calculateDouble(myGraph, point) {
-    const newPointArr = [];
+function pointDouble(myGraph) {
+    const pointArr = [];
+    let newPointArr = [];
 
-    const lambda = (3 * point[0] * point[0] + myGraph.parameterA) / (2 * point[1]);
-    const newX = lambda * lambda - 2 * point[0];
-    const newY = -point[1] + lambda * (point[0] - newX);
+    const point = document.getElementsByClassName('workingPoints')[0];
+    const storePoint = [getXY(point)];
 
-    newPointArr[0] = newX;
-    newPointArr[1] = newY;
+    pointArr[0] = (storePoint[0].x - myGraph.centerX) / myGraph.scaleX;
+    pointArr[1] = -(storePoint[0].y - myGraph.centerY) / myGraph.scaleY;
 
-    return newPointArr;
+    newPointArr = calculateDouble(myGraph, pointArr);
+
+    const lambda = (3 * newPointArr[0] * newPointArr[0] + myGraph.parameterA) / (2 * newPointArr[1]);
+
+    const listedPoints = listPoints(myGraph, storePoint, newPointArr[0], newPointArr[1], 'doubling');
+    pointDoublingSteps(myGraph, listedPoints, lambda, newPointArr[0], newPointArr[1]);
+
+    addCalculatedPoint(myGraph, newPointArr[0], newPointArr[1], 2);
 }
+
+
 
 export { pointDouble, calculateDouble };
