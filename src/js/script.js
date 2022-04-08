@@ -27,6 +27,9 @@ function drawEquations() {
     drawEquation((x) => -myGraph.equationP(x), 'rgb(59,129,246)', 3, myGraph);
 }
 
+const widthGraph = 751.4;
+const heightGraph = 390;
+
 document.getElementById('pointSVG').addEventListener('wheel', (e) => {
     e.preventDefault();
     movePoint(e, myGraph); // Move point when scrolling
@@ -36,7 +39,7 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
 
     e.preventDefault(); // Prevents page scroll when zooming
 
-    myGraph.context.clearRect(0, 0, 751.4, 390); // Use var of size instead
+    myGraph.context.clearRect(0, 0, widthGraph, heightGraph); // Use var of size instead
 
     if (e.deltaY < 0) { // Zoom in
         scaleZoom /= 1.02;
@@ -257,7 +260,7 @@ document.getElementById('curve')[2].addEventListener('click', () => {
     const firstParameter = document.getElementById('a');
     const secondParameter = document.getElementById('b');
 
-    myGraph.context.clearRect(0, 0, 751.4, 390, myGraph); // Use var of size instead
+    myGraph.context.clearRect(0, 0, widthGraph, heightGraph, myGraph); // Use var of size instead
 
     myGraph = new Graph({
         canvasId: 'myCanvas',
@@ -273,6 +276,10 @@ document.getElementById('curve')[2].addEventListener('click', () => {
     changeEquation(firstParameter.value, secondParameter.value);
     deletePoints();
     drawEquations();
+});
+
+document.getElementById('explanationExpand').addEventListener('click', () => {
+    document.getElementById('explanationContainer').style.display = '';
 });
 
 function init() {
