@@ -59,29 +59,29 @@ function pointAdditionSteps(myGraph, points, lambdaI, x, y) {
     // eslint-disable-next-line no-undef
     MathJax.typeset();
 
-    addCalculatedPoint(myGraph, newX, newY, 1);
+    addCalculatedPoint(myGraph, { x: newX, y: newY }, 1);
 }
 
-function calculateAddition(myGraph, point1, point2) {
-    const lambda = ((point2[1] - point1[1]) / (point2[0] - point1[0]));
-    let newX = (lambda * lambda) - point2[0] - point1[0];
+function calculateAddition(myGraph, point) {
+    console.log(point);
+    const lambda = ((point[1].y - point[0].y) / (point[1].x - point[0].x));
+    let newX = (lambda * lambda) - point[1].x - point[0].x;
     let newY = 0;
-    let result = 0;
 
     // Handle edge case: same x coordinate for both points, but not same y coordinate
-    if (point2[0] === point1[0] && point1[1] !== point2[1]) {
+    if (point[1].x === point[0].x && point[0].y !== point[1].y) {
         newY = 9999999; // TODO find javascript value for this
-        newX = point1[0];
-        result = [newX, newY];
-        return result;
-    } if (point2[0] === point1[0] && point1[1] === point2[1]) {
+        newX = point[0].x;
+
+        return { x: newX, y: newY };
+    } if (point[1].x === point[0].x && point[0].y === point[1].y) {
         pointDouble(myGraph); // TODO Handle edge case: both points are the same, so double the point
 
         // TODO: pointDoublingSteps when implemented
     } else {
-        newY = point2[1] + lambda * newX + lambda * (-point2[0]);
-        result = [newX, newY];
-        return result;
+        newY = point[1].y + lambda * newX + lambda * (-point[1].x);
+
+        return { x: newX, y: newY };
     }
 
     return 0;
@@ -96,16 +96,14 @@ function pointAddition(myGraph) {
     const p2 = graphToCoords(myGraph, points[1]);
 
     const lambda = ((p2.y - p1.y) / (p2.x - p1.x));
-    const point1Arr = [p1.x, p1.y];
-    console.log([p1.x, p1.y], p1);
-    const point2Arr = [p2.x, p2.y];
 
-    const thirdPoint = calculateAddition(myGraph, point1Arr, point2Arr);
+    const thirdPoint = calculateAddition(myGraph, [p1, p2]);
 
-    const listedPoints = listPoints(myGraph, points, thirdPoint[0], thirdPoint[1], 'addition');
-    pointAdditionSteps(myGraph, listedPoints, lambda, thirdPoint[0], thirdPoint[1]);
+    const listedPoints = listPoints(myGraph, points, thirdPoint.x, thirdPoint.y, 'addition');
 
-    addCalculatedPoint(myGraph, thirdPoint[0], thirdPoint[1], 1);
+    pointAdditionSteps(myGraph, listedPoints, lambda, thirdPoint.x, thirdPoint.y);
+
+    addCalculatedPoint(myGraph, thirdPoint, 1);
 }
 
 export {
