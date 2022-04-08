@@ -20,7 +20,13 @@ document.getElementById("pointForm").addEventListener("submit", (event) => {
         drawPoint(newPoint, curve.fieldOrder, 5, "red");
         drawPoint(curve.points[index1],curve.fieldOrder, 5, "blue");
         drawPoint(curve.points[index2],curve.fieldOrder, 5, "yellow");
-        drawLine(curve.points[index1], newPoint,0);
+        //drawLine(curve.points[index1], newPoint,0);
+        drawLineDirect2(curve.points[index1], curve.points[index2]);
+        drawLineDirectGood(curve.points[index1], newPoint);
+        ctx.moveTo(0,0);
+        ctx.lineTo(900,900);
+        ctx.stroke();
+
     } catch (e) {
         console.log("Error! find selv ud af det!");
         console.log(e);
@@ -34,14 +40,74 @@ document.getElementById("power").addEventListener("change", () => {
     }
 });
 
-function drawLine (point1, point3, progress) {
-    if (progress < curve.fieldOrder) {
+function drawLine (x1, x2, y1, y2, size) {
+    ctx.moveTo(x1 * canvas.width / size, canvas.height - (y1 * canvas.height / size));
+    ctx.lineTo(x2 * canvas.width / size, canvas.height - (y2 * canvas.height / size));
+    ctx.stroke();
+
+    /*if (progress < curve.fieldOrder) {
         setTimeout(() => {drawLine(point1, point3, progress + 0.01)}, 0.1);
         let newPoint = {"x":Mod(point1.x + (progress),curve.fieldOrder), "y":Mod(point1.y+(point3.alfa*progress),curve.fieldOrder)};
         drawPoint(newPoint, curve.fieldOrder, 1, "green");
+    }*/
+}
+function drawLineDirect (point1, point2, progress) {
+    if (progress < curve.fieldOrder*5) {
+        setTimeout(() => {drawLineDirect(point1, point2, progress + 0.1)}, 0.1);
+        let alfa = (point2.y - point1.y)/(point2.x - point1.x);
+        console.log("Alfa: " + alfa);
+        let newPoint = {"x":Mod(point1.x + (progress),curve.fieldOrder), "y":Mod(point1.y+(alfa*progress),curve.fieldOrder)};
+        drawPoint(newPoint, curve.fieldOrder, 1, "green");
     }
 }
+function drawLineDirect2 (point1, point2) {
+    let dir = [point2.x - point1.x, point2.y - point1.y];
+    let temp = point1;
+    let currentProgress = 0;
+    while (currentProgress < curve.fieldOrder) {
+        let intersectWithCanvasProgress = Math.min((curve.fieldOrder - temp.x) / dir[0], (curve.fieldOrder - temp.y) / dir[1]);
+        let newX = temp.x + (intersectWithCanvasProgress * dir[0]);
+        let newY = temp.y + (intersectWithCanvasProgress * dir[1]);
+        //draw line
+        drawLine(temp.x, temp.y, newX, newY, curve.fieldOrder);
+        console.log(`Draw line from x1: ${temp.x}, x2: ${newX}, y1: ${temp.y}, y2: ${newY}, progress: ${intersectWithCanvasProgress}.`);
+        temp = {x:Mod(newX, curve.fieldOrder), y:Mod(newY, curve.fieldOrder)};
+        currentProgress = currentProgress + intersectWithCanvasProgress;
+    }
 
+
+    /*if (progress < curve.fieldOrder*5) {
+        setTimeout(() => {drawLineDirect(point1, point2, progress + 0.1)}, 0.1);
+        let alfa = (point2.y - point1.y)/(point2.x - point1.x);
+        console.log("Alfa: " + alfa);
+        let newPoint = {"x":Mod(point1.x + (progress),curve.fieldOrder), "y":Mod(point1.y+(alfa*progress),curve.fieldOrder)};
+        drawPoint(newPoint, curve.fieldOrder, 1, "green");
+    }*/
+}
+
+function drawLineDirectGood (point1, point3) {
+    let tempPoint = {x: point1.x, y:point1.y}
+
+    while(tempPoint.x !== point3.x && !(Math.abs(tempPoint.y - point3.y) >= 0.1)) {
+        if (tempPoint.x + 1 >= curve.fieldOrder){
+            
+        }
+        
+        if(tempPoint.x >= curve.fieldOrder || tempPoint.y >= curve.fieldOrder || tempPoint.y <= 0) {
+            drawLine(point1.x, tempPoint.x, point1.y, tempPoint.y, 16)
+            point1.x = tempPoint.x%curve.fieldOrder;
+            point1.y = tempPoint.y%curve.fieldOrder;
+            tempPoint.x++;
+            tempPoint.x %= curve.fieldOrder;
+            tempPoint.y += point3.alfa;
+            tempPoint.y %= curve.fieldOrder;
+        }
+    }
+
+    ctx.moveTo(point1.x*canvas.width/curve.fieldOrder, point1.y*canvas.height/curve.fieldOrder);
+    ctx.lineTo(point3.x*canvas.width/curve.fieldOrder, point3.y*canvas.height/curve.fieldOrder);
+    ctx.stroke();
+}
 
 
 function drawPoint (point, size, pointSize, color) {
@@ -53,12 +119,12 @@ function drawPoint (point, size, pointSize, color) {
     ctx.stroke();
 }
 
-//Curve function //Form y^2 + cxy + dy = x^3 + ax + b
+//Curve function //Form y^2 + cxy + dy = x^3 + ax^2 + b
 let curve = {
     "a": 1,
     "b": 1,
     "c": 1,
-    "d": 1,
+    "d": 0,
     "mod": 0,
     "fieldOrder": 0,
     points: [],
@@ -104,7 +170,7 @@ let curve = {
                 //let yR = (-y + alfa*(x-xR))%mod;
                 let xR = additiveXOR(
                     additiveXOR(
-                        multiplicativeXOR(alfa, alfa, mod),
+                        m,
                         multiplicativeXOR(x, 2 , mod)
                     ),
                     multiplicativeXOR(this.c, alfa, mod));
@@ -133,6 +199,7 @@ let curve = {
             } else {
                 let point1 = this.points[index1];
                 let point2 = this.points[index2];
+                console.log(additiveXOR(point2.x,point1.x));
                 let alfa = 
                 multiplicativeXOR(
                     additiveXOR(point2.y, point1.y),
@@ -145,9 +212,9 @@ let curve = {
                 additiveXOR(
                     additiveXOR(
                         multiplicativeXOR(alfa,alfa, mod),
-                        additiveXOR(point1.x, point2.x)
+                        additiveXOR(additiveXOR(curve.a, alfa), point1.x)
                     ),
-                    multiplicativeXOR(this.c, alfa, mod)
+                    point2.x
                 );
                 let yR = 
                 additiveXOR(
@@ -159,10 +226,7 @@ let curve = {
                             mod
                         )
                     ),
-                    additiveXOR(
-                        multiplicativeXOR(this.c, xR, mod),
-                        this.d
-                    )
+                    xR
                 );
                 alert("HELLO!");
                 let R = {x: xR, y: yR, alfa:alfa}
@@ -194,10 +258,10 @@ function createPoints (curve, finiteFieldSize, mod) {
 function createPointsGF2 (curve, finiteFieldSize, mod) {
     for (let x = 0; x < finiteFieldSize; x++) {
         let y;
-        let leftSide = additiveXOR(
+        let rightSide = additiveXOR(
             additiveXOR(
                 multiplicativeXOR(x, multiplicativeXOR(x, x, mod), mod),
-                multiplicativeXOR(curve.a, x, mod)
+                multiplicativeXOR(curve.a, multiplicativeXOR(x, x, mod), mod)
             ),
             curve.b
         );
@@ -209,9 +273,23 @@ function createPointsGF2 (curve, finiteFieldSize, mod) {
                         multiplicativeXOR(cx, y, mod)
                     ),
                     multiplicativeXOR(curve.d, y, mod)
-                ) === leftSide)
+                ) === rightSide)
             {
                 curve.points.push({x:x, y:y});
+                if (x !== 0) {
+                    let x2 = x;
+                    let y2 = additiveXOR(y,x);
+                    if (additiveXOR(
+                        additiveXOR(
+                            multiplicativeXOR(y2, y2, mod),
+                            multiplicativeXOR(cx, y2, mod)
+                        ),
+                        multiplicativeXOR(curve.d, y2, mod)
+                    ) === rightSide)
+                    {
+                        curve.points.push({x:x2, y:y2});
+                    }
+                }
                 break;
                 //console.log(curve.points[curve.points.length - 1]);
             }
@@ -219,8 +297,9 @@ function createPointsGF2 (curve, finiteFieldSize, mod) {
         if (y === finiteFieldSize) {
             console.log("Error!");
         }
-        console.log(`Progress: ${(x / finiteFieldSize)*100}%`);
+        //console.log(`Progress: ${(x / finiteFieldSize)*100}%`);
     }
+    console.log(curve.points);
 }
 
 
@@ -258,8 +337,8 @@ function handleSubmit (event) {
 
     if (power > 1) {
         modoli = Number(event.target["modoli"].value);
-        curve.c = 1;
-        curve.d = 1;
+        //curve.c = 1;
+        //curve.d = 1;
     } else {
         modoli = prime;
         curve.c = 0;
