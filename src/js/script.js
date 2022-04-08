@@ -163,7 +163,6 @@ document.getElementById('pointP').addEventListener('keypress', (e) => {
                     scalarFormsX.setAttribute('id', 'scalarFormsActive');
                     const formPlaceholder = document.getElementById('formPlaceholder');
                     formPlaceholder.appendChild(document.getElementById('scalarFormsActive'));
-                    console.log(document.getElementById('scalarFormsID'));
 
                     const html = "<p class='font-bold text-xl mb-2 text-gray-800 mb-10' id='parameters'>\\(nP = P + P + ... + P\\) \\((n \\; times)\\)</p>"
                     + "<label class='block tracking-wide text-gray-700 text-x font-bold mb-2' for='setScalar'> Choose a scalar \\(n\\)</label>"
@@ -216,7 +215,6 @@ document.getElementById('layer2').addEventListener('click', (e) => {
                 scalarFormsX.setAttribute('id', 'scalarFormsActive');
                 const formPlaceholder = document.getElementById('formPlaceholder');
                 formPlaceholder.appendChild(document.getElementById('scalarFormsActive'));
-                console.log(document.getElementById('scalarFormsID'));
 
                 const html = "<p class='font-bold text-xl text-gray-800 mb-10' id='parameters'>\\(nP = P + P + ... + P\\) \\((n \\; times)\\)</p>"
                 + "<label class='block tracking-wide text-gray-700 text-x font-bold mb-2' for='setScalar'> Choose a scalar \\(n\\)</label>"
