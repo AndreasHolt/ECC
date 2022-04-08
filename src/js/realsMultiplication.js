@@ -11,8 +11,10 @@ function convertToBinary(scalar) {
         binary = (num % 2) + (binary);
     }
 
-    const binaryArray = (`${binary}`).split('').reverse();
 
+    const binaryArray = (`${binary}`).split('').reverse();
+    console.log(binaryArray);
+    
     return binaryArray;
 }
 
