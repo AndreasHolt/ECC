@@ -206,27 +206,28 @@ describe('Unit Test Application Code', () => {
 
     context('ECC calculations', () => {
         it('calculateAddition x coordinate', () => {
-            const point1 = [0.8388814913448736, -3.3757861359141805];
-            const point2 = [-1.7177097203728364, 4.303533459549233];
+            const point1 = { x: 0.8388814913448736, y: -3.3757861359141805};
+            const point2 = { x: -1.7177097203728364, y: 4.303533459549233};
 
-            expect(calculateAddition(myGraph, point1, point2)[0]).to.eq(9.90124534636108);
+            expect(calculateAddition(myGraph, [point1, point2]).x).to.eq(9.90124534636108);
         });
 
         it('calculateAddition y coordinate', () => {
-            const point1 = [0.8388814913448736, -3.3757861359141805];
-            const point2 = [-1.7177097203728364, 4.303533459549233];
+            const point1 = { x: 0.8388814913448736, y: -3.3757861359141805};
+            const point2 = { x: -1.7177097203728364, y: 4.303533459549233};
 
-            expect(calculateAddition(myGraph, point1, point2)[1]).to.eq(-30.596715322433464);
+            expect(calculateAddition(myGraph, [point1, point2]).y).to.eq(-30.596715322433464);
         });
 
         it('calculateDouble x coordinate', () => {
-            const point1 = [-1.2916111850865513, -4.393553613618751];
-            expect(calculateDouble(myGraph, point1)[0]).to.eq(2.5832226658830533);
+            const point1 = {x: -1.2916111850865513, y: -4.393553613618751};
+
+            expect(calculateDouble(myGraph, point1).x).to.eq(2.5832226658830533);
         });
 
         it('calculateDouble y coordinate', () => {
-            const point1 = [-1.2916111850865513, -4.393553613618751];
-            expect(calculateDouble(myGraph, point1)[1]).to.eq(4.395660718021738);
+            const point1 = {x: -1.2916111850865513, y: -4.393553613618751};
+            expect(calculateDouble(myGraph, point1).y).to.eq(4.395660718021738);
         });
 
         it('test y coordinate', () => {
