@@ -280,7 +280,9 @@ document.getElementById('curve')[2].addEventListener('click', () => {
 
 document.getElementById('explanationExpand').addEventListener('click', () => {
     const container = document.getElementById('explanationContainer');
-    if (container.style.display === 'none') {
+    if (container.style.display === 'none' && document.getElementsByClassName('calculatedPoints').length === 0) {
+        alert('Place points on the graph first!');
+    } else if (container.style.display === 'none') {
         container.style.display = '';
     } else {
         container.style.display = 'none ';
