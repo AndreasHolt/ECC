@@ -5,14 +5,14 @@ function twoDecimalRound(val) {
     return Math.round(val * 100) / 100;
 }
 
-function listPoints(myGraph, point1, point2, calculatedX, calculatedY, operation) {
-    const pObj = graphToCoords(myGraph, point1);
+function listPoints(myGraph, placedPoints, calculatedX, calculatedY, operation) {
+    const pObj = graphToCoords(myGraph, placedPoints[0]);
     const P = `${twoDecimalRound(pObj.x)}, ${twoDecimalRound(-pObj.y)}`;
 
     let Q;
     let qObj;
     if (operation === 'addition') {
-        qObj = graphToCoords(myGraph, point2);
+        qObj = graphToCoords(myGraph, placedPoints[1]);
         Q = `${twoDecimalRound(qObj.x)}, ${twoDecimalRound(-qObj.y)}`;
     }
 
@@ -59,59 +59,53 @@ function pointAdditionSteps(myGraph, points, lambdaI, x, y) {
     // eslint-disable-next-line no-undef
     MathJax.typeset();
 
-    addCalculatedPoint(myGraph, newX, newY, 1);
+    addCalculatedPoint(myGraph, { x: newX, y: newY }, 1);
 }
 
-function calculateAddition(myGraph, point1, point2) {
-    const lambda = ((point2[1] - point1[1]) / (point2[0] - point1[0]));
-    let newX = (lambda * lambda) - point2[0] - point1[0];
+function calculateAddition(myGraph, point) {
+    console.log(point);
+    const lambda = ((point[1].y - point[0].y) / (point[1].x - point[0].x));
+    let newX = (lambda * lambda) - point[1].x - point[0].x;
     let newY = 0;
-    let result = 0;
 
     // Handle edge case: same x coordinate for both points, but not same y coordinate
-    if (point2[0] === point1[0] && point1[1] !== point2[1]) {
+    if (point[1].x === point[0].x && point[0].y !== point[1].y) {
         newY = 9999999; // TODO find javascript value for this
-        newX = point1[0];
-        result = [newX, newY];
-        return result;
-    } if (point2[0] === point1[0] && point1[1] === point2[1]) {
-        pointDouble(myGraph); // Handle edge case: both points are the same, so double the point
+        newX = point[0].x;
+
+        return { x: newX, y: newY };
+    } if (point[1].x === point[0].x && point[0].y === point[1].y) {
+        pointDouble(myGraph); // TODO Handle edge case: both points are the same, so double the point
 
         // TODO: pointDoublingSteps when implemented
     } else {
-        newY = point2[1] + lambda * newX + lambda * (-point2[0]);
-        result = [newX, newY];
-        return result;
+        newY = point[1].y + lambda * newX + lambda * (-point[1].x);
+
+        return { x: newX, y: newY };
     }
 
     return 0;
 }
 
 function pointAddition(myGraph) {
-    const points = document.getElementsByClassName('workingPoints');
+    const wPoints = document.getElementsByClassName('workingPoints');
 
-    const point1 = getXY(points[0]);
-    const point2 = getXY(points[1]);
+    const points = [getXY(wPoints[0]), getXY(wPoints[1])];
 
-    // graphToCoords(myGraph, graphX, graphY)
-    // const p1 = graphToCoords(myGraph, )
-    const x1 = (point1.x - myGraph.centerX) / myGraph.scaleX;
-    const y1 = (point1.y - myGraph.centerY) / myGraph.scaleY;
-    const x2 = (point2.x - myGraph.centerX) / myGraph.scaleX;
-    const y2 = (point2.y - myGraph.centerY) / myGraph.scaleY;
+    const p1 = graphToCoords(myGraph, points[0]);
+    const p2 = graphToCoords(myGraph, points[1]);
 
-    const lambda = ((y2 - y1) / (x2 - x1));
-    const point1Arr = [x1, y1];
-    const point2Arr = [x2, y2];
+    const lambda = ((p2.y - p1.y) / (p2.x - p1.x));
 
-    const thirdPoint = calculateAddition(myGraph, point1Arr, point2Arr);
+    const thirdPoint = calculateAddition(myGraph, [p1, p2]);
 
-    const listedPoints = listPoints(myGraph, point1, point2, thirdPoint[0], thirdPoint[1], 'addition');
-    pointAdditionSteps(myGraph, listedPoints, lambda, thirdPoint[0], thirdPoint[1]);
+    const listedPoints = listPoints(myGraph, points, thirdPoint.x, thirdPoint.y, 'addition');
 
-    addCalculatedPoint(myGraph, thirdPoint[0], thirdPoint[1], 1);
+    pointAdditionSteps(myGraph, listedPoints, lambda, thirdPoint.x, thirdPoint.y);
+
+    addCalculatedPoint(myGraph, thirdPoint, 1);
 }
 
 export {
-    pointAddition, listPoints, pointAdditionSteps, calculateAddition, twoDecimalRound
+    pointAddition, listPoints, pointAdditionSteps, calculateAddition, twoDecimalRound,
 };
