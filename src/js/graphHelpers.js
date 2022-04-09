@@ -37,6 +37,12 @@ function movePoint(event, myGraph) {
     }
 }
 
+function getXY(el) {
+    const x = parseInt(el.getAttribute('cx'), 10);
+    const y = parseInt(el.getAttribute('cy'), 10);
+    return { x, y };
+}
+
 function coordsToGraph(myGraph, coordsX, coordsY) {
     const x = myGraph.centerX + (coordsX * myGraph.scaleX);
     const y = myGraph.centerY + (coordsY * myGraph.scaleY);
@@ -44,10 +50,11 @@ function coordsToGraph(myGraph, coordsX, coordsY) {
 }
 
 function getPointPlacement(myGraph, x) {
-    const point1 = document.getElementsByClassName('workingPoints')[0];
-    const point2 = document.getElementsByClassName('workingPoints')[1];
-    const x1 = (point1.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX;
-    const x2 = (point2.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX;
+    const points = document.getElementsByClassName('workingPoints');
+
+    const x1 = (getXY(points[0]).x - myGraph.centerX) / myGraph.scaleX;
+    const x2 = (getXY(points[1]).x - myGraph.centerX) / myGraph.scaleX;
+
     let returnValue;
 
     if ((x > x1) && (x > x2)) {
@@ -57,6 +64,7 @@ function getPointPlacement(myGraph, x) {
     } else if (x1 >= x && x2 >= x) {
         returnValue = 3;
     }
+
     return returnValue;
 }
 
@@ -118,7 +126,7 @@ function drawLine(myGraph, operator, color, i, x, y, svg, pointOperation) {
     svg.appendChild(newLine);
 }
 
-function addCalculatedPoint(myGraph, x, y, pointOperation) {
+function addCalculatedPoint(myGraph, point, pointOperation) {
     if (document.getElementsByClassName('calculatedPoints').length === 2) {
         document.getElementsByClassName('calculatedPoints')[1].remove();
         document.getElementsByClassName('calculatedPoints')[0].remove();
@@ -133,10 +141,9 @@ function addCalculatedPoint(myGraph, x, y, pointOperation) {
     let arrayIntersectInverted;
 
     if (pointOperation === 3) {
-        arrayIntersectInverted = [y];
-        console.log('arrayInt');
+        arrayIntersectInverted = [point.y];
     } else {
-        arrayIntersectInverted = [y, -y];
+        arrayIntersectInverted = [point.y, -point.y];
     }
 
     for (let i = 0; i < arrayIntersectInverted.length; i += 1) {
@@ -148,7 +155,7 @@ function addCalculatedPoint(myGraph, x, y, pointOperation) {
             circle.setAttribute('fill', 'fuchsia');
         }
 
-        circle.setAttribute('cx', (x * myGraph.scaleX) + myGraph.centerX);
+        circle.setAttribute('cx', (point.x * myGraph.scaleX) + myGraph.centerX);
         circle.setAttribute('cy', (-arrayIntersectInverted[i] * myGraph.scaleY) + myGraph.centerY);
         circle.classList.add('calculatedPoints');
         circle.setAttribute('r', 5);
@@ -159,9 +166,9 @@ function addCalculatedPoint(myGraph, x, y, pointOperation) {
         if (pointOperation === 3) {
             return 0;
         } if (i === 0) {
-            drawLine(myGraph, '+', 'fuchsia', i, x, y, svg, pointOperation);
+            drawLine(myGraph, '+', 'fuchsia', i, point.x, point.y, svg, pointOperation);
         } else {
-            drawLine(myGraph, '-', 'orange', i, x, y, svg, pointOperation);
+            drawLine(myGraph, '-', 'orange', i, point.x, point.y, svg, pointOperation);
         }
     }
 }
@@ -179,12 +186,6 @@ function addPointOnClick() {
 
     const svg = document.querySelector('svg');
     svg.appendChild(circle);
-}
-
-function getXY(el) {
-    const x = parseInt(el.getAttribute('cx'), 10);
-    const y = parseInt(el.getAttribute('cy'), 10);
-    return { x, y };
 }
 
 function addPointByInput(idX, myGraph) {

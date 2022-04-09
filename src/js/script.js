@@ -27,6 +27,9 @@ function drawEquations() {
     drawEquation((x) => -myGraph.equationP(x), 'rgb(59,129,246)', 3, myGraph);
 }
 
+const widthGraph = 751.4;
+const heightGraph = 390;
+
 document.getElementById('pointSVG').addEventListener('wheel', (e) => {
     e.preventDefault();
     movePoint(e, myGraph); // Move point when scrolling
@@ -36,7 +39,7 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
 
     e.preventDefault(); // Prevents page scroll when zooming
 
-    myGraph.context.clearRect(0, 0, 751.4, 390); // Use var of size instead
+    myGraph.context.clearRect(0, 0, widthGraph, heightGraph); // Use var of size instead
 
     if (e.deltaY < 0) { // Zoom in
         scaleZoom /= 1.02;
@@ -67,7 +70,7 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
 
         const cx = el.getAttribute('cx');
         const cy = el.getAttribute('cy');
-        const coords = graphToCoords(myGraph, cx, cy);
+        const coords = graphToCoords(myGraph, { x: cx, y: cy });
 
         if (e.deltaY < 0) { // Zoom in
             graphPos = coordsToGraph(myGraph, coords.x * 1.02, coords.y * 1.02);
@@ -120,7 +123,6 @@ function deletePoints() {
 
     Array.from(allSVG).forEach((key) => {
         for (let i = key.length; i > 0; i -= 1) {
-            // console.log(key[i-1])
             key[i - 1].remove();
         }
     });
@@ -131,8 +133,8 @@ function deletePoints() {
 }
 
 document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
-        movePoint(e, myGraph);
-}); 
+    movePoint(e, myGraph);
+});
 
 document.getElementById('pointQ').addEventListener('keypress', (e) => {
     if(e.key === 'Enter') {
@@ -153,7 +155,7 @@ document.getElementById('pointQ').addEventListener('keypress', (e) => {
 }); 
 
 document.getElementById('pointP').addEventListener('keypress', (e) => {
-    if(e.key === 'Enter') {
+    if (e.key === 'Enter') {
         const pointsOnGraph = document.getElementsByClassName('workingPoints');
 
         // Delete the point on the graph that was placed first
@@ -182,7 +184,6 @@ document.getElementById('pointP').addEventListener('keypress', (e) => {
                     scalarFormsX.setAttribute('id', 'scalarFormsActive');
                     const formPlaceholder = document.getElementById('formPlaceholder');
                     formPlaceholder.appendChild(document.getElementById('scalarFormsActive'));
-                    console.log(document.getElementById('scalarFormsID'));
 
                     const html = "<p class='font-bold text-xl mb-2 text-gray-800 mb-10' id='parameters'>\\(nP = P + P + ... + P\\) \\((n \\; times)\\)</p>"
                     + "<label class='block tracking-wide text-gray-700 text-x font-bold mb-2' for='setScalar'> Choose a scalar \\(n\\)</label>"
@@ -202,7 +203,7 @@ document.getElementById('pointP').addEventListener('keypress', (e) => {
             }
         }
     }
-}); 
+});
 
 document.getElementById('layer2').addEventListener('click', (e) => {
     movePoint(e, myGraph); // Ensures that the point is on the graph when clicked
@@ -235,7 +236,6 @@ document.getElementById('layer2').addEventListener('click', (e) => {
                 scalarFormsX.setAttribute('id', 'scalarFormsActive');
                 const formPlaceholder = document.getElementById('formPlaceholder');
                 formPlaceholder.appendChild(document.getElementById('scalarFormsActive'));
-                console.log(document.getElementById('scalarFormsID'));
 
                 const html = "<p class='font-bold text-xl text-gray-800 mb-10' id='parameters'>\\(nP = P + P + ... + P\\) \\((n \\; times)\\)</p>"
                 + "<label class='block tracking-wide text-gray-700 text-x font-bold mb-2' for='setScalar'> Choose a scalar \\(n\\)</label>"
@@ -279,7 +279,7 @@ document.getElementById('curve')[2].addEventListener('click', () => {
     const firstParameter = document.getElementById('a');
     const secondParameter = document.getElementById('b');
 
-    myGraph.context.clearRect(0, 0, 751.4, 390, myGraph); // Use var of size instead
+    myGraph.context.clearRect(0, 0, widthGraph, heightGraph, myGraph); // Use var of size instead
 
     myGraph = new Graph({
         canvasId: 'myCanvas',
@@ -297,6 +297,17 @@ document.getElementById('curve')[2].addEventListener('click', () => {
     drawEquations();
 });
 
+document.getElementById('explanationExpand').addEventListener('click', () => {
+    const container = document.getElementById('explanationContainer');
+    if (container.style.display === 'none' && document.getElementsByClassName('calculatedPoints').length === 0) {
+        alert('Place points on the graph first!');
+    } else if (container.style.display === 'none') {
+        container.style.display = '';
+    } else {
+        container.style.display = 'none ';
+    }
+});
+
 function init() {
     drawEquations();
 
@@ -309,7 +320,12 @@ function init() {
                     // eslint-disable-next-line no-param-reassign
                     buttons.disabled = false;
                 }
+
+
+
             });
+
+            document.getElementById('explanationContainer').style.display = 'none';
 
             deletePoints();
 
