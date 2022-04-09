@@ -188,11 +188,9 @@ function getXY(el) {
 }
 
 function addPointByInput(idX, myGraph) {
-    console.log('Test1');
     const svgNS = 'http://www.w3.org/2000/svg';
     const x = document.getElementById(idX).value;
     const y = document.getElementById(`${idX[0]}y`);
-    console.log('Test2');
 
     const circle = document.createElementNS(svgNS, 'circle');
     circle.setAttribute('fill', 'red');
@@ -204,7 +202,6 @@ function addPointByInput(idX, myGraph) {
     y.value = `${myGraph.equationP(x)}`;
     const svg = document.querySelector('svg');
     svg.appendChild(circle);
-    console.log('Test3');
 }
 
 export {
