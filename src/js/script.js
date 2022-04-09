@@ -134,6 +134,24 @@ document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
         movePoint(e, myGraph);
 }); 
 
+document.getElementById('pointQ').addEventListener('keypress', (e) => {
+    if(e.key === 'Enter') {
+        const pointsOnGraph = document.getElementsByClassName('workingPoints');
+
+        // Delete the point on the graph that was placed first
+        if (document.getElementById('pointAddition').disabled) {
+            if (pointsOnGraph.length === 0) {
+                addPointByInput('Qx', myGraph);
+            } else if (pointsOnGraph.length === 1) {
+                addPointByInput('Qx', myGraph);
+                pointAddition(myGraph)
+            } else {
+                deletePoints();
+            }
+        }
+    }
+}); 
+
 document.getElementById('pointP').addEventListener('keypress', (e) => {
     if(e.key === 'Enter') {
         const pointsOnGraph = document.getElementsByClassName('workingPoints');
@@ -142,6 +160,9 @@ document.getElementById('pointP').addEventListener('keypress', (e) => {
         if (document.getElementById('pointAddition').disabled) {
             if (pointsOnGraph.length === 0) {
                 addPointByInput('Px', myGraph);
+            } else if (pointsOnGraph.length === 1) {
+                addPointByInput('Px', myGraph);
+                pointAddition(myGraph);
             } else {
                 deletePoints();
             }
