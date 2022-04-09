@@ -138,6 +138,7 @@ document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
 
 document.getElementById('pointQ').addEventListener('keypress', (e) => {
     if(e.key === 'Enter') {
+        console.log("LmaoQ");
         const pointsOnGraph = document.getElementsByClassName('workingPoints');
 
         // Delete the point on the graph that was placed first
@@ -156,6 +157,7 @@ document.getElementById('pointQ').addEventListener('keypress', (e) => {
 
 document.getElementById('pointP').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
+        console.log("LmaoP");
         const pointsOnGraph = document.getElementsByClassName('workingPoints');
 
         // Delete the point on the graph that was placed first
@@ -275,26 +277,53 @@ function changeEquation(a, b) {
     MathJax.typeset();
 }
 
-document.getElementById('curve')[2].addEventListener('click', () => {
-    const firstParameter = document.getElementById('a');
-    const secondParameter = document.getElementById('b');
+document.getElementById('curve')[0].addEventListener('keypress', (e) => {
+    if(e.key === 'Enter') {
+        const firstParameter = document.getElementById('a');
+        const secondParameter = document.getElementById('b');
 
-    myGraph.context.clearRect(0, 0, widthGraph, heightGraph, myGraph); // Use var of size instead
+        myGraph.context.clearRect(0, 0, widthGraph, heightGraph, myGraph); // Use var of size instead
 
-    myGraph = new Graph({
-        canvasId: 'myCanvas',
-        minX: -scaleZoom,
-        minY: -scaleZoom,
-        maxX: scaleZoom,
-        maxY: scaleZoom,
-        parameterA: parseInt(firstParameter.value, 10),
-        parameterB: parseInt(secondParameter.value, 10),
-        unitsPerTick: scaleZoom / 5,
-    });
+        myGraph = new Graph({
+            canvasId: 'myCanvas',
+            minX: -scaleZoom,
+            minY: -scaleZoom,
+            maxX: scaleZoom,
+            maxY: scaleZoom,
+            parameterA: parseInt(firstParameter.value, 10),
+            parameterB: parseInt(secondParameter.value, 10),
+            unitsPerTick: scaleZoom / 5,
+        });
 
-    changeEquation(firstParameter.value, secondParameter.value);
-    deletePoints();
-    drawEquations();
+        changeEquation(firstParameter.value, secondParameter.value);
+        deletePoints();
+        drawEquations();
+
+    }
+});
+document.getElementById('curve')[1].addEventListener('keypress', (e) => {
+    if(e.key === 'Enter') {
+        const firstParameter = document.getElementById('a');
+        const secondParameter = document.getElementById('b');
+
+        myGraph.context.clearRect(0, 0, widthGraph, heightGraph, myGraph); // Use var of size instead
+
+        myGraph = new Graph({
+            canvasId: 'myCanvas',
+            minX: -scaleZoom,
+            minY: -scaleZoom,
+            maxX: scaleZoom,
+            maxY: scaleZoom,
+            parameterA: parseInt(firstParameter.value, 10),
+            parameterB: parseInt(secondParameter.value, 10),
+            unitsPerTick: scaleZoom / 5,
+        });
+
+        changeEquation(firstParameter.value, secondParameter.value);
+        deletePoints();
+        drawEquations();
+
+    }
 });
 
 document.getElementById('explanationExpand').addEventListener('click', () => {
