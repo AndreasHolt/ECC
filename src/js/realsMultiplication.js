@@ -1,20 +1,21 @@
-import { addCalculatedPoint, getXY, graphToCoords, removeBinaryParagraphs } from './graphHelpers';
+import {
+    addCalculatedPoint, getXY, graphToCoords, removeBinaryParagraphs,
+} from './graphHelpers';
 import { calculateDouble } from './realsDoubling';
 import { calculateAddition, listPoints, twoDecimalRound } from './realsAddition';
-
 
 function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
     points.x = twoDecimalRound(points.x);
     points.y = twoDecimalRound(points.y);
 
-    const binary = convertToBinary(scalar,0);
+    const binary = convertToBinary(scalar, 0);
 
     // If so we should use Number.toFixed
     const newX = twoDecimalRound(x);
     const newY = twoDecimalRound(y);
 
-    let arrayPowerOfTwo = [];
-    let arrayPowerOfTwoOnes = []
+    const arrayPowerOfTwo = [];
+    const arrayPowerOfTwoOnes = [];
 
     console.log(binary);
     // Show binary representation calculations
@@ -33,12 +34,11 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
     // REMOVE FROM HTML when calculation button event listener
     removeBinaryParagraphs();
 
-    let paragraphPowerOfTwo = document.createElement('p');
+    const paragraphPowerOfTwo = document.createElement('p');
     paragraphPowerOfTwo.className = 'paragraphBinary';
     stepRows[0].insertAdjacentElement('afterend', paragraphPowerOfTwo);
 
     // clear inner HTML whenever a new scalar is being input
-
 
     document.getElementById('calculatingHeader').innerHTML = 'Point Multiplication: Double and Add Algorithm';
     stepRows[0].innerHTML = `There exist faster algorithms than simply computing \\(n \\cdot P\\), which requires n additions. One of them is the double and add algorithm: <br>
@@ -52,24 +52,23 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
         }
     }
 
-
     stepRows[0].innerHTML += `<br> <br> Which we can write as: <br>
                               \\(${scalar} \\cdot P = \\) &nbsp`;
 
     for (let i = 0; i < arrayPowerOfTwoOnes.length; i += 1) {
-        stepRows[0].innerHTML += arrayPowerOfTwoOnes[i] + `\\(P\\)`;
+        stepRows[0].innerHTML += `${arrayPowerOfTwoOnes[i]}\\(P\\)`;
         if (i !== arrayPowerOfTwoOnes.length - 1) {
             stepRows[0].innerHTML += ' + ';
         }
     }
 
-    stepRows[0].innerHTML += `<br> Therefore the Double and Add algorithm tells us to: <br> <br>• Take \\(P\\) <br>`;
+    stepRows[0].innerHTML += '<br> Therefore the Double and Add algorithm tells us to: <br> <br>• Take \\(P\\) <br>';
 
     const binaryReversed = binary.toString().split('').reverse().join('');
     console.log(binaryReversed);
 
-    for(let i = 0; i < binary.length; i += 1) {
-        if(i !== 0) {
+    for (let i = 0; i < binary.length; i += 1) {
+        if (i !== 0) {
             stepRows[0].innerHTML += `• Double \\( 2^{${i - 1}}P\\), so that we get \\(2^{${i}}P\\) <br>`;
             if (binary[binary.length - 1 - i] === '1') {
                 console.log('Index: ', binary.length - 1 - i);
@@ -78,13 +77,9 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
                 stepRows[0].innerHTML += `• Don't perform any addition involving \\(2^{${i}}P\\) <br>`;
             }
         }
-
     }
 
-    stepRows[0].innerHTML += `<br>Thus, to compute \\(${scalar} \\cdot P \\), we only have to perform ${arrayPowerOfTwoOnes.length - 1} additions and ${binary.length - 1} doublings.`
-
-
-
+    stepRows[0].innerHTML += `<br>Thus, to compute \\(${scalar} \\cdot P \\), we only have to perform ${arrayPowerOfTwoOnes.length - 1} additions and ${binary.length - 1} doublings.`;
 
     /*   stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a new point \\(R = (x_R, y_R):\\) <br>
                                \\(x_R = m^2 - 2x_P = ${lambda}^2 - 2 \\cdot ${points.x}  = \\underline{${newX}}\\) <br>
@@ -94,7 +89,6 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
     // eslint-disable-next-line no-undef
     MathJax.typeset();
 }
-
 
 function convertToBinary(scalar, arrayBool) {
     let num = scalar;
@@ -109,7 +103,6 @@ function convertToBinary(scalar, arrayBool) {
         return binary;
     }
 
-
     const binaryArray = (`${binary}`).split('').reverse();
     console.log(binaryArray);
 
@@ -120,8 +113,6 @@ function convertToBinary(scalar, arrayBool) {
 //     const points = document.getElementsByClassName('workingPoints');
 //     const point = [(points[0].getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, -(points[0].getAttribute('cy') - myGraph.centerY) / myGraph.scaleY];
 //     const storePoint = [getXY(document.getElementsByClassName('workingPoints')[0])]; // TODO Check if this is the same as above
-
-
 
 //     const scalar = document.getElementById('scalarForm').value;
 //     const binary = convertToBinary(scalar, 1); // the array of bits, from msb to lsb
@@ -152,14 +143,13 @@ function convertToBinary(scalar, arrayBool) {
 //     return res;
 // }
 
-
 function pointMultiplication(myGraph) {
     const pointEl = document.getElementsByClassName('workingPoints')[0];
     const point = graphToCoords(myGraph, getXY(pointEl));
     point.y = -point.y;
 
     const scalar = document.getElementById('scalarForm').value;
-    const binary = convertToBinary(scalar); // the array of bits, from msb to lsb
+    const binary = convertToBinary(scalar, 1); // the array of bits, from msb to lsb
 
     let i = binary.length - 2;
     let res = point;
