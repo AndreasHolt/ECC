@@ -1,5 +1,5 @@
 import { pointDouble } from './realsDoubling';
-import { pointAddition } from './realsAddition';
+import { pointAddition, twoDecimalRound} from './realsAddition';
 import { pointMultiplication } from './realsMultiplication';
 import {
     movePoint, graphToCoords, coordsToGraph, addPointOnClick, addPointByInput,
@@ -137,6 +137,9 @@ function deletePoints() {
             paragraphs[i].remove();
         }
     }
+    for (const point of document.getElementsByClassName('border-solid border-2 border-black h-10 w-14')) { 
+        point.value = "";
+    }
 }
 
 document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
@@ -151,7 +154,7 @@ document.getElementById('negateP').addEventListener('click', (e) => {
 
     for (const x of pointsOnGraph) {
         if ((pointPx.value < (x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX + 0.0001) && (pointPx.value > (x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX - 0.0001)) {
-            pointPy.value = `${-pointPy.value}`
+            pointPy.value = `${-twoDecimalRound(pointPy.value)}`
 
             y = (x.getAttribute('cy') - myGraph.centerY)/myGraph.scaleY;
             x.setAttribute('cy', -(y*myGraph.scaleY)+myGraph.centerY);
@@ -178,7 +181,7 @@ document.getElementById('negateQ').addEventListener('click', (e) => {
     for (const x of pointsOnGraph) {
         console.log((x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX)
         if ((pointQx.value < (x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX + 0.0001) && (pointQx.value > (x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX - 0.0001)) {
-            pointQy.value = `${-pointQy.value}`
+            pointQy.value = `${-twoDecimalRound(pointQy.value)}`
 
             y = (x.getAttribute('cy') - myGraph.centerY)/myGraph.scaleY;
             console.log(y);
