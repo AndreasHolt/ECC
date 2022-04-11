@@ -1,4 +1,4 @@
-import { addCalculatedPoint, getXY } from './graphHelpers';
+import { addCalculatedPoint, getXY, graphToCoords } from './graphHelpers';
 import { calculateDouble } from './realsDoubling';
 import { calculateAddition, listPoints, twoDecimalRound } from './realsAddition';
 
@@ -66,15 +66,50 @@ function convertToBinary(scalar, arrayBool) {
     return binaryArray;
 }
 
+// function pointMultiplication(myGraph) {
+//     const points = document.getElementsByClassName('workingPoints');
+//     const point = [(points[0].getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, -(points[0].getAttribute('cy') - myGraph.centerY) / myGraph.scaleY];
+//     const storePoint = [getXY(document.getElementsByClassName('workingPoints')[0])]; // TODO Check if this is the same as above
+
+
+
+//     const scalar = document.getElementById('scalarForm').value;
+//     const binary = convertToBinary(scalar, 1); // the array of bits, from msb to lsb
+
+//     let i = binary.length - 2;
+//     let res = point;
+
+//     while (i >= 0) { // traversing from most significant bit to least significant bit
+//         res = calculateDouble(myGraph, res); // double
+
+//         // eslint-disable-next-line eqeqeq
+//         if (binary[i] == 1) {
+//             res = calculateAddition(myGraph, res, point); // addition
+//         }
+
+//         i -= 1;
+//     }
+
+//     console.log('Calculated points: ', res[0], -res[1]);
+
+//     const listedPoints = listPoints(myGraph, storePoint, res[0], res[1], 'doubling');
+
+//     pointMultiplicationSteps(myGraph, listedPoints, res[0], res[1], scalar);
+
+//     addCalculatedPoint(myGraph, res[0], res[1], 3);
+
+//     res[1] = -res[1];
+//     return res;
+// }
+
+
 function pointMultiplication(myGraph) {
-    const points = document.getElementsByClassName('workingPoints');
-    const point = [(points[0].getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, -(points[0].getAttribute('cy') - myGraph.centerY) / myGraph.scaleY];
-    const storePoint = [getXY(document.getElementsByClassName('workingPoints')[0])]; // TODO Check if this is the same as above
-
-
+    const pointEl = document.getElementsByClassName('workingPoints')[0];
+    const point = graphToCoords(myGraph, getXY(pointEl));
+    point.y = -point.y;
 
     const scalar = document.getElementById('scalarForm').value;
-    const binary = convertToBinary(scalar, 1); // the array of bits, from msb to lsb
+    const binary = convertToBinary(scalar); // the array of bits, from msb to lsb
 
     let i = binary.length - 2;
     let res = point;
@@ -82,23 +117,20 @@ function pointMultiplication(myGraph) {
     while (i >= 0) { // traversing from most significant bit to least significant bit
         res = calculateDouble(myGraph, res); // double
 
-        // eslint-disable-next-line eqeqeq
+        // eslint-disable-next-line
         if (binary[i] == 1) {
-            res = calculateAddition(myGraph, res, point); // addition
+            res = calculateAddition(myGraph, [res, point]);
         }
 
         i -= 1;
     }
 
-    console.log('Calculated points: ', res[0], -res[1]);
+    const listedPoints = listPoints(myGraph, [point], res.x, res.y, 'doubling');
+    pointMultiplicationSteps(myGraph, listedPoints, res.x, res.y, scalar);
 
-    const listedPoints = listPoints(myGraph, storePoint, res[0], res[1], 'doubling');
+    addCalculatedPoint(myGraph, res, 3);
 
-    pointMultiplicationSteps(myGraph, listedPoints, res[0], res[1], scalar);
-
-    addCalculatedPoint(myGraph, res[0], res[1], 3);
-
-    res[1] = -res[1];
+    res.y = -res.y;
     return res;
 }
 
