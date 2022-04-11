@@ -55,10 +55,13 @@ function pointAdditionSteps(myGraph, points, lambdaI, x, y) {
     stepRows[0].innerHTML = `If P and Q are distinct \\((x_P \\neq x_Q)\\), the line through them has slope: <br>
                             \\(m = \\frac{y_P - y_Q}{x_P - x_Q} = \\frac{${points[0].y} - ${points[1].y}}{${points[0].x} - ${points[1].x}} = \\underline{${lambda}}\\)`;
 
-    stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a third point \\(R = (x_R, y_R):\\) <br>
+    stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a third point -\\(R = (x_R, y_R)\\), where: <br>
                             \\(x_R = m^2 - x_P - x_Q = ${lambda}^2 - ${points[0].x} - ${points[1].x} = \\underline{${newX}}\\) <br>
-                            \\(y_R = y_P + m(x_R - x_P) = ${points[0].y} + ${lambda}(${newX} - ${points[0].x}) = \\underline{${newY}}\\) <br> <br>
-                            \\(\\textbf{R = (${newX}, ${newY})}\\)`;
+                            \\(y_R = y_P + m(x_R - x_P) = ${points[0].y} + ${lambda}(${newX} - ${points[0].x}) = \\underline{${newY}}\\) <br> Hence:  <br>
+                            \\(\\textbf{R = (${newX}, ${newY})}\\) <br>
+                            \\(\\textbf{-R = (${newX}, ${-newY})}\\)`;
+
+                            
 
     // eslint-disable-next-line no-undef
     MathJax.typeset();
