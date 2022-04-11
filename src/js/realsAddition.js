@@ -6,7 +6,9 @@ function twoDecimalRound(val) {
 }
 
 function listPoints(myGraph, placedPoints, calculatedX, calculatedY, operation) {
+    console.log("ay", placedPoints[0]);
     const pObj = graphToCoords(myGraph, placedPoints[0]);
+    console.log("ay2", pObj);
     const P = `${twoDecimalRound(pObj.x)}, ${twoDecimalRound(-pObj.y)}`;
 
     let Q;
@@ -31,6 +33,8 @@ function listPoints(myGraph, placedPoints, calculatedX, calculatedY, operation) 
     pointsListed.innerHTML = `\\(P = (${P})\\) &nbsp \\(-R = (${minusR})\\) &nbsp \\(R = (${R})\\)`;
     // eslint-disable-next-line no-undef
     MathJax.typeset();
+
+    console.log(pObj);
     return pObj;
 }
 
