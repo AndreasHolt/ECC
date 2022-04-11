@@ -166,6 +166,10 @@ function addCalculatedPoint(myGraph, point, pointOperation) {
         svg.appendChild(circle);
 
         if (pointOperation === 3) {
+            document.getElementById('Rx').value = `${twoDecimalRound(point.x)}`
+            document.getElementById('Ry').value = `${twoDecimalRound(point.y)}`
+            document.getElementById('negRx').value = `${-twoDecimalRound(point.x)}`
+            document.getElementById('negRy').value = `${-twoDecimalRound(point.y)}`
             return 0;
         } if (i === 0) {
             drawLine(myGraph, '+', 'fuchsia', i, point.x, point.y, svg, pointOperation);
