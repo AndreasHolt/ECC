@@ -207,7 +207,7 @@ function addPointByInput(idX, myGraph) {
 
 function removeBinaryParagraphs() {
     if (document.getElementsByClassName('paragraphBinary')) {
-        let paragraphs = document.getElementsByClassName('paragraphBinary');
+        const paragraphs = document.getElementsByClassName('paragraphBinary');
         for (let i = 0; i < paragraphs.length; i += 1) {
             paragraphs[i].remove();
         }
