@@ -130,6 +130,13 @@ function deletePoints() {
     if (!document.getElementById('pointMultiplication').disabled && isOnPage(document.getElementById('scalarFormsActive'))) {
         document.getElementById('scalarFormsActive').remove();
     }
+
+    if (document.getElementsByClassName('paragraphBinary')) {
+        let paragraphs = document.getElementsByClassName('paragraphBinary');
+        for (let i = 0; i < paragraphs.length; i += 1) {
+            paragraphs[i].remove();
+        }
+    }
 }
 
 document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
@@ -202,7 +209,7 @@ document.getElementById('pointQ').addEventListener('keypress', (e) => {
             }
         }
     }
-}); 
+});
 
 document.getElementById('pointP').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
@@ -435,3 +442,5 @@ function init() {
 }
 
 init();
+
+
