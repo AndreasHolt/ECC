@@ -146,20 +146,22 @@ document.getElementById('negateP').addEventListener('click', (e) => {
     const pointPy = document.getElementById('Py');
 
     for (const x of pointsOnGraph) {
-        console.log((x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX)
         if ((pointPx.value < (x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX + 0.0001) && (pointPx.value > (x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX - 0.0001)) {
             pointPy.value = `${-pointPy.value}`
 
             y = (x.getAttribute('cy') - myGraph.centerY)/myGraph.scaleY;
-            console.log(y);
             x.setAttribute('cy', -(y*myGraph.scaleY)+myGraph.centerY);
 
             document.getElementById('negateP').value = (document.getElementById('negateP').value === "+")?"-":"+";
         }
 
-        if (pointsOnGraph.length == 2) {
+        if (document.getElementById('pointAddition').disabled == true && pointsOnGraph.length == 2) {
+            console.log("stinky poopy funny")
             pointAddition(myGraph);
-        }
+        } else if (document.getElementById('pointDoubling').disabled == true && pointsOnGraph.length == 1) {
+            console.log("poopy haha stinky")
+            pointDouble(myGraph);
+        } 
     }
 });
 
@@ -263,7 +265,6 @@ document.getElementById('layer2').addEventListener('click', (e) => {
 
     // Delete the point on the graph that was placed first
     if (document.getElementById('pointAddition').disabled) {
-        document.getElementById('pointQ').style.display = "True"
         if (pointsOnGraph.length === 1) {
             addPointOnClick(myGraph);
             pointAddition(myGraph); // TODO Zoom out if point is outside view
@@ -273,7 +274,6 @@ document.getElementById('layer2').addEventListener('click', (e) => {
             deletePoints();
         }
     } else if (document.getElementById('pointDoubling').disabled) {
-        document.getElementById('pointQ').style.display = "False"
         if (pointsOnGraph.length === 0) {
             addPointOnClick(myGraph);
             pointDouble(myGraph);
@@ -281,7 +281,6 @@ document.getElementById('layer2').addEventListener('click', (e) => {
             deletePoints();
         }
     } else if (document.getElementById('pointMultiplication').disabled) {
-        document.getElementById('pointQ').style.display = "False"
         if (pointsOnGraph.length === 0) {
             const scalarFormsActive = document.getElementById('scalarFormsActive');
             if (!isOnPage(scalarFormsActive)) {
@@ -394,24 +393,47 @@ function init() {
 
     const operations = document.querySelectorAll('#pointAddition, #pointDoubling, #pointMultiplication');
 
-    Array.from(operations).forEach((input) => {
-        input.addEventListener('click', (e) => {
-            Array.from(operations).forEach((buttons) => {
-                if (buttons.disabled === true) {
-                    // eslint-disable-next-line no-param-reassign
-                    buttons.disabled = false;
-                }
-
-
-
-            });
-
-            document.getElementById('explanationContainer').style.display = 'none';
-
-            deletePoints();
-
-            e.target.disabled = true;
+    document.getElementById('pointAddition').addEventListener('click', (e) => {
+        Array.from(operations).forEach((buttons) => {
+            if (buttons.disabled === true) {
+                // eslint-disable-next-line no-param-reassign
+                buttons.disabled = false;
+            }
         });
+        document.getElementById("pointQ").style.display = "block"
+
+        document.getElementById('explanationContainer').style.display = 'none';
+        deletePoints();
+        e.target.disabled = true;
+    });
+
+    document.getElementById('pointDoubling').addEventListener('click', (e) => {
+        Array.from(operations).forEach((buttons) => {
+            if (buttons.disabled === true) {
+                // eslint-disable-next-line no-param-reassign
+                buttons.disabled = false;
+            }
+        });
+
+        document.getElementById("pointQ").style.display = "none"
+
+        document.getElementById('explanationContainer').style.display = 'none';
+        deletePoints();
+        e.target.disabled = true;
+    });
+
+    document.getElementById('pointMultiplication').addEventListener('click', (e) => {
+        Array.from(operations).forEach((buttons) => {
+            if (buttons.disabled === true) {
+                // eslint-disable-next-line no-param-reassign
+                buttons.disabled = false;
+            }
+        });
+        document.getElementById("pointQ").style.display = "none"
+
+        document.getElementById('explanationContainer').style.display = 'none';
+        deletePoints();
+        e.target.disabled = true;
     });
 }
 
