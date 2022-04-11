@@ -110,7 +110,6 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
 /// ----------------------------------------------------------------------
 //
 
-
 function isOnPage(element) {
     return (element === document.body) ? false : document.body.contains(element);
 }
@@ -141,46 +140,44 @@ document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
 
 document.getElementById('negateP').addEventListener('click', (e) => {
     const pointsOnGraph = document.getElementsByClassName('workingPoints');
-    let x, y;
+    let x; let
+        y;
     const pointPx = document.getElementById('Px');
     const pointPy = document.getElementById('Py');
 
     for (const x of pointsOnGraph) {
-        if ((pointPx.value < (x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX + 0.0001) && (pointPx.value > (x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX - 0.0001)) {
-            pointPy.value = `${-pointPy.value}`
+        if ((pointPx.value < (x.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX + 0.0001) && (pointPx.value > (x.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX - 0.0001)) {
+            pointPy.value = `${-pointPy.value}`;
 
-            y = (x.getAttribute('cy') - myGraph.centerY)/myGraph.scaleY;
-            x.setAttribute('cy', -(y*myGraph.scaleY)+myGraph.centerY);
+            y = (x.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY;
+            x.setAttribute('cy', -(y * myGraph.scaleY) + myGraph.centerY);
 
-            document.getElementById('negateP').value = (document.getElementById('negateP').value === "+")?"-":"+";
+            document.getElementById('negateP').value = (document.getElementById('negateP').value === '+') ? '-' : '+';
         }
 
         if (document.getElementById('pointAddition').disabled == true && pointsOnGraph.length == 2) {
-            console.log("stinky poopy funny")
             pointAddition(myGraph);
         } else if (document.getElementById('pointDoubling').disabled == true && pointsOnGraph.length == 1) {
-            console.log("poopy haha stinky")
             pointDouble(myGraph);
-        } 
+        }
     }
 });
 
 document.getElementById('negateQ').addEventListener('click', (e) => {
     const pointsOnGraph = document.getElementsByClassName('workingPoints');
-    let x, y;
+    let x; let
+        y;
     const pointQx = document.getElementById('Qx');
     const pointQy = document.getElementById('Qy');
 
     for (const x of pointsOnGraph) {
-        console.log((x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX)
-        if ((pointQx.value < (x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX + 0.0001) && (pointQx.value > (x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX - 0.0001)) {
-            pointQy.value = `${-pointQy.value}`
+        if ((pointQx.value < (x.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX + 0.0001) && (pointQx.value > (x.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX - 0.0001)) {
+            pointQy.value = `${-pointQy.value}`;
 
-            y = (x.getAttribute('cy') - myGraph.centerY)/myGraph.scaleY;
-            console.log(y);
-            x.setAttribute('cy', -(y*myGraph.scaleY)+myGraph.centerY);
+            y = (x.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY;
+            x.setAttribute('cy', -(y * myGraph.scaleY) + myGraph.centerY);
 
-            document.getElementById('negateQ').value = (document.getElementById('negateQ').value === "+")?"-":"+";
+            document.getElementById('negateQ').value = (document.getElementById('negateQ').value === '+') ? '-' : '+';
         }
 
         if (pointsOnGraph.length == 2) {
@@ -190,7 +187,7 @@ document.getElementById('negateQ').addEventListener('click', (e) => {
 });
 
 document.getElementById('pointQ').addEventListener('keypress', (e) => {
-    if(e.key === 'Enter') {
+    if (e.key === 'Enter') {
         const pointsOnGraph = document.getElementsByClassName('workingPoints');
 
         // Delete the point on the graph that was placed first
@@ -199,7 +196,7 @@ document.getElementById('pointQ').addEventListener('keypress', (e) => {
                 addPointByInput('Qx', myGraph);
             } else if (pointsOnGraph.length === 1) {
                 addPointByInput('Qx', myGraph);
-                pointAddition(myGraph)
+                pointAddition(myGraph);
             } else {
                 deletePoints();
             }
@@ -246,8 +243,6 @@ document.getElementById('pointP').addEventListener('keypress', (e) => {
                     document.getElementById('scalarFormsActive').innerHTML = html;
 
                     MathJax.typeset();
-
-                    console.log('no');
                 }
                 addPointByInput('Px', myGraph);
                 pointMultiplication(myGraph);
@@ -301,8 +296,6 @@ document.getElementById('layer2').addEventListener('click', (e) => {
                 });
 
                 MathJax.typeset();
-
-                console.log('no');
             }
             addPointOnClick(myGraph);
             pointMultiplication(myGraph);
@@ -329,7 +322,7 @@ function changeEquation(a, b) {
 }
 
 document.getElementById('curve')[0].addEventListener('keypress', (e) => {
-    if(e.key === 'Enter') {
+    if (e.key === 'Enter') {
         const firstParameter = document.getElementById('a');
         const secondParameter = document.getElementById('b');
 
@@ -349,11 +342,10 @@ document.getElementById('curve')[0].addEventListener('keypress', (e) => {
         changeEquation(firstParameter.value, secondParameter.value);
         deletePoints();
         drawEquations();
-
     }
 });
 document.getElementById('curve')[1].addEventListener('keypress', (e) => {
-    if(e.key === 'Enter') {
+    if (e.key === 'Enter') {
         const firstParameter = document.getElementById('a');
         const secondParameter = document.getElementById('b');
 
@@ -373,7 +365,6 @@ document.getElementById('curve')[1].addEventListener('keypress', (e) => {
         changeEquation(firstParameter.value, secondParameter.value);
         deletePoints();
         drawEquations();
-
     }
 });
 
@@ -400,7 +391,7 @@ function init() {
                 buttons.disabled = false;
             }
         });
-        document.getElementById("pointQ").style.display = "block"
+        document.getElementById('pointQ').style.display = 'block';
 
         document.getElementById('explanationContainer').style.display = 'none';
         deletePoints();
@@ -415,7 +406,7 @@ function init() {
             }
         });
 
-        document.getElementById("pointQ").style.display = "none"
+        document.getElementById('pointQ').style.display = 'none';
 
         document.getElementById('explanationContainer').style.display = 'none';
         deletePoints();
@@ -429,7 +420,7 @@ function init() {
                 buttons.disabled = false;
             }
         });
-        document.getElementById("pointQ").style.display = "none"
+        document.getElementById('pointQ').style.display = 'none';
 
         document.getElementById('explanationContainer').style.display = 'none';
         deletePoints();
@@ -438,6 +429,3 @@ function init() {
 }
 
 init();
-
-
-
