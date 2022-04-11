@@ -14,13 +14,16 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
     const newY = twoDecimalRound(y);
 
     let arrayPowerOfTwo = [];
+    let arrayPowerOfTwoOnes = []
 
+    console.log(binary);
     // Show binary representation calculations
     for (let i = 0; i < binary.length; i += 1) {
         if (binary[i] === '1') {
-            arrayPowerOfTwo.push(`\\(1 \\cdot 2^${i}\\) `);
+            arrayPowerOfTwo.push(`\\(1 \\cdot 2^{${binary.length - 1 - i}}\\) `);
+            arrayPowerOfTwoOnes.push(`\\(2^{${binary.length - 1 - i}}\\) `);
         } else {
-            arrayPowerOfTwo.push(`\\(0 \\cdot 2^${i}\\) `);
+            arrayPowerOfTwo.push(`\\(0 \\cdot 2^{${binary.length - 1 - i}}\\) `);
         }
     }
 
@@ -42,6 +45,35 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
                               Get the binary representation of the scalar \\(${scalar}\\), which is \\(\\textbf{${binary}}\\). This binary representation can be turned into a sum of powers of two: <br>`;
 
     arrayPowerOfTwo.forEach(number => stepRows[0].innerHTML += number);
+    stepRows[0].innerHTML += '<br> <br> Which we can write as: <br>';
+
+    for (let i = 0; i < arrayPowerOfTwoOnes.length; i += 1) {
+        stepRows[0].innerHTML += arrayPowerOfTwoOnes[i];
+        if (i !== arrayPowerOfTwoOnes.length - 1) {
+            stepRows[0].innerHTML += ' + ';
+        }
+    }
+
+    stepRows[0].innerHTML += `<br> Therefore the Double and Add algorithm tells us to: <br> Take \\(P\\) <br>`;
+
+    const binaryReversed = binary.toString().split('').reverse().join('');
+    console.log(binaryReversed);
+
+    for(let i = 0; i < binary.length; i += 1) {
+        if(i !== 0) {
+            stepRows[0].innerHTML += `Double \\( 2^{${i - 1}}P\\), so that we get \\(2^{${i}}P\\) <br>`;
+            if (binary[binary.length - 1 - i] === '1') {
+                console.log('Index: ', binary.length - 1 - i);
+                stepRows[0].innerHTML += `Add \\(2^{${i}}P\\) to our result <br>`;
+            } else {
+                stepRows[0].innerHTML += `Don't perform any addition involving \\(2^{${i}}P\\) <br>`;
+            }
+        }
+
+    }
+
+
+
 
     /*   stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a new point \\(R = (x_R, y_R):\\) <br>
                                \\(x_R = m^2 - 2x_P = ${lambda}^2 - 2 \\cdot ${points.x}  = \\underline{${newX}}\\) <br>
