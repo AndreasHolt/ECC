@@ -6,9 +6,7 @@ function twoDecimalRound(val) {
 }
 
 function listPoints(myGraph, placedPoints, calculatedX, calculatedY, operation) {
-    console.log("ay", placedPoints[0]);
     const pObj = graphToCoords(myGraph, placedPoints[0]);
-    console.log("ay2", pObj);
     const P = `${twoDecimalRound(pObj.x)}, ${twoDecimalRound(-pObj.y)}`;
 
     let Q;
@@ -34,7 +32,6 @@ function listPoints(myGraph, placedPoints, calculatedX, calculatedY, operation) 
     // eslint-disable-next-line no-undef
     MathJax.typeset();
 
-    console.log(pObj);
     return pObj;
 }
 
@@ -70,7 +67,6 @@ function pointAdditionSteps(myGraph, points, lambdaI, x, y) {
 }
 
 function calculateAddition(myGraph, point) {
-    console.log(point);
     const lambda = ((point[1].y - point[0].y) / (point[1].x - point[0].x));
     let newX = (lambda * lambda) - point[1].x - point[0].x;
     let newY = 0;
