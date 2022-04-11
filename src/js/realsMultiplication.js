@@ -2,6 +2,7 @@ import { addCalculatedPoint, getXY, graphToCoords } from './graphHelpers';
 import { calculateDouble } from './realsDoubling';
 import { calculateAddition, listPoints, twoDecimalRound } from './realsAddition';
 
+
 function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
     points.x = twoDecimalRound(points.x);
     points.y = twoDecimalRound(points.y);
@@ -27,8 +28,17 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
 
     // TODO Only load LaTeX when eventListener on calculation button is triggered
     // REMOVE FROM HTML when calculation button event listener
+    if (document.getElementsByClassName('paragraphBinary')) {
+        let paragraphs = document.getElementsByClassName('paragraphBinary');
+        for (let i = 0; i < paragraphs.length; i++) {
+            paragraphs[i].remove()
+        }
+    }
     let paragraphPowerOfTwo = document.createElement('p');
+    paragraphPowerOfTwo.className = 'paragraphBinary';
     stepRows[stepRows.length - 1].insertAdjacentElement('afterend', paragraphPowerOfTwo);
+
+    // clear inner HTML whenever a new scalar is being input
 
     arrayPowerOfTwo.forEach(number => paragraphPowerOfTwo.innerHTML += number);
 
