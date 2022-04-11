@@ -1,4 +1,4 @@
-import { addCalculatedPoint, getXY, graphToCoords } from './graphHelpers';
+import { addCalculatedPoint, getXY, graphToCoords, removeBinaryParagraphs } from './graphHelpers';
 import { calculateDouble } from './realsDoubling';
 import { calculateAddition, listPoints, twoDecimalRound } from './realsAddition';
 
@@ -28,29 +28,26 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
 
     // TODO Only load LaTeX when eventListener on calculation button is triggered
     // REMOVE FROM HTML when calculation button event listener
-    if (document.getElementsByClassName('paragraphBinary')) {
-        let paragraphs = document.getElementsByClassName('paragraphBinary');
-        for (let i = 0; i < paragraphs.length; i++) {
-            paragraphs[i].remove()
-        }
-    }
+    removeBinaryParagraphs();
+
     let paragraphPowerOfTwo = document.createElement('p');
     paragraphPowerOfTwo.className = 'paragraphBinary';
-    stepRows[stepRows.length - 1].insertAdjacentElement('afterend', paragraphPowerOfTwo);
+    stepRows[0].insertAdjacentElement('afterend', paragraphPowerOfTwo);
 
     // clear inner HTML whenever a new scalar is being input
 
-    arrayPowerOfTwo.forEach(number => paragraphPowerOfTwo.innerHTML += number);
 
-    document.getElementById('calculatingHeader').innerHTML = 'Point Multiplication: Double and Add Algorithm'
-     stepRows[0].innerHTML = `There exist faster algorithms than simply computing \\(n \\cdot P\\), which requires n additions. One of them is the double and add algorithm: <br>
-                              Get the binary representation of the scalar \\(${scalar}\\), which is \\(\\textbf{${binary}\\)`;
+    document.getElementById('calculatingHeader').innerHTML = 'Point Multiplication: Double and Add Algorithm';
+    stepRows[0].innerHTML = `There exist faster algorithms than simply computing \\(n \\cdot P\\), which requires n additions. One of them is the double and add algorithm: <br>
+                              Get the binary representation of the scalar \\(${scalar}\\), which is \\(\\textbf{${binary}}\\). This binary representation can be turned into a sum of powers of two: <br>`;
 
- /*   stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a new point \\(R = (x_R, y_R):\\) <br>
-                            \\(x_R = m^2 - 2x_P = ${lambda}^2 - 2 \\cdot ${points.x}  = \\underline{${newX}}\\) <br>
-                            \\(y_R = -y_P + m(x_P - x_R) = -${points.y} + ${lambda}(${points.x} -  ${newX}) = \\underline{${newY}}\\) <br> <br>
-                            \\(\\textbf{R = (${newX}, ${newY})}\\)`;
- */
+    arrayPowerOfTwo.forEach(number => stepRows[0].innerHTML += number);
+
+    /*   stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a new point \\(R = (x_R, y_R):\\) <br>
+                               \\(x_R = m^2 - 2x_P = ${lambda}^2 - 2 \\cdot ${points.x}  = \\underline{${newX}}\\) <br>
+                               \\(y_R = -y_P + m(x_P - x_R) = -${points.y} + ${lambda}(${points.x} -  ${newX}) = \\underline{${newY}}\\) <br> <br>
+                               \\(\\textbf{R = (${newX}, ${newY})}\\)`;
+    */
     // eslint-disable-next-line no-undef
     MathJax.typeset();
 }

@@ -2,7 +2,7 @@ import { pointDouble } from './realsDoubling';
 import { pointAddition } from './realsAddition';
 import { pointMultiplication } from './realsMultiplication';
 import {
-    movePoint, graphToCoords, coordsToGraph, addPointOnClick, addPointByInput,
+    movePoint, graphToCoords, coordsToGraph, addPointOnClick, addPointByInput, removeBinaryParagraphs,
 } from './graphHelpers';
 import {
     Graph, drawXAxis, drawYAxis, drawEquation,
@@ -110,6 +110,7 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
 /// ----------------------------------------------------------------------
 //
 
+
 function isOnPage(element) {
     return (element === document.body) ? false : document.body.contains(element);
 }
@@ -131,12 +132,7 @@ function deletePoints() {
         document.getElementById('scalarFormsActive').remove();
     }
 
-    if (document.getElementsByClassName('paragraphBinary')) {
-        let paragraphs = document.getElementsByClassName('paragraphBinary');
-        for (let i = 0; i < paragraphs.length; i += 1) {
-            paragraphs[i].remove();
-        }
-    }
+    removeBinaryParagraphs();
 }
 
 document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
@@ -420,5 +416,6 @@ function init() {
 }
 
 init();
+
 
 

@@ -205,8 +205,17 @@ function addPointByInput(idX, myGraph) {
     svg.appendChild(circle);
 }
 
+function removeBinaryParagraphs() {
+    if (document.getElementsByClassName('paragraphBinary')) {
+        let paragraphs = document.getElementsByClassName('paragraphBinary');
+        for (let i = 0; i < paragraphs.length; i += 1) {
+            paragraphs[i].remove();
+        }
+    }
+}
+
 export {
     movePoint, moveSection, mouseToGraph, convertToXY, graphToCoords, coordsToGraph,
     getPointPlacement, addCalculatedPoint, logicPointAddition, drawLine, addPointOnClick,
-    getXY, addPointByInput,
+    getXY, addPointByInput, removeBinaryParagraphs,
 };
