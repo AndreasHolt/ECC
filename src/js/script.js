@@ -136,9 +136,56 @@ document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
     movePoint(e, myGraph);
 });
 
+document.getElementById('negateP').addEventListener('click', (e) => {
+    const pointsOnGraph = document.getElementsByClassName('workingPoints');
+    let x, y;
+    const pointPx = document.getElementById('Px');
+    const pointPy = document.getElementById('Py');
+
+    for (const x of pointsOnGraph) {
+        console.log((x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX)
+        if ((pointPx.value < (x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX + 0.0001) && (pointPx.value > (x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX - 0.0001)) {
+            pointPy.value = `${-pointPy.value}`
+
+            y = (x.getAttribute('cy') - myGraph.centerY)/myGraph.scaleY;
+            console.log(y);
+            x.setAttribute('cy', -(y*myGraph.scaleY)+myGraph.centerY);
+
+            document.getElementById('negateP').value = (document.getElementById('negateP').value === "+")?"-":"+";
+        }
+
+        if (pointsOnGraph.length == 2) {
+            pointAddition(myGraph);
+        }
+    }
+});
+
+document.getElementById('negateQ').addEventListener('click', (e) => {
+    const pointsOnGraph = document.getElementsByClassName('workingPoints');
+    let x, y;
+    const pointQx = document.getElementById('Qx');
+    const pointQy = document.getElementById('Qy');
+
+    for (const x of pointsOnGraph) {
+        console.log((x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX)
+        if ((pointQx.value < (x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX + 0.0001) && (pointQx.value > (x.getAttribute('cx') - myGraph.centerX)/myGraph.scaleX - 0.0001)) {
+            pointQy.value = `${-pointQy.value}`
+
+            y = (x.getAttribute('cy') - myGraph.centerY)/myGraph.scaleY;
+            console.log(y);
+            x.setAttribute('cy', -(y*myGraph.scaleY)+myGraph.centerY);
+
+            document.getElementById('negateQ').value = (document.getElementById('negateQ').value === "+")?"-":"+";
+        }
+
+        if (pointsOnGraph.length == 2) {
+            pointAddition(myGraph);
+        }
+    }
+});
+
 document.getElementById('pointQ').addEventListener('keypress', (e) => {
     if(e.key === 'Enter') {
-        console.log("LmaoQ");
         const pointsOnGraph = document.getElementsByClassName('workingPoints');
 
         // Delete the point on the graph that was placed first
@@ -157,7 +204,6 @@ document.getElementById('pointQ').addEventListener('keypress', (e) => {
 
 document.getElementById('pointP').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
-        console.log("LmaoP");
         const pointsOnGraph = document.getElementsByClassName('workingPoints');
 
         // Delete the point on the graph that was placed first
@@ -214,6 +260,7 @@ document.getElementById('layer2').addEventListener('click', (e) => {
 
     // Delete the point on the graph that was placed first
     if (document.getElementById('pointAddition').disabled) {
+        document.getElementById('pointQ').style.display = "True"
         if (pointsOnGraph.length === 1) {
             addPointOnClick(myGraph);
             pointAddition(myGraph); // TODO Zoom out if point is outside view
@@ -223,6 +270,7 @@ document.getElementById('layer2').addEventListener('click', (e) => {
             deletePoints();
         }
     } else if (document.getElementById('pointDoubling').disabled) {
+        document.getElementById('pointQ').style.display = "False"
         if (pointsOnGraph.length === 0) {
             addPointOnClick(myGraph);
             pointDouble(myGraph);
@@ -230,6 +278,7 @@ document.getElementById('layer2').addEventListener('click', (e) => {
             deletePoints();
         }
     } else if (document.getElementById('pointMultiplication').disabled) {
+        document.getElementById('pointQ').style.display = "False"
         if (pointsOnGraph.length === 0) {
             const scalarFormsActive = document.getElementById('scalarFormsActive');
             if (!isOnPage(scalarFormsActive)) {
