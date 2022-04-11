@@ -2,16 +2,11 @@ import { graphToCoords, addCalculatedPoint, getXY } from './graphHelpers';
 import { twoDecimalRound, listPoints } from './realsAddition';
 
 function calculateDouble(myGraph, point) {
-    const newPointArr = [];
+    const lambda = (3 * point.x * point.x + myGraph.parameterA) / (2 * point.y);
+    const newX = lambda * lambda - 2 * point.x;
+    const newY = -point.y + lambda * (point.x - newX);
 
-    const lambda = (3 * point[0] * point[0] + myGraph.parameterA) / (2 * point[1]);
-    const newX = lambda * lambda - 2 * point[0];
-    const newY = -point[1] + lambda * (point[0] - newX);
-
-    newPointArr[0] = newX;
-    newPointArr[1] = newY;
-
-    return newPointArr;
+    return { x: newX, y: newY };
 }
 
 function pointDoublingSteps(myGraph, points, lambdaI, x, y) {
@@ -37,25 +32,19 @@ function pointDoublingSteps(myGraph, points, lambdaI, x, y) {
 }
 
 function pointDouble(myGraph) {
-    const pointArr = [];
-    let newPointArr = [];
-
     const point = document.getElementsByClassName('workingPoints')[0];
-    const storePoint = [getXY(point)];
+    const storePoint = getXY(point);
+    const coords = graphToCoords(myGraph, storePoint);
+    coords.y = -coords.y; // TODO Need comment on why we do this
 
-    pointArr[0] = (storePoint[0].x - myGraph.centerX) / myGraph.scaleX;
-    pointArr[1] = -(storePoint[0].y - myGraph.centerY) / myGraph.scaleY;
+    const double = calculateDouble(myGraph, coords);
 
-    newPointArr = calculateDouble(myGraph, pointArr);
+    const lambda = (3 * double.x * double.x + myGraph.parameterA) / (2 * double.y);
 
-    const lambda = (3 * newPointArr[0] * newPointArr[0] + myGraph.parameterA) / (2 * newPointArr[1]);
+    const listedPoints = listPoints(myGraph, [storePoint], double.x, double.y, 'doubling');
+    pointDoublingSteps(myGraph, listedPoints, lambda, double.x, double.y);
 
-    const listedPoints = listPoints(myGraph, storePoint, newPointArr[0], newPointArr[1], 'doubling');
-    pointDoublingSteps(myGraph, listedPoints, lambda, newPointArr[0], newPointArr[1]);
-
-    addCalculatedPoint(myGraph, newPointArr[0], newPointArr[1], 2);
+    addCalculatedPoint(myGraph, double, 2);
 }
-
-
 
 export { pointDouble, calculateDouble };
