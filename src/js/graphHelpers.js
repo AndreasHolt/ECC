@@ -1,3 +1,5 @@
+import { twoDecimalRound } from './realsAddition';
+
 function moveSection(id, x, y) {
     const el = document.getElementById(id);
 
@@ -164,16 +166,24 @@ function addCalculatedPoint(myGraph, point, pointOperation) {
         svg.appendChild(circle);
 
         if (pointOperation === 3) {
+            document.getElementById('Rx').value = `${twoDecimalRound(point.x)}`
+            document.getElementById('Ry').value = `${twoDecimalRound(point.y)}`
+            document.getElementById('negRx').value = `${-twoDecimalRound(point.x)}`
+            document.getElementById('negRy').value = `${-twoDecimalRound(point.y)}`
             return 0;
         } if (i === 0) {
             drawLine(myGraph, '+', 'fuchsia', i, point.x, point.y, svg, pointOperation);
         } else {
             drawLine(myGraph, '-', 'orange', i, point.x, point.y, svg, pointOperation);
         }
+        document.getElementById('Rx').value = `${twoDecimalRound(point.x)}`
+        document.getElementById('Ry').value = `${twoDecimalRound(point.y)}`
+        document.getElementById('negRx').value = `${-twoDecimalRound(point.x)}`
+        document.getElementById('negRy').value = `${-twoDecimalRound(point.y)}`
     }
 }
 
-function addPointOnClick() {
+function addPointOnClick(myGraph) {
     const point = document.getElementById('point');
     const svgNS = 'http://www.w3.org/2000/svg';
 
@@ -186,6 +196,15 @@ function addPointOnClick() {
 
     const svg = document.querySelector('svg');
     svg.appendChild(circle);
+
+    
+    if (document.getElementsByClassName('workingPoints').length === 1) {
+        document.getElementById('Px').value = `${(point.getAttribute('cx')-myGraph.centerX)/myGraph.scaleX}`;
+        document.getElementById('Py').value = `${-(point.getAttribute('cy')-myGraph.centerY)/myGraph.scaleY}`;
+    } else if (document.getElementsByClassName('workingPoints').length === 2) {
+        document.getElementById('Qx').value = `${(point.getAttribute('cx')-myGraph.centerX)/myGraph.scaleX}`;
+        document.getElementById('Qy').value = `${-(point.getAttribute('cy')-myGraph.centerY)/myGraph.scaleY}`;
+    } 
 }
 
 function addPointByInput(idX, myGraph) {
@@ -200,14 +219,14 @@ function addPointByInput(idX, myGraph) {
     circle.classList.add('workingPoints');
     circle.setAttribute('r', 5);
 
-    y.value = `${myGraph.equationP(x)}`;
+    y.value = `${twoDecimalRound(myGraph.equationP(x))}`;
     const svg = document.querySelector('svg');
     svg.appendChild(circle);
 }
 
 function removeBinaryParagraphs() {
     if (document.getElementsByClassName('paragraphBinary')) {
-        let paragraphs = document.getElementsByClassName('paragraphBinary');
+        const paragraphs = document.getElementsByClassName('paragraphBinary');
         for (let i = 0; i < paragraphs.length; i += 1) {
             paragraphs[i].remove();
         }
