@@ -613,7 +613,17 @@ function showTable(arrayValues) {
     console.log(arrayValues);
 }
 
+function clmul32(x1, x2, mod) {         //https://www.youtube.com/watch?v=v4HKU_VBbqM
+    let result = 0;
+    //x2 |= 0;                            //Kun nødvendig hvis der er chance for at input er double
+    
+    while (x1 !== 0) {
+        result ^= x2 * (x1 & -x1);
+        x1 &= x1 - 1;
+    }
 
+    return result;                      //
+}
 
 
 
