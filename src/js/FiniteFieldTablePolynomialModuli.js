@@ -164,6 +164,23 @@ let curve = {
     calcPointDouble: (index, options, mod) => {
         return this.calcPointAddition(index, index, options, mod);
     },
+
+    calcPointMultiplication: (k, index, options, mod) => {              //https://scialert.net/fulltext/?doi=itj.2013.1780.1787
+        let Q = this.points[index];
+        let i = numberOfBits2(k);
+
+        while (i !== 0 ) {
+            i >>= 1;
+            Q = this.calcPointDouble(index, options, mod);
+
+            if (i ^ k === i) {
+                Q = this.calcPointAddition(index, Q, options, mod);     //Enten skal vi finde indexet på Q eller så skal vi have punktet som input i de andre funktioner
+            }
+        }
+
+        return Q;
+    },
+
     calcPointAddition: function(index1, index2, options, mod) {
         if (index1 === index2) {
             if (options.prime === true) {
