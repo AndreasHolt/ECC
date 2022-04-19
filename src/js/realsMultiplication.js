@@ -29,6 +29,7 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
     }
 
     const stepRows = document.getElementsByClassName('steps');
+    stepRows[1].innerHTML = '';
 
     // TODO Only load LaTeX when eventListener on calculation button is triggered
     // REMOVE FROM HTML when calculation button event listener

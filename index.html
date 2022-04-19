@@ -51,10 +51,10 @@
                             type="number" id="b" name="b" placeholder="Ex: 15" value="15">
                     </div>
                 </div>
-                <div class="left-right-col basis-1/3">
-                    <h3>To perform the operation, click on the graph or enter points:</h3>
+                <h3>To perform the operation, click on the graph or enter points:</h3>
+                <div class="grid grid-cols-2 gap-5">
                     <form id="typePoints">
-                        <div id="pointP">
+                        <div id="pointP" class="col-span-2">
                             <div>
                                 <label>P: \(x\)</label>
                                 <input class="border-solid border-2 border-black h-10 w-14"
@@ -67,7 +67,7 @@
                                  type="button" id="negateP" value="-">
                             </div>
                         </div>
-                        <div id="pointQ">
+                        <div id="pointQ" class="col-span-2">
                             <div>
                                 <label>Q: \(x\)</label>
                                 <input class="border-solid border-2 border-black h-10 w-14"
@@ -80,7 +80,7 @@
                                  type="button" id="negateQ" value="-">
                             </div>
                         </div>
-                        <div id="pointR">
+                        <div id="pointR" class="col-span-2">
                             <label>R: \(x\)</label>
                             <input class="border-solid border-2 border-black h-10 w-14"
                             type="number" id="Rx" name="Rx" value="0" readonly="True">
@@ -89,7 +89,7 @@
                             <input class="border-solid border-2 border-black h-10 w-14"
                             type="number" id="Ry" name="Ry" value="0" readonly="True">
                         </div>
-                        <div class="pointNegR">
+                        <div id="pointNegR" class="col-span-2" >
                             <label>-R: \(x\)</label>
                             <input class="border-solid border-2 border-black h-10 w-14"
                             type="number" id="negRx" name="negRx" value="0" readonly="True">
