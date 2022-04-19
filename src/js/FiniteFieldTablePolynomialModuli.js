@@ -4,9 +4,7 @@ const canvas = document.getElementById("curveGraph");
 const ctx = canvas.getContext("2d");
 //let table = document.querySelector("#table");
 
-options = {
-    prime: true
-}
+
 
 form.addEventListener("submit", handleSubmit);
 document.getElementById("pointForm").addEventListener("submit", (event) => {
@@ -14,6 +12,7 @@ document.getElementById("pointForm").addEventListener("submit", (event) => {
     try {
         let index1 = Number(event.target["index1"].value);
         let index2 = Number(event.target["index2"].value);
+        let options = {};
         if (curve.mod === curve.fieldOrder) {
             options.prime = true;
         } else {
@@ -212,7 +211,7 @@ let curve = {
             if (options.prime === true) {
                 let point1 = this.points[index1];
                 let point2 = this.points[index2];
-                let alfa = Mod(((point2.y - point1.y)*inversePrime(Mod(point2.x-point1.x, mod), mod)), mod);
+                let alfa = Mod((point2.y - point1.y)*inversePrime(Mod(point2.x-point1.x, mod), mod), mod);
                 let xR = Mod((-point1.x - point2.x + alfa*alfa), mod);
                 let yR = Mod(-point1.y + alfa*(point1.x-xR), mod);
                 let R = {x: xR, y: yR, alfa:alfa}
@@ -358,7 +357,7 @@ function handleSubmit (event) {
     
     for (let options of optionsList) {
         let arrayValues = createTable(sizeOfTable, modoli, options);
-        createTableHTML(arrayValues, sizeOfTable, options.mode);
+        //createTableHTML(arrayValues, sizeOfTable, options.mode);
     }
     
     createPoints(curve, sizeOfTable, modoli);
@@ -511,8 +510,14 @@ function additiveXOR (x1, x2) {
     return x1^x2;
 }
 
-function inversePrime (x, mod) {
-    return Mod(Math.pow(x, mod - 2),mod);
+function inversePrime (x, mod) {        //Enhance later (Double and add /// sqaure and multiply)
+    let result = x;
+
+    for (let i = 0 ; i < mod - 2 ; ++i) {
+        result = Mod(result * x, mod);
+    }
+
+    return result;
 }
 
 function findInverseGF2 (x1, modoli) {
