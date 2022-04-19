@@ -1,5 +1,5 @@
 import {
-    addCalculatedPoint, getXY, graphToCoords, removeBinaryParagraphs,
+    addCalculatedPoint, getXY, graphToCoords, removeBinaryParagraphs, checkExplanationDisplay
 } from './graphHelpers';
 import { calculateDouble } from './realsDoubling';
 import { calculateAddition, listPoints, twoDecimalRound } from './realsAddition';
@@ -87,11 +87,7 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
                                \\(\\textbf{R = (${newX}, ${newY})}\\)`;
     */
     // eslint-disable-next-line no-undef
-    const container = document.getElementById('explanationContainer');
-    if (!(container.style.display === 'none')) {
-        MathJax.typeset();
-   }
-
+    checkExplanationDisplay();
 
 }
 
