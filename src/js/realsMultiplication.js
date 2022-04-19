@@ -87,7 +87,6 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
                                \\(\\textbf{R = (${newX}, ${newY})}\\)`;
     */
     // eslint-disable-next-line no-undef
-    MathJax.typeset();
 }
 
 function convertToBinary(scalar, arrayBool) {
