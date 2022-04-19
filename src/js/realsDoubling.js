@@ -1,4 +1,4 @@
-import { graphToCoords, addCalculatedPoint, getXY } from './graphHelpers';
+import { graphToCoords, addCalculatedPoint, getXY, checkExplanationDisplay } from './graphHelpers';
 import { twoDecimalRound, listPoints } from './realsAddition';
 
 function calculateDouble(myGraph, point) {
@@ -28,10 +28,7 @@ function pointDoublingSteps(myGraph, points, lambdaI, x, y) {
                             \\(\\textbf{R = (${newX}, ${newY})}\\)`;
 
     // eslint-disable-next-line no-undef
-    const container = document.getElementById('explanationContainer');
-    if (!(container.style.display === 'none')) {
-        MathJax.typeset();
-   }
+    checkExplanationDisplay();
 
 
 }
