@@ -1,4 +1,4 @@
-import { graphToCoords, addCalculatedPoint, getXY } from './graphHelpers';
+import { graphToCoords, addCalculatedPoint, getXY, checkExplanationDisplay } from './graphHelpers';
 import { pointDouble } from './realsDoubling';
 
 function twoDecimalRound(val) {
@@ -61,10 +61,7 @@ function pointAdditionSteps(myGraph, points, lambdaI, x, y) {
                             
 
     // eslint-disable-next-line no-undef
-    const container = document.getElementById('explanationContainer');
-    if (!(container.style.display === 'none')) {
-        MathJax.typeset();
-   }
+    checkExplanationDisplay();
 
     addCalculatedPoint(myGraph, { x: newX, y: newY }, 1);
 }

@@ -1,5 +1,16 @@
 import { twoDecimalRound } from './realsAddition';
 
+function checkExplanationDisplay() {
+    const container = document.getElementById('explanationContainer');
+    if (!(container.style.display === 'none')) {
+        MathJax.typeset();
+        console.log('test expl')
+   }
+
+}
+
+
+
 function moveSection(id, x, y) {
     const el = document.getElementById(id);
 
@@ -236,5 +247,5 @@ function removeBinaryParagraphs() {
 export {
     movePoint, moveSection, mouseToGraph, convertToXY, graphToCoords, coordsToGraph,
     getPointPlacement, addCalculatedPoint, logicPointAddition, drawLine, addPointOnClick,
-    getXY, addPointByInput, removeBinaryParagraphs,
+    getXY, addPointByInput, removeBinaryParagraphs, checkExplanationDisplay
 };
