@@ -6,10 +6,7 @@ function checkExplanationDisplay() {
         MathJax.typeset();
         console.log('test expl')
    }
-
 }
-
-
 
 function moveSection(id, x, y) {
     const el = document.getElementById(id);
