@@ -387,6 +387,7 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
         alert('Place points on the graph first!');
     } else if (container.style.display === 'none') {
         container.style.display = '';
+        MathJax.typeset();
     } else {
         container.style.display = 'none ';
     }

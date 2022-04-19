@@ -61,7 +61,6 @@ function pointAdditionSteps(myGraph, points, lambdaI, x, y) {
                             
 
     // eslint-disable-next-line no-undef
-    MathJax.typeset();
 
     addCalculatedPoint(myGraph, { x: newX, y: newY }, 1);
 }
