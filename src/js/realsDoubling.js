@@ -28,6 +28,12 @@ function pointDoublingSteps(myGraph, points, lambdaI, x, y) {
                             \\(\\textbf{R = (${newX}, ${newY})}\\)`;
 
     // eslint-disable-next-line no-undef
+    const container = document.getElementById('explanationContainer');
+    if (!(container.style.display === 'none')) {
+        MathJax.typeset();
+   }
+
+
 }
 
 function pointDouble(myGraph) {
