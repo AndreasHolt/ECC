@@ -1,3 +1,5 @@
+import { createPointsGF2, multiplicativeXOR, additiveXOR, findInverseGF2 } from "./gf2.js";
+import {numberOfBits2} from "./Bits.js";
 
 let form = document.querySelector("#form");
 const canvas = document.getElementById("curveGraph");
@@ -12,6 +14,8 @@ document.getElementById("pointForm").addEventListener("submit", (event) => {
     try {
         let index1 = Number(event.target["index1"].value);
         let index2 = Number(event.target["index2"].value);
+        let point1 = curve.points[index1];
+        let point2 = curve.points[index2];
         let options = {};
         if (curve.mod === curve.fieldOrder) {
             options.prime = true;
@@ -19,30 +23,51 @@ document.getElementById("pointForm").addEventListener("submit", (event) => {
             options.prime = false;
         }
         
-        let newPoint = curve.calcPointAddition(index1, index2, options, curve.mod); 
-        console.log(newPoint);
+        let newPoint = curve.calcPointAddition(point1, point2, options, curve.mod);
         drawPoint(newPoint, curve.fieldOrder, 5, "red");
-        drawPoint(curve.points[index1],curve.fieldOrder, 5, "blue");
-        drawPoint(curve.points[index2],curve.fieldOrder, 5, "yellow");
+        drawPoint(point1,curve.fieldOrder, 5, "blue");
+        drawPoint(point2,curve.fieldOrder, 5, "yellow");
         //drawLine(0, 16, 0, 1, curve.fieldOrder);
-        //drawLineDirect2(curve.points[index1], curve.points[index2]);
-        console.log(curve.points[index1],curve.points[index2], newPoint);
-        //drawLineDirect(curve.points[index1],curve.points[index2],0);
-        drawLineDirectGood(curve.points[index1], newPoint, options);
-        /*ctx.moveTo(0,0);
-        ctx.lineTo(900,900);
-        ctx.stroke();*/
+        if (index1 !== index2) {
+            drawLineDirect(point1, point2, 16);
+        }
+        drawLineDirectGood(point1, newPoint, options);
 
     } catch (e) {
         console.log("Error! find selv ud af det!");
         console.log(e);
     }
 });
-document.getElementById("power").addEventListener("change", () => {
+
+document.getElementById("power").addEventListener("input", () => {
     if (document.getElementById("power").value > 1) {
         document.getElementById("modoliDiv").hidden = false;
     } else {
         document.getElementById("modoliDiv").hidden = true;
+    }
+});
+
+document.getElementById("scalarForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    let index = Number(event.target["index"].value);
+    let point = curve.points[index];
+    let scale = Number(event.target["Scalar"].value);
+    drawPoint(point, curve.fieldOrder, 5, "blue");
+    
+    if (point) {
+        
+    
+        let options = {};
+            if (curve.mod === curve.fieldOrder) {
+                options.prime = true;
+            } else {
+                options.prime = false;
+            }
+
+        let scaledPoint = curve.calcPointMultiplication(scale, point, options, curve.mod);
+
+        drawPoint(scaledPoint, curve.fieldOrder, 5, "red");
+        drawLineDirectGood(point, scaledPoint, options);
     }
 });
 
@@ -59,11 +84,11 @@ function drawLine (x1, x2, y1, y2, size, color = "black") {
         drawPoint(newPoint, curve.fieldOrder, 1, "green");
     }*/
 }
-function drawLineDirect (point1, point2) {
+function drawLineDirect (point1, point2, delay) {
     let alfa = (point2.y - point1.y)/(point2.x - point1.x);
-    drawLineDirect_AUX(alfa, 0, 0.2, point1);
+    drawLineDirect_AUX(alfa, 0, 0.2, point1, delay);
 }
-function drawLineDirect_AUX (alfa, progress, speed, previousPoint) {
+function drawLineDirect_AUX (alfa, progress, speed, previousPoint, delay) {
     if (progress < curve.fieldOrder) {
         //console.log("Alfa: " + alfa);
         let newPoint = {"x":Mod(previousPoint.x + speed, curve.fieldOrder), "y":Mod(previousPoint.y+(alfa*speed), curve.fieldOrder)};
@@ -87,47 +112,20 @@ function drawLineDirect_AUX (alfa, progress, speed, previousPoint) {
         }
         //drawLine(previousPoint.x, newPoint.x, previousPoint.y, newPoint.y, curve.fieldOrder,"green");
         //drawPoint(newPoint, curve.fieldOrder, 1, "green");
-        setTimeout(() => {drawLineDirect_AUX(alfa, progress, speed, newPoint)}, 16);
+        setTimeout(() => {drawLineDirect_AUX(alfa, progress, speed, newPoint, delay)}, delay);
     }
 }
 
-
-function drawLineDirect2 (point1, point2) {
-    let dir = [point2.x - point1.x, point2.y - point1.y];
-    let temp = point1;
-    let currentProgress = 0;
-    while (currentProgress < curve.fieldOrder) {
-        let intersectWithCanvasProgress = Math.min((curve.fieldOrder - temp.x) / dir[0], (curve.fieldOrder - temp.y) / dir[1]);
-        let newX = temp.x + (intersectWithCanvasProgress * dir[0]);
-        let newY = temp.y + (intersectWithCanvasProgress * dir[1]);
-        //draw line
-        drawLine(temp.x, temp.y, newX, newY, curve.fieldOrder);
-        console.log(`Draw line from x1: ${temp.x}, x2: ${newX}, y1: ${temp.y}, y2: ${newY}, progress: ${intersectWithCanvasProgress}.`);
-        temp = {x:Mod(newX, curve.fieldOrder), y:Mod(newY, curve.fieldOrder)};
-        currentProgress = currentProgress + intersectWithCanvasProgress;
-    }
-
-
-    /*if (progress < curve.fieldOrder*5) {
-        setTimeout(() => {drawLineDirect(point1, point2, progress + 0.1)}, 0.1);
-        let alfa = (point2.y - point1.y)/(point2.x - point1.x);
-        console.log("Alfa: " + alfa);
-        let newPoint = {"x":Mod(point1.x + (progress),curve.fieldOrder), "y":Mod(point1.y+(alfa*progress),curve.fieldOrder)};
-        drawPoint(newPoint, curve.fieldOrder, 1, "green");
-    }*/
-}
-
-function drawLineDirectGood (point1, point3, options) {
-    let tempPoint = {x: point1.x, y: point1.y}
+function drawLineDirectGood (point, point3, options) {
+    let point1 = {x: point.x, y: point.y};
+    let tempPoint = {x: point1.x, y: point1.y};
     let i = 0;
 
     if (options.prime == false && point3.x != 0) {
         point3.y = additiveXOR(point3.y, point3.x);
     } else if (options.prime == true) {
         point3.y = Mod(curve.fieldOrder - point3.y, curve.fieldOrder);
-        console.log("please");
     }
-    console.log(point3);
 
     while(((tempPoint.x != point3.x) || (tempPoint.y != point3.y)) && i < 100) {
         tempPoint.x += 1;
@@ -153,7 +151,7 @@ function drawLineDirectGood (point1, point3, options) {
 
         ++i;
     }
-    console.log(point1, tempPoint);
+
     drawLine(point1.x, tempPoint.x, point1.y, tempPoint.y, curve.fieldOrder);
 
     if (tempPoint.x === point3.x && tempPoint.y === point3.y) {
@@ -179,77 +177,67 @@ let curve = {
     "mod": 0,
     "fieldOrder": 0,
     points: [],
-    drawDots: (size) => {
-        //console.log("Hello");
-        for (let element of curve.points) {
+    drawDots: function (size) {
+        for (let element of this.points) {
             drawPoint(element, size, 5, "black");
         }
     },
-    calcPointDouble: function(index, options, mod) {
-        return this.calcPointAddition(index, index, options, mod);
+    calcPointDouble: function(point, options, mod) {
+        return this.calcPointAddition(point, point, options, mod);
     },
-
-    calcPointMultiplication: function(k, index, options, mod) {              //https://scialert.net/fulltext/?doi=itj.2013.1780.1787
-        let Q = this.points[index];
+    calcPointMultiplication: function(k, P, options, mod) {              //https://scialert.net/fulltext/?doi=itj.2013.1780.1787
+        let Q = P;
         let i = numberOfBits2(k);
-
+        i >>= 1;
+        //101 |1|01 => P, 1|0|1 => 2P, 10|1| => 2(2P) + P = 5P 
         while (i !== 0 ) {
-            i >>= 1;
-            Q = this.calcPointDouble(index, options, mod);
+            Q = this.calcPointDouble(Q, options, mod);
 
-            if (i ^ k === i) {
-                Q = this.calcPointAddition(index, Q, options, mod);     //Enten skal vi finde indexet på Q eller så skal vi have punktet som input i de andre funktioner
+            
+            if ((i & k) === i) {
+                Q = this.calcPointAddition(P, Q, options, mod);     //Enten skal vi finde indexet på Q eller så skal vi have punktet som input i de andre funktioner
             }
+            i >>= 1;
         }
 
         return Q;
     },
-
-    calcPointAddition: function(index1, index2, options, mod) {
-        if (index1 === index2) {
+    //Point 1 (p1) and point 2 (p2)
+    calcPointAddition: function(p1, p2, options, mod) {
+        if (p1.x === p2.x && p1.y === p2.y) {
             if (options.prime === true) {
-                let x = this.points[index1].x;
-                let y = this.points[index1].y;
-                let alfa = Mod((3*(x*x) + curve.a)*inversePrime(Mod(2*y, mod), mod), mod);
-                let xR = Mod((alfa*alfa - 2*x), mod);
-                let yR = Mod(curve.fieldOrder - (y + alfa*(xR - x)), mod);
+                let alfa = Mod((3*(p1.x*p1.x) + this.a)*inversePrime(Mod(2*p1.y, mod), mod), mod);
+                let xR = Mod((alfa*alfa - 2*p1.x), mod);
+                let yR = Mod(this.fieldOrder - (p1.y + alfa*(xR - p1.x)), mod);
                 let R = {x: xR, y: yR, alfa: alfa};
                 return R;
             } else {
-                let x = this.points[index1].x;
-                let y = this.points[index1].y;
-
-                if (x === 0) {
-                    return {x: x, y: y, alfa: 0};
+                if (p1.x === 0) {
+                    return {x: p1.x, y: p1.y, alfa: 0};
                 }
 
-                let alfa = additiveXOR(x, multiplicativeXOR(y, findInverseGF2(x, mod), mod)); // x + y / x
+                let alfa = additiveXOR(p1.x, multiplicativeXOR(p1.y, findInverseGF2(p1.x, mod), mod)); // x + y / x
                 //let xR = (-x - x + alfa*alfa)%mod;
                 //let yR = (-y + alfa*(x-xR))%mod;
-                let xR = additiveXOR(additiveXOR(multiplicativeXOR(alfa, alfa, mod), alfa), curve.a); // alfa^2 + alfa + a
-                let yR = additiveXOR(multiplicativeXOR(x, x, mod), multiplicativeXOR(additiveXOR(alfa, 1), xR, mod)); // x^2 + x_3 * (alfa + 1)
+                let xR = additiveXOR(additiveXOR(multiplicativeXOR(alfa, alfa, mod), alfa), this.a); // alfa^2 + alfa + a
+                let yR = additiveXOR(multiplicativeXOR(p1.x, p1.x, mod), multiplicativeXOR(additiveXOR(alfa, 1), xR, mod)); // x^2 + x_3 * (alfa + 1)
                 
                 let R = {x: xR, y: yR, alfa: alfa};
                 return R;
             }
         } else {
             if (options.prime === true) {
-                let point1 = this.points[index1];
-                let point2 = this.points[index2];
-                let alfa = Mod((point2.y - point1.y)*inversePrime(Mod(point2.x-point1.x, mod), mod), mod);
-                let xR = Mod((-point1.x - point2.x + alfa*alfa), mod);
-                let yR = Mod(-point1.y + alfa*(point1.x-xR), mod);
-                let R = {x: xR, y: yR, alfa:alfa}
+                let alfa = Mod((p1.y - p2.y)*inversePrime(Mod(p1.x-p2.x, mod), mod), mod);
+                let xR = Mod((-p1.x - p2.x + alfa*alfa), mod);
+                let yR = Mod(-p1.y + alfa*(p1.x-xR), mod);
+                let R = {x: xR, y: yR, alfa:alfa};
                 return R;
             } else {
-                let point1 = this.points[index1];
-                let point2 = this.points[index2];
-                console.log(additiveXOR(point2.x,point1.x));
                 let alfa = 
                 multiplicativeXOR(
-                    additiveXOR(point2.y, point1.y),
+                    additiveXOR(p2.y, p1.y),
                     findInverseGF2(
-                        additiveXOR(point2.x,point1.x), mod
+                        additiveXOR(p2.x,p1.x), mod
                     ),
                     mod
                 );
@@ -257,12 +245,12 @@ let curve = {
                 additiveXOR(
                     additiveXOR(
                         multiplicativeXOR(alfa,alfa, mod),
-                        additiveXOR(additiveXOR(curve.a, alfa), point1.x)), point2.x); //m^2 + a + m + x_1 + x_2
+                        additiveXOR(additiveXOR(this.a, alfa), p1.x)), p2.x); //m^2 + a + m + x_1 + x_2
                 let yR = 
                 additiveXOR(
                     additiveXOR(
-                        point1.y,
-                        multiplicativeXOR(alfa, additiveXOR(point1.x, xR), mod)), xR ); // y_1 + m(x_1 + x_3) + x_3
+                        p1.y,
+                        multiplicativeXOR(alfa, additiveXOR(p1.x, xR), mod)), xR ); // y_1 + m(x_1 + x_3) + x_3
                 let R = {x: xR, y: yR, alfa:alfa}
                 return R;
             }
@@ -277,15 +265,13 @@ function Mod (val, mod) {
 let elements = [];
 
 function createPoints (curve, finiteFieldSize, mod) {
-    console.log(finiteFieldSize);
-    console.log(mod);
     if (finiteFieldSize === mod) {
         console.log("prime");
         createPointsPrime(curve, finiteFieldSize)
     } else {
         createPointsGF2(curve, finiteFieldSize, mod)
     }
-    curve.points.reverse();
+    //curve.points.reverse();
 }
 
 
@@ -419,10 +405,8 @@ function calculateElements(size, mod, combinationFunction) {
     return arrayValues;
 }
 
-function numberOfBits2 (val) {
-    return Math.floor(Math.log2(val)) + 1;
-}
-function numberOfBits (val) {
+//SLOW
+/*function numberOfBits (val) {
     if (val === 0) {
         return 1;
     }
@@ -431,7 +415,7 @@ function numberOfBits (val) {
         i++;
     }
     return i;
-}
+}*/
 
 
 
@@ -439,7 +423,7 @@ function numberOfBits (val) {
 function inversePrime (x, mod) {        //Enhance later (Double and add /// sqaure and multiply)
     let result = x;
 
-    for (let i = 0 ; i < mod - 2 ; ++i) {
+    for (let i = 0 ; i < mod - 3 ; ++i) {
         result = Mod(result * x, mod);
     }
 
@@ -456,10 +440,7 @@ function calcIreduciblePoly (size) {
 
     
 }
-//Performs modulo operation on the polynomial.
-function polyMod (value, mod) {
-    return value ^ (mod << (numberOfBits2(value) - numberOfBits2(mod)));
-}
+
 
 function isPrime(val){
     
