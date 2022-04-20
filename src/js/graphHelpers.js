@@ -115,7 +115,7 @@ function drawLine(myGraph, operator, color, i, x, y, svg, pointOperation) {
     }
     const newLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     if (i === 0) {
-        newLine.setAttribute('x1', fromPoint.getAttribute('cx')); // TODO point addition clicking on the same spot causes fromPoint is null!
+        newLine.setAttribute('x1', fromPoint.getAttribute('cx'));
         newLine.setAttribute('y1', fromPoint.getAttribute('cy'));
     } else {
         newLine.setAttribute('x1', (x * myGraph.scaleX) + myGraph.centerX);
