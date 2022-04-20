@@ -78,7 +78,10 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
         }
     }
 
-    stepRows[1].innerHTML += `<br>Thus, to compute \\(${scalar} \\cdot P \\), we only have to perform ${arrayPowerOfTwoOnes.length - 1} additions and ${binary.length - 1} doublings.`;
+    let numAdditions = (scalar % 2 === 0)?(arrayPowerOfTwoOnes.length):(arrayPowerOfTwoOnes.length - 1);
+
+    stepRows[1].innerHTML += `<br>Thus, to compute \\(${scalar} \\cdot P \\), we only have to perform ${numAdditions} additions and ${binary.length - 1} doublings.`;
+    console.log(binary, arrayPowerOfTwoOnes)
 
     /*   stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a new point \\(R = (x_R, y_R):\\) <br>
                                \\(x_R = m^2 - 2x_P = ${lambda}^2 - 2 \\cdot ${points.x}  = \\underline{${newX}}\\) <br>
