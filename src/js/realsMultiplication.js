@@ -31,8 +31,6 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
     const stepRows = document.getElementsByClassName('steps');
     stepRows[1].innerHTML = '';
 
-    // TODO Only load LaTeX when eventListener on calculation button is triggered
-    // REMOVE FROM HTML when calculation button event listener
     removeBinaryParagraphs();
 
     const paragraphPowerOfTwo = document.createElement('p');
@@ -111,40 +109,6 @@ function convertToBinary(scalar, arrayBool) {
 
     return binaryArray;
 }
-
-// function pointMultiplication(myGraph) {
-//     const points = document.getElementsByClassName('workingPoints');
-//     const point = [(points[0].getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, -(points[0].getAttribute('cy') - myGraph.centerY) / myGraph.scaleY];
-//     const storePoint = [getXY(document.getElementsByClassName('workingPoints')[0])]; // TODO Check if this is the same as above
-
-//     const scalar = document.getElementById('scalarForm').value;
-//     const binary = convertToBinary(scalar, 1); // the array of bits, from msb to lsb
-
-//     let i = binary.length - 2;
-//     let res = point;
-
-//     while (i >= 0) { // traversing from most significant bit to least significant bit
-//         res = calculateDouble(myGraph, res); // double
-
-//         // eslint-disable-next-line eqeqeq
-//         if (binary[i] == 1) {
-//             res = calculateAddition(myGraph, res, point); // addition
-//         }
-
-//         i -= 1;
-//     }
-
-//     console.log('Calculated points: ', res[0], -res[1]);
-
-//     const listedPoints = listPoints(myGraph, storePoint, res[0], res[1], 'doubling');
-
-//     pointMultiplicationSteps(myGraph, listedPoints, res[0], res[1], scalar);
-
-//     addCalculatedPoint(myGraph, res[0], res[1], 3);
-
-//     res[1] = -res[1];
-//     return res;
-// }
 
 function pointMultiplication(myGraph) {
     const pointEl = document.getElementsByClassName('workingPoints')[0];
