@@ -1,4 +1,6 @@
-import { graphToCoords, addCalculatedPoint, getXY, checkExplanationDisplay } from './graphHelpers';
+import {
+    graphToCoords, addCalculatedPoint, getXY, checkExplanationDisplay,
+} from './graphHelpers';
 import { pointDouble } from './realsDoubling';
 
 function twoDecimalRound(val) {
@@ -58,8 +60,6 @@ function pointAdditionSteps(myGraph, points, lambdaI, x, y) {
                             \\(\\textbf{R = (${newX}, ${newY})}\\) <br>
                             \\(\\textbf{-R = (${newX}, ${-newY})}\\)`;
 
-                            
-
     // eslint-disable-next-line no-undef
     checkExplanationDisplay();
 
@@ -78,16 +78,13 @@ function calculateAddition(myGraph, pointArr) {
 
         return { x: newX, y: newY };
     } if (pointArr[1].x === pointArr[0].x && pointArr[0].y === pointArr[1].y) {
-        pointDouble(myGraph); // TODO Handle edge case: both points are the same, so double the point
-
-        // TODO: pointDoublingSteps when implemented
-    } else {
-        newY = pointArr[1].y + lambda * newX + lambda * (-pointArr[1].x);
-
-        return { x: newX, y: newY };
+        // Handle edge case: both points are the same, so double the point
+        pointDouble(myGraph);
+        return 0;
     }
+    newY = pointArr[1].y + lambda * newX + lambda * (-pointArr[1].x);
 
-    return 0;
+    return { x: newX, y: newY };
 }
 
 function pointAddition(myGraph) {
@@ -101,6 +98,8 @@ function pointAddition(myGraph) {
     const lambda = ((p2.y - p1.y) / (p2.x - p1.x));
 
     const thirdPoint = calculateAddition(myGraph, [p1, p2]);
+
+    if (!thirdPoint) { return; }
 
     const listedPoints = listPoints(myGraph, points, thirdPoint.x, thirdPoint.y, 'addition');
 
