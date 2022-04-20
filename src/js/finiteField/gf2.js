@@ -1,3 +1,6 @@
+import {numberOfBits2} from "./Bits.js";
+
+
 function createPointsGF2 (curve, finiteFieldSize, mod) {
     for (let x = 0; x < finiteFieldSize; x++) {
         let y;
@@ -38,13 +41,14 @@ function createPointsGF2 (curve, finiteFieldSize, mod) {
             }
         }
         if (y === finiteFieldSize) {
-            console.log("Error!");
+            //console.log("Error!");
         }
         //console.log(`Progress: ${(x / finiteFieldSize)*100}%`);
     }
     console.log(curve.points);
 }
 
+//Adds two numbers in GF2
 function additiveXOR (x1, x2) {
     return x1^x2;
 }
@@ -154,6 +158,18 @@ function degree (a) {
     if (a === 0) {
         return -1;
     } else {
-        return numberOfBits(a) - 1;
+        return numberOfBits2(a) - 1;
     }
 }
+
+//Performs modulo operation on the polynomial.
+function polyMod (value, mod) {
+    return value ^ (mod << (numberOfBits2(value) - numberOfBits2(mod)));
+}
+
+
+export {
+    additiveXOR, multiplicativeXOR, findInverseGF2, createPointsGF2, 
+};
+
+

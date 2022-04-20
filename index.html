@@ -23,11 +23,18 @@
                 <input type="number" name="index2" id="index2" value="5"><br>
                 <input type="submit">
             </form>
+            <form id="scalarForm">
+                <label for="index">Index: </label>
+                <input type="number" name="index" id="index" value="3"><br>
+                <label for="Scalar">Scalar: </label>
+                <input type="number" name="Scalar" id="Scalar" value="5"><br>
+                <input type="submit">
+            </form>
         </div>
         
         <canvas id="curveGraph" width="800" height="800" style="border:1px solid #000000;">
             
         </canvas>
-        <script defer src="src/js/finiteField/FiniteFieldTablePolynomialModuli.js"></script>
+        <script defer type="module" src="./src/js/finiteField/FiniteFieldTablePolynomialModuli.js"></script>
     </body>
 </html>
