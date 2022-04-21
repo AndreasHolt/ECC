@@ -118,22 +118,35 @@ function pointMultiplication(myGraph) {
     const point = graphToCoords(myGraph, getXY(pointEl));
     point.y = -point.y;
 
-    const scalar = document.getElementById('scalarForm').value;
+    let scalar = document.getElementById('scalarForm').value;
     const binary = convertToBinary(scalar, 1); // the array of bits, from msb to lsb
 
-    let i = binary.length - 2;
+    //let i = binary.length - 2;
+
+    let Q = 0;
+
+    console.log('Q, ', Q, 'Point, ', point);
+
+    let bits = binary;
+    let i = bits.length - 2;
     let res = point;
 
-    while (i >= 0) { // traversing from most significant bit to least significant bit
-        res = calculateDouble(myGraph, res); // double
-
-        // eslint-disable-next-line
-        if (binary[i] == 1) {
-            res = calculateAddition(myGraph, [res, point]);
+    while (i >= 0) {
+        res = calculateDouble(myGraph, res); // Double
+        if(bits[i] == 1) {
+            res = calculateAddition(myGraph, [res, point]); // Add
+            res.y = -res.y;
         }
 
-        i -= 1;
+        i = i - 1
     }
+
+
+
+
+    
+
+
 
     const listedPoints = listPoints(myGraph, [point], res.x, res.y, 'doubling');
     pointMultiplicationSteps(myGraph, listedPoints, res.x, res.y, scalar);

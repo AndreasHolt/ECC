@@ -67,9 +67,13 @@ function pointAdditionSteps(myGraph, points, lambdaI, x, y) {
 }
 
 function calculateAddition(myGraph, pointArr) {
+    if(pointArr[0] === 0) {
+        return pointArr[1];
+    }
     const lambda = ((pointArr[1].y - pointArr[0].y) / (pointArr[1].x - pointArr[0].x));
     let newX = (lambda * lambda) - pointArr[1].x - pointArr[0].x;
     let newY = 0;
+
 
     // Handle edge case: same x coordinate for both points, but not same y coordinate
     if (pointArr[1].x === pointArr[0].x && pointArr[0].y !== pointArr[1].y) {
