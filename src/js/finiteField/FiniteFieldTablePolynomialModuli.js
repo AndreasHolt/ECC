@@ -6,9 +6,36 @@ const canvas = document.getElementById("curveGraph");
 const ctx = canvas.getContext("2d");
 //let table = document.querySelector("#table");
 
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    curve.points = [];
+    let prime = Number(event.target["prime"].value);
+    let power = Number(event.target["power"].value);
+    let sizeOfTable = Math.pow(prime, power);
+    curve.fieldOrder = sizeOfTable;
+    let optionsList = [{mode:"multiplicative"},{mode:"additive"}];
+    let modoli;
 
+    if (power > 1) {
+        modoli = Number(event.target["modoli"].value);
+        //curve.c = 1;
+        //curve.d = 1;
+    } else {
+        modoli = prime;
+        curve.c = 0;
+        curve.d = 0;
+    }
+    curve.mod = modoli;
+    
+    for (let options of optionsList) {
+        let arrayValues = createTable(sizeOfTable, modoli, options);
+        createTableHTML(arrayValues, sizeOfTable, options.mode);
+    }
+    
+    createPoints(curve, sizeOfTable, modoli);
+    curve.drawDots(sizeOfTable);
 
-form.addEventListener("submit", handleSubmit);
+});
 document.getElementById("pointForm").addEventListener("submit", (event) => {
     event.preventDefault();
     try {
@@ -300,36 +327,7 @@ function createPointsPrime (curve, finiteFieldSize) {
 }
 
 
-function handleSubmit (event) {
-    event.preventDefault();
-    curve.points = [];
-    let prime = Number(event.target["prime"].value);
-    let power = Number(event.target["power"].value);
-    let sizeOfTable = Math.pow(prime, power);
-    curve.fieldOrder = sizeOfTable;
-    let optionsList = [{mode:"multiplicative"},{mode:"additive"}];
-    let modoli;
 
-    if (power > 1) {
-        modoli = Number(event.target["modoli"].value);
-        //curve.c = 1;
-        //curve.d = 1;
-    } else {
-        modoli = prime;
-        curve.c = 0;
-        curve.d = 0;
-    }
-    curve.mod = modoli;
-    
-    for (let options of optionsList) {
-        let arrayValues = createTable(sizeOfTable, modoli, options);
-        //createTableHTML(arrayValues, sizeOfTable, options.mode);
-    }
-    
-    createPoints(curve, sizeOfTable, modoli);
-    curve.drawDots(sizeOfTable);
-
-}
 
 /*for (let letter of "hej med dig!") {
     var charCode = letter.charCodeAt(0);
@@ -375,7 +373,7 @@ function createTableHTML (tableArray, tableSize, htmlID) {
     if (oldTable) {
         oldTable.replaceWith(newTable);
     } else {
-        document.getElementById("inputDiv").after(newTable);
+        document.getElementById("outputTableColumn").after(newTable);
     }
 
 }
