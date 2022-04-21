@@ -1,5 +1,8 @@
-import { createPointsGF2, multiplicativeXOR, additiveXOR, findInverseGF2 } from "./gf2.js";
+import { multiplicativeXOR, additiveXOR, findInverseGF2 } from "./gf2.js";
 import {numberOfBits2} from "./Bits.js";
+import {createCurve, createCurveAXY} from "./curves.js";
+
+export {Mod,  };
 
 let form = document.querySelector("#form");
 const canvas = document.getElementById("curveGraph");
@@ -8,6 +11,54 @@ const ctx = canvas.getContext("2d");
 
 form.addEventListener("submit", (event) => {
     event.preventDefault();
+    let prime;
+    let power;
+    let modoli;
+    let additionFunction;
+    let createPointsFunction;
+    switch (event.target["curveList"].value) {
+        case ("Prime 5"):
+            prime = 5;
+            power = 1;
+            modoli = 5;
+            additionFunction = calcPointAdditionPrime;
+            break;
+        case ("Prime 17"):
+            prime = 17;
+            power = 1;
+            modoli = 17;
+            additionFunction = calcPointAdditionPrime;
+            break;
+        case ("Prime 37"):
+            prime = 37;
+            power = 1;
+            modoli = 37;
+            additionFunction = calcPointAdditionPrime;
+            break;
+        case ("GF2 4"):
+            prime = 2;
+            power = 4;
+            modoli = 19;
+            additionFunction = calcPointAdditionGF2;
+            break;
+        case ("GF2 5"):
+            prime = 2;
+            power = 5;
+            modoli = 37;
+            additionFunction = calcPointAdditionGF2;
+            break;
+        case ("GF2 8"):
+            prime = 2;
+            power = 8;
+            modoli = 285;
+            additionFunction = calcPointAdditionGF2;
+            break;
+    }
+    //let curve = createCurve(3,6,0,1, Math.pow(prime, power), modoli, additionFunction);
+    let curve = createCurveAXY(12, 1, 0, Math.pow(prime, power), modoli, additionFunction);
+    curve.createPoints();
+    drawPoints(curve.points, curve.fieldOrder);
+    /*
     curve.points = [];
     let prime = Number(event.target["prime"].value);
     let power = Number(event.target["power"].value);
@@ -34,7 +85,7 @@ form.addEventListener("submit", (event) => {
     
     createPoints(curve, sizeOfTable, modoli);
     curve.drawDots(sizeOfTable);
-
+*/
 });
 document.getElementById("pointForm").addEventListener("submit", (event) => {
     event.preventDefault();
@@ -66,13 +117,13 @@ document.getElementById("pointForm").addEventListener("submit", (event) => {
     }
 });
 
-document.getElementById("power").addEventListener("input", () => {
+/*document.getElementById("power").addEventListener("input", () => {
     if (document.getElementById("power").value > 1) {
         document.getElementById("modoliDiv").hidden = false;
     } else {
         document.getElementById("modoliDiv").hidden = true;
     }
-});
+});*/
 
 document.getElementById("scalarForm").addEventListener("submit", (event) => {
     event.preventDefault();
@@ -186,6 +237,12 @@ function drawLineDirectGood (point, point3, options) {
     }
 }
 
+function drawPoints (arrayPoints, fieldOrder) {
+    for (let point of arrayPoints) {
+        drawPoint(point, fieldOrder, 3, "black");
+    }
+}
+
 function drawPoint (point, size, pointSize, color) {
     //console.log("Hello1");
     ctx.beginPath();
@@ -195,145 +252,62 @@ function drawPoint (point, size, pointSize, color) {
     ctx.stroke();
 }
 
-//Curve function //Form y^2 + cxy + dy = x^3 + ax^2 + b
-let curve = {
-    "a": 1,
-    "b": 1,
-    "c": 1,
-    "d": 0,
-    "mod": 0,
-    "fieldOrder": 0,
-    points: [],
-    drawDots: function (size) {
-        for (let element of this.points) {
-            drawPoint(element, size, 5, "black");
-        }
-    },
-    calcPointDouble: function(point, options, mod) {
-        return this.calcPointAddition(point, point, options, mod);
-    },
-    calcPointMultiplication: function(k, P, options, mod) {              //https://scialert.net/fulltext/?doi=itj.2013.1780.1787
-        let Q = P;
-        let i = numberOfBits2(k);
-        i >>= 1;
-        //101 |1|01 => P, 1|0|1 => 2P, 10|1| => 2(2P) + P = 5P 
-        while (i !== 0 ) {
-            Q = this.calcPointDouble(Q, options, mod);
-
-            
-            if ((i & k) === i) {
-                Q = this.calcPointAddition(P, Q, options, mod);     //Enten skal vi finde indexet på Q eller så skal vi have punktet som input i de andre funktioner
-            }
-            i >>= 1;
-        }
-
-        return Q;
-    },
-    //Point 1 (p1) and point 2 (p2)
-    calcPointAddition: function(p1, p2, options, mod) {
-        if (p1.x === p2.x && p1.y === p2.y) {
-            if (options.prime === true) {
-                let alfa = Mod((3*(p1.x*p1.x) + this.a)*inversePrime(Mod(2*p1.y, mod), mod), mod);
-                let xR = Mod((alfa*alfa - 2*p1.x), mod);
-                let yR = Mod(this.fieldOrder - (p1.y + alfa*(xR - p1.x)), mod);
-                let R = {x: xR, y: yR, alfa: alfa};
-                return R;
-            } else {
-                if (p1.x === 0) {
-                    return {x: p1.x, y: p1.y, alfa: 0};
-                }
-
-                let alfa = additiveXOR(p1.x, multiplicativeXOR(p1.y, findInverseGF2(p1.x, mod), mod)); // x + y / x
-                //let xR = (-x - x + alfa*alfa)%mod;
-                //let yR = (-y + alfa*(x-xR))%mod;
-                let xR = additiveXOR(additiveXOR(multiplicativeXOR(alfa, alfa, mod), alfa), this.a); // alfa^2 + alfa + a
-                let yR = additiveXOR(multiplicativeXOR(p1.x, p1.x, mod), multiplicativeXOR(additiveXOR(alfa, 1), xR, mod)); // x^2 + x_3 * (alfa + 1)
-                
-                let R = {x: xR, y: yR, alfa: alfa};
-                return R;
-            }
-        } else {
-            if (options.prime === true) {
-                let alfa = Mod((p1.y - p2.y)*inversePrime(Mod(p1.x-p2.x, mod), mod), mod);
-                let xR = Mod((-p1.x - p2.x + alfa*alfa), mod);
-                let yR = Mod(-p1.y + alfa*(p1.x-xR), mod);
-                let R = {x: xR, y: yR, alfa:alfa};
-                return R;
-            } else {
-                let alfa = 
-                multiplicativeXOR(
-                    additiveXOR(p2.y, p1.y),
-                    findInverseGF2(
-                        additiveXOR(p2.x,p1.x), mod
-                    ),
-                    mod
-                );
-                let xR = 
-                additiveXOR(
-                    additiveXOR(
-                        multiplicativeXOR(alfa,alfa, mod),
-                        additiveXOR(additiveXOR(this.a, alfa), p1.x)), p2.x); //m^2 + a + m + x_1 + x_2
-                let yR = 
-                additiveXOR(
-                    additiveXOR(
-                        p1.y,
-                        multiplicativeXOR(alfa, additiveXOR(p1.x, xR), mod)), xR ); // y_1 + m(x_1 + x_3) + x_3
-                let R = {x: xR, y: yR, alfa:alfa}
-                return R;
-            }
-        }
+function calcPointAdditionPrime (p1, p2) {
+    if (p1.x === p2.x && p1.y === p2.y) {
+        let alfa = Mod((3*(p1.x*p1.x) + this.a)*inversePrime(Mod(2*p1.y, this.mod), this.mod), this.mod);
+        let xR = Mod((alfa*alfa - 2*p1.x), this.mod);
+        let yR = Mod(this.fieldOrder - (p1.y + alfa*(xR - p1.x)), this.mod);
+        let R = {x: xR, y: yR, alfa: alfa};
+        return R;
+    } else {
+        let alfa = Mod((p1.y - p2.y)*inversePrime(Mod(p1.x-p2.x, this.mod), this.mod), this.mod);
+        let xR = Mod((-p1.x - p2.x + alfa*alfa), this.mod);
+        let yR = Mod(-p1.y + alfa*(p1.x-xR), this.mod);
+        let R = {x: xR, y: yR, alfa:alfa};
+        return R;
     }
-};
+}
+function calcPointAdditionGF2 (p1, p2) {
+    if (p1.x === p2.x && p1.y === p2.y) {
+        let alfa = multiplicativeXOR(                                                                                   //alfa = (3 * x^2 + a + c * y) / (2 * y + c * x + d)
+            additiveXOR( multiplicativeXOR(3, multiplicativeXOR(p1.x, p1.x, this.mod), this.mod),                       //(3 * x^2 + 
+            additiveXOR(this.a, multiplicativeXOR(this.c, p1.y, this.mod))),                                            //... a + c * y) *
+            findInverseGF2(additiveXOR(additiveXOR(multiplicativeXOR(2, p1.y, this.mod),                                //... 1 / (2y +
+            multiplicativeXOR(this.c, p1.x, this.mod)),                                                                 //... c * x + 
+                this.d), this.mod), this.mod);                                                                          //... d)
+            
+
+        let xR = additiveXOR(multiplicativeXOR(alfa, alfa, this.mod), multiplicativeXOR(this.c, alfa, this.mod));       //x_3 = alfa^2 + alfa
+
+        let yR = additiveXOR(additiveXOR(                                                                               //y_3 = c * x_3 + d + y_1 + alfa * (x_1 + x_3)
+            multiplicativeXOR(this.c, xR, this.mod), this.d),                                                           //c * x_3 + d +
+            additiveXOR(p1.y, multiplicativeXOR(alfa, additiveXOR(p1.x, xR), this.mod)));                               //... y_1 + alfa * (x_1 + x_3)
+        
+        let R = {x: xR, y: yR, alfa: alfa};
+        return R;
+    } else {
+        let alfa = multiplicativeXOR(                                                                                   //alfa = (y_2 + y_1) / (x_2 + x_1)
+            additiveXOR(p2.y, p1.y),                                                                                    //(y_2 + y_1) * 
+            findInverseGF2(additiveXOR(p2.x, p1.x), this.mod), this.mod);                                               //... 1 / (x_2 + x_1) 
+        
+        let xR = additiveXOR(                                                                                           //x_3 = x_2 + x_1 + alfa^2 + c * alfa
+            additiveXOR(p2.x, p1.x),                                                                                    //x_2 + x_1 + 
+            additiveXOR(multiplicativeXOR(alfa, alfa, this.mod), multiplicativeXOR(this.c, alfa, this.mod)));           //... alfa^2 + c * alfa
+
+        let yR = additiveXOR(                                                                                           //y_3 = -cx_3 - d - y_1 + alfa * (x_1 + x_3)
+            additiveXOR(multiplicativeXOR(this.c, xR, this.mod), this.d),                                               //c * x_3 + d +
+            additiveXOR(p1.y, multiplicativeXOR(alfa, additiveXOR(p1.x, xR), this.mod)));                               //... y_1 + alfa * (x_1 + x_3)
+        let R = {x: xR, y: yR, alfa:alfa}
+        return R;
+    }
+}
+
+
 
 function Mod (val, mod) {
     return ((val % mod) + mod) % mod;
 }
-//element = {x}
-let elements = [];
 
-function createPoints (curve, finiteFieldSize, mod) {
-    if (finiteFieldSize === mod) {
-        console.log("prime");
-        createPointsPrime(curve, finiteFieldSize)
-    } else {
-        createPointsGF2(curve, finiteFieldSize, mod)
-    }
-    //curve.points.reverse();
-}
-
-
-
-
-
-
-
-function createPointsPrime (curve, finiteFieldSize) {
-    for (let x = 0 ; x < finiteFieldSize ; x++) {
-        let rightSide = Mod((x*x*x + curve.a*x + curve.b), finiteFieldSize);
-        for (let y = 0 ; y < finiteFieldSize ; y++) {
-            if (Mod((y*y), finiteFieldSize) === rightSide) {
-                curve.points.push({x:x, y:y});
-                let oppositeY = finiteFieldSize-y;
-                if (oppositeY === finiteFieldSize) {
-                    break;
-                }
-                if(Mod((oppositeY*oppositeY), finiteFieldSize) === rightSide) {
-                    curve.points.push({x:x, y:oppositeY});
-                    break;
-                }
-            }
-        }
-    }
-}
-
-
-
-
-/*for (let letter of "hej med dig!") {
-    var charCode = letter.charCodeAt(0);
-    console.log(charCode);
-    console.log(letter);
-}*/
 
 function createTableHTML (tableArray, tableSize, htmlID) {
     let oldTable = document.getElementById(htmlID);
