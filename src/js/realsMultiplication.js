@@ -17,7 +17,6 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
     const arrayPowerOfTwo = [];
     const arrayPowerOfTwoOnes = [];
 
-    console.log(binary);
     // Show binary representation calculations
     for (let i = 0; i < binary.length; i += 1) {
         if (binary[i] === '1') {
@@ -64,13 +63,11 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
     stepRows[1].innerHTML += '<br> Therefore the Double and Add algorithm tells us to: <br> <br>• Take \\(P\\) <br>';
 
     const binaryReversed = binary.toString().split('').reverse().join('');
-    console.log(binaryReversed);
 
     for (let i = 0; i < binary.length; i += 1) {
         if (i !== 0) {
             stepRows[1].innerHTML += `• Double \\( 2^{${i - 1}}P\\), so that we get \\(2^{${i}}P\\) <br>`;
             if (binary[binary.length - 1 - i] === '1') {
-                console.log('Index: ', binary.length - 1 - i);
                 stepRows[1].innerHTML += `• Add \\(2^{${i}}P\\) to our result <br>`;
             } else {
                 stepRows[1].innerHTML += `• Don't perform any addition involving \\(2^{${i}}P\\) <br>`;
@@ -81,7 +78,6 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
     let numAdditions = (scalar % 2 === 0)?(arrayPowerOfTwoOnes.length):(arrayPowerOfTwoOnes.length - 1);
 
     stepRows[1].innerHTML += `<br>Thus, to compute \\(${scalar} \\cdot P \\), we only have to perform ${numAdditions} additions and ${binary.length - 1} doublings.`;
-    console.log(binary, arrayPowerOfTwoOnes)
 
     /*   stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a new point \\(R = (x_R, y_R):\\) <br>
                                \\(x_R = m^2 - 2x_P = ${lambda}^2 - 2 \\cdot ${points.x}  = \\underline{${newX}}\\) <br>
@@ -108,7 +104,6 @@ function convertToBinary(scalar, arrayBool) {
     }
 
     const binaryArray = (`${binary}`).split('').reverse();
-    console.log(binaryArray);
 
     return binaryArray;
 }
@@ -125,8 +120,6 @@ function pointMultiplication(myGraph) {
 
     let Q = 0;
 
-    console.log('Q, ', Q, 'Point, ', point);
-
     let bits = binary;
     let i = bits.length - 2;
     let res = point;
@@ -140,13 +133,6 @@ function pointMultiplication(myGraph) {
 
         i = i - 1
     }
-
-
-
-
-    
-
-
 
     const listedPoints = listPoints(myGraph, [point], res.x, res.y, 'doubling');
     pointMultiplicationSteps(myGraph, listedPoints, res.x, res.y, scalar);
