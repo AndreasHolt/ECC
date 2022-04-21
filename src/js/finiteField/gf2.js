@@ -1,52 +1,7 @@
 import {numberOfBits2} from "./Bits.js";
 
 
-function createPointsGF2 (curve, finiteFieldSize, mod) {
-    for (let x = 0; x < finiteFieldSize; x++) {
-        let y;
-        let rightSide = additiveXOR(
-            additiveXOR(
-                multiplicativeXOR(x, multiplicativeXOR(x, x, mod), mod),
-                multiplicativeXOR(curve.a, multiplicativeXOR(x, x, mod), mod)
-            ),
-            curve.b
-        );
-        let cx = multiplicativeXOR(curve.c, x, mod);
-        for (y = 0; y < finiteFieldSize; y++) {
-            if (additiveXOR(
-                    additiveXOR(
-                        multiplicativeXOR(y, y, mod),
-                        multiplicativeXOR(cx, y, mod)
-                    ),
-                    multiplicativeXOR(curve.d, y, mod)
-                ) === rightSide)
-            {
-                curve.points.push({x:x, y:y});
-                if (x !== 0) {
-                    let x2 = x;
-                    let y2 = additiveXOR(y,x);
-                    if (additiveXOR(
-                        additiveXOR(
-                            multiplicativeXOR(y2, y2, mod),
-                            multiplicativeXOR(cx, y2, mod)
-                        ),
-                        multiplicativeXOR(curve.d, y2, mod)
-                    ) === rightSide)
-                    {
-                        curve.points.push({x:x2, y:y2});
-                    }
-                }
-                break;
-                //console.log(curve.points[curve.points.length - 1]);
-            }
-        }
-        if (y === finiteFieldSize) {
-            //console.log("Error!");
-        }
-        //console.log(`Progress: ${(x / finiteFieldSize)*100}%`);
-    }
-    console.log(curve.points);
-}
+
 
 //Adds two numbers in GF2
 function additiveXOR (x1, x2) {
@@ -169,7 +124,7 @@ function polyMod (value, mod) {
 
 
 export {
-    additiveXOR, multiplicativeXOR, findInverseGF2, createPointsGF2, 
+    additiveXOR, multiplicativeXOR, findInverseGF2, 
 };
 
 
