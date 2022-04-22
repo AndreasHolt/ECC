@@ -136,15 +136,9 @@ function drawLine(myGraph, operator, color, i, x, y, svg, pointOperation) {
 }
 
 function addCalculatedPoint(myGraph, point, pointOperation) {
-    if (document.getElementsByClassName('calculatedPoints').length === 2) {
-        document.getElementsByClassName('calculatedPoints')[1].remove();
-        document.getElementsByClassName('calculatedPoints')[0].remove();
-
-        document.getElementsByClassName('linesConnecting')[1].remove();
-        document.getElementsByClassName('linesConnecting')[0].remove();
-    } else if (pointOperation === 3 && document.getElementsByClassName('calculatedPoints').length === 1) {
-        document.getElementsByClassName('calculatedPoints')[0].remove();
-    }
+    document.querySelectorAll('.calculatedPoints, .linesConnecting').forEach(el => {
+        el.remove();
+    });
 
     let arrayIntersectInverted;
 
