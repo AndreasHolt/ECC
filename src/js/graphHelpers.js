@@ -47,8 +47,8 @@ function movePoint(event, myGraph) {
 }
 
 function getXY(el) {
-    const x = parseInt(el.getAttribute('cx'), 10);
-    const y = parseInt(el.getAttribute('cy'), 10);
+    const x = parseFloat(el.getAttribute('cx'));
+    const y = parseFloat(el.getAttribute('cy'));
     return { x, y };
 }
 
