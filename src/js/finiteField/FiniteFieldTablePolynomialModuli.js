@@ -4,12 +4,13 @@ import {createCurve, createCurveAXY} from "./curves.js";
 
 export {Mod,  };
 
-let form = document.querySelector("#form");
 const canvas = document.getElementById("curveGraph");
 const ctx = canvas.getContext("2d");
 //let table = document.querySelector("#table");
 
-form.addEventListener("submit", (event) => {
+let curve;
+
+document.querySelector("#form").addEventListener("submit", (event) => {
     event.preventDefault();
     let prime;
     let power;
@@ -54,8 +55,10 @@ form.addEventListener("submit", (event) => {
             additionFunction = calcPointAdditionGF2;
             break;
     }
-    //let curve = createCurve(3,6,0,1, Math.pow(prime, power), modoli, additionFunction);
-    let curve = createCurveAXY(12, 1, 0, Math.pow(prime, power), modoli, additionFunction);
+    curve = createCurve(2,1,1,1, Math.pow(prime, power), modoli, additionFunction);
+    //curve = createCurveAXY(Math.floor(Math.random()*Math.pow(prime, power)), 1, 0, Math.pow(prime, power), modoli, additionFunction);
+    //console.log("Subgroup for G: " + curve.calcSubGroup(curve.G));
+    console.log("a: " + curve.a);
     curve.createPoints();
     drawPoints(curve.points, curve.fieldOrder);
     /*
@@ -87,7 +90,7 @@ form.addEventListener("submit", (event) => {
     curve.drawDots(sizeOfTable);
 */
 });
-document.getElementById("pointForm").addEventListener("submit", (event) => {
+document.getElementById("additionForm").addEventListener("submit", (event) => {
     event.preventDefault();
     try {
         let index1 = Number(event.target["index1"].value);
@@ -101,15 +104,15 @@ document.getElementById("pointForm").addEventListener("submit", (event) => {
             options.prime = false;
         }
         
-        let newPoint = curve.calcPointAddition(point1, point2, options, curve.mod);
+        let newPoint = curve.calcPointAddition(point1, point2);
         drawPoint(newPoint, curve.fieldOrder, 5, "red");
         drawPoint(point1,curve.fieldOrder, 5, "blue");
         drawPoint(point2,curve.fieldOrder, 5, "yellow");
         //drawLine(0, 16, 0, 1, curve.fieldOrder);
         if (index1 !== index2) {
-            drawLineDirect(point1, point2, 16);
+            //drawLineDirect(point1, point2, 16);
         }
-        drawLineDirectGood(point1, newPoint, options);
+        //drawLineDirectGood(point1, newPoint, options);
 
     } catch (e) {
         console.log("Error! find selv ud af det!");
@@ -125,6 +128,18 @@ document.getElementById("pointForm").addEventListener("submit", (event) => {
     }
 });*/
 
+document.getElementById("Scalar").addEventListener("input", (event) => {
+    let index = Number(document.getElementById("index").value);
+    let point = curve.points[index];
+    let scale = Number(event.target.value);
+    if (point) {
+
+        let scaledPoint = curve.calcPointMultiplication(scale, point);
+        highlightPoint(scaledPoint, 1000, curve.fieldOrder);
+        
+    }
+});
+
 document.getElementById("scalarForm").addEventListener("submit", (event) => {
     event.preventDefault();
     let index = Number(event.target["index"].value);
@@ -133,17 +148,7 @@ document.getElementById("scalarForm").addEventListener("submit", (event) => {
     drawPoint(point, curve.fieldOrder, 5, "blue");
     
     if (point) {
-        
-    
-        let options = {};
-            if (curve.mod === curve.fieldOrder) {
-                options.prime = true;
-            } else {
-                options.prime = false;
-            }
-
-        let scaledPoint = curve.calcPointMultiplication(scale, point, options, curve.mod);
-
+        let scaledPoint = curve.calcPointMultiplication(scale, point);
         drawPoint(scaledPoint, curve.fieldOrder, 5, "red");
         drawLineDirectGood(point, scaledPoint, options);
     }
@@ -238,6 +243,7 @@ function drawLineDirectGood (point, point3, options) {
 }
 
 function drawPoints (arrayPoints, fieldOrder) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let point of arrayPoints) {
         drawPoint(point, fieldOrder, 3, "black");
     }
@@ -250,6 +256,20 @@ function drawPoint (point, size, pointSize, color) {
     ctx.fillStyle = color;
     ctx.fill();
     ctx.stroke();
+}
+
+function highlightPoint (point, time, size) {
+    let svg = document.getElementById("highlightSVG");
+    var svgns = "http://www.w3.org/2000/svg";
+    var circle = document.createElementNS(svgns, 'circle');
+    circle.setAttributeNS(null, 'cx', point.x * canvas.width / size);
+    circle.setAttributeNS(null, 'cy', canvas.height - (point.y * canvas.height / size));
+    circle.setAttributeNS(null, 'r', 10);
+    circle.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 1px;' );
+    svg.appendChild(circle);
+    setTimeout(() => {
+        svg.removeChild(circle);
+    }, time);
 }
 
 function calcPointAdditionPrime (p1, p2) {

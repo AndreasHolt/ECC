@@ -1,7 +1,17 @@
 import {numberOfBits2} from "./Bits.js";
 
 
+function aXOR (...theArgs) {
+    return theArgs.reduce((previous, current) => {
+        return previous ^ current;
+    });
+}
 
+function mXOR (mod, ...theArgs) {
+    return theArgs.reduce((previous, current) => {
+        return multiplicativeXOR(previous, current, mod);
+    });
+}
 
 //Adds two numbers in GF2
 function additiveXOR (x1, x2) {
@@ -124,7 +134,7 @@ function polyMod (value, mod) {
 
 
 export {
-    additiveXOR, multiplicativeXOR, findInverseGF2, 
+    aXOR, mXOR, additiveXOR, multiplicativeXOR, findInverseGF2, 
 };
 
 
