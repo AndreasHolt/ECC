@@ -31,7 +31,7 @@
                             </select>
                             <input type="submit">
                         </form>
-                        <form id="pointForm">
+                        <form id="additionForm">
                             <label for="index1">Index1: </label>
                             <input type="number" name="index1" id="index1" value="3"><br>
                             <label for="index2">Index2: </label>
@@ -52,7 +52,17 @@
 
                 </td>
                 <td id="outputGraphColumn">
-                    <canvas id="curveGraph" width="800" height="800" style="border:1px solid #000000;"></canvas>
+                    <div style="position: relative;">
+                        <canvas id="curveGraph" width="800" height="800" style="border:1px solid #000000;"></canvas>
+                        <svg id="highlightSVG" style="position: absolute; 
+                                    left: 0px; 
+                                    top:0px;
+                                    z-index: 2;
+                                    width: 800px;
+                                    height: 800px;">
+                        </svg>
+                    </div>
+                    
                 </td>
             </tr>
         </table>
