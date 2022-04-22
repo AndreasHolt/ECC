@@ -20,9 +20,9 @@ document.getElementById('pointSVG').addEventListener('wheel', (e) => {
     movePoint(e, myGraph); // Move point when scrolling
 
     if (e.deltaY < 0) { // Zoom in
-        redrawGraph(0.98);
-    } else { // Zoom out
         redrawGraph(1.02);
+    } else { // Zoom out
+        redrawGraph(0.98);
     }
 });
 
