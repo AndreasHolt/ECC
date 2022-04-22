@@ -120,11 +120,9 @@ document.getElementById('pointQ').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         const pointsOnGraph = document.getElementsByClassName('workingPoints');
 
-        let count = 0;
         for (const point of pointsOnGraph) {
             if (point.getAttribute('idPoint') === 'Q') {
                 point.remove();
-                count++;
             }
         }
         // Delete the point on the graph that was placed first
@@ -144,11 +142,10 @@ document.getElementById('pointQ').addEventListener('keypress', (e) => {
 document.getElementById('pointP').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         const pointsOnGraph = document.getElementsByClassName('workingPoints');
-        let count = 0;
+
         for (const point of pointsOnGraph) {
             if (point.getAttribute('idPoint') === 'P') {
                 point.remove();
-                count++;
             }
         }
         // Delete the point on the graph that was placed first
