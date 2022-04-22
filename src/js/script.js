@@ -187,7 +187,7 @@ document.getElementById('pointP').addEventListener('keypress', (e) => {
 
                     MathJax.typeset();
                 }
-                addPointOnClick(myGraph);
+                addPointByInput('Px', myGraph);
                 pointMultiplication(myGraph);
             } else if (pointsOnGraph.length === 1) {
                 deletePoints();
