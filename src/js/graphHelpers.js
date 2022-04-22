@@ -194,7 +194,7 @@ function addPointOnClick(myGraph) {
     circle.setAttribute('cy', point.getAttribute('cy'));
     circle.classList.add('workingPoints');
     circle.setAttribute('r', 5);
-
+    circle.setAttribute('idPoint', (document.getElementsByClassName('workingPoints').length === 1)?'P':'Q');
     const svg = document.querySelector('svg');
     svg.appendChild(circle);
 
@@ -217,6 +217,7 @@ function addPointByInput(idX, myGraph) {
     circle.setAttribute('cy', myGraph.centerY + (myGraph.scaleY * -myGraph.equationP(x)));
     circle.classList.add('workingPoints');
     circle.setAttribute('r', 5);
+    circle.setAttribute('idPoint', `${idX[0]}`);
 
     y.value = `${twoDecimalRound(myGraph.equationP(x))}`;
     const svg = document.querySelector('svg');
