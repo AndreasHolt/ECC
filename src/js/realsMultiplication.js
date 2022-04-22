@@ -1,5 +1,5 @@
 import {
-    addCalculatedPoint, getXY, graphToCoords, removeBinaryParagraphs, checkExplanationDisplay
+    addCalculatedPoint, getXY, graphToCoords, removeBinaryParagraphs, checkExplanationDisplay,
 } from './graphHelpers';
 import { calculateDouble } from './realsDoubling';
 import { calculateAddition, listPoints, twoDecimalRound } from './realsAddition';
@@ -9,10 +9,6 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
     points.y = twoDecimalRound(points.y);
 
     const binary = convertToBinary(scalar, 0);
-
-    // If so we should use Number.toFixed
-    const newX = twoDecimalRound(x);
-    const newY = twoDecimalRound(y);
 
     const arrayPowerOfTwo = [];
     const arrayPowerOfTwoOnes = [];
@@ -62,8 +58,6 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
 
     stepRows[1].innerHTML += '<br> Therefore the Double and Add algorithm tells us to: <br> <br>• Take \\(P\\) <br>';
 
-    const binaryReversed = binary.toString().split('').reverse().join('');
-
     for (let i = 0; i < binary.length; i += 1) {
         if (i !== 0) {
             stepRows[1].innerHTML += `• Double \\( 2^{${i - 1}}P\\), so that we get \\(2^{${i}}P\\) <br>`;
@@ -75,19 +69,12 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
         }
     }
 
-    let numAdditions = (scalar % 2 === 0)?(arrayPowerOfTwoOnes.length):(arrayPowerOfTwoOnes.length - 1);
+    const numAdditions = (scalar % 2 === 0) ? (arrayPowerOfTwoOnes.length) : (arrayPowerOfTwoOnes.length - 1);
 
     stepRows[1].innerHTML += `<br>Thus, to compute \\(${scalar} \\cdot P \\), we only have to perform ${numAdditions} additions and ${binary.length - 1} doublings.`;
 
-    /*   stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a new point \\(R = (x_R, y_R):\\) <br>
-                               \\(x_R = m^2 - 2x_P = ${lambda}^2 - 2 \\cdot ${points.x}  = \\underline{${newX}}\\) <br>
-                               \\(y_R = -y_P + m(x_P - x_R) = -${points.y} + ${lambda}(${points.x} -  ${newX}) = \\underline{${newY}}\\) <br> <br>
-                               \\(\\textbf{R = (${newX}, ${newY})}\\)`;
-    */
     // eslint-disable-next-line no-undef
     checkExplanationDisplay();
-    
-
 }
 
 function convertToBinary(scalar, arrayBool) {
@@ -113,25 +100,23 @@ function pointMultiplication(myGraph) {
     const point = graphToCoords(myGraph, getXY(pointEl));
     point.y = -point.y;
 
-    let scalar = document.getElementById('scalarForm').value;
+    const scalar = document.getElementById('scalarForm').value;
     const binary = convertToBinary(scalar, 1); // the array of bits, from msb to lsb
 
-    //let i = binary.length - 2;
+    const Q = 0;
 
-    let Q = 0;
-
-    let bits = binary;
+    const bits = binary;
     let i = bits.length - 2;
     let res = point;
 
     while (i >= 0) {
         res = calculateDouble(myGraph, res); // Double
-        if(bits[i] == 1) {
+        if (bits[i] == 1) {
             res = calculateAddition(myGraph, [res, point]); // Add
             res.y = -res.y;
         }
 
-        i = i - 1
+        i -= 1;
     }
 
     const listedPoints = listPoints(myGraph, [point], res.x, res.y, 'doubling');

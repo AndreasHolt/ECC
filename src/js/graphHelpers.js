@@ -194,7 +194,7 @@ function addPointOnClick(myGraph) {
     circle.setAttribute('cy', point.getAttribute('cy'));
     circle.classList.add('workingPoints');
     circle.setAttribute('r', 5);
-    circle.setAttribute('idPoint', (document.getElementsByClassName('workingPoints').length === 1)?'P':'Q');
+    circle.setAttribute('idPoint', (document.getElementsByClassName('workingPoints').length === 1) ? 'P' : 'Q');
     const svg = document.querySelector('svg');
     svg.appendChild(circle);
 
