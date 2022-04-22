@@ -1,4 +1,6 @@
-import { graphToCoords, addCalculatedPoint, getXY, checkExplanationDisplay } from './graphHelpers';
+import {
+    graphToCoords, addCalculatedPoint, getXY, checkExplanationDisplay,
+} from './graphHelpers';
 import { twoDecimalRound, listPoints } from './realsAddition';
 
 function calculateDouble(myGraph, point) {
@@ -13,7 +15,6 @@ function pointDoublingSteps(myGraph, points, lambdaI, x, y) {
     points.x = twoDecimalRound(points.x);
     points.y = twoDecimalRound(points.y);
 
-    // If so we should use Number.toFixed
     const lambda = twoDecimalRound(lambdaI);
     const newX = twoDecimalRound(x);
     const newY = twoDecimalRound(y);
@@ -29,8 +30,6 @@ function pointDoublingSteps(myGraph, points, lambdaI, x, y) {
 
     // eslint-disable-next-line no-undef
     checkExplanationDisplay();
-
-
 }
 
 function pointDouble(myGraph) {
