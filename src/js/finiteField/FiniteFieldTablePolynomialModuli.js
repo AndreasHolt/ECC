@@ -1,6 +1,6 @@
-import { multiplicativeXOR, additiveXOR, findInverseGF2 } from "./gf2.js";
+import { multiplicativeXOR, additiveXOR, findInverseGF2, aXOR, mXOR } from "./gf2.js";
 import {numberOfBits2} from "./Bits.js";
-import {createCurve, createCurveAXY} from "./curves.js";
+import {createCurveABCD, createCurveAXY} from "./curves.js";
 
 export {Mod,  };
 
@@ -55,8 +55,17 @@ document.querySelector("#form").addEventListener("submit", (event) => {
             additionFunction = calcPointAdditionGF2;
             break;
     }
-    curve = createCurve(2,1,1,1, Math.pow(prime, power), modoli, additionFunction);
-    //curve = createCurveAXY(Math.floor(Math.random()*Math.pow(prime, power)), 1, 0, Math.pow(prime, power), modoli, additionFunction);
+    //curve = createCurveABCD(2,1,1,1, Math.pow(prime, power), modoli, additionFunction);
+    curve = createCurveAXY(Math.floor(Math.random()*Math.pow(prime, power)), 1, 0, Math.pow(prime, power), modoli, additionFunction);
+
+
+    let optionsList = [{mode:"multiplicative"},{mode:"additive"}];    
+    for (let options of optionsList) {
+        let arrayValues = createTable(curve.fieldOrder, curve.mod, options);
+        createTableHTML(arrayValues, curve.fieldOrder, options.mode);
+    }
+
+
     //console.log("Subgroup for G: " + curve.calcSubGroup(curve.G));
     console.log("a: " + curve.a);
     curve.createPoints();
@@ -113,7 +122,6 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
             //drawLineDirect(point1, point2, 16);
         }
         //drawLineDirectGood(point1, newPoint, options);
-
     } catch (e) {
         console.log("Error! find selv ud af det!");
         console.log(e);
@@ -135,7 +143,7 @@ document.getElementById("Scalar").addEventListener("input", (event) => {
     if (point) {
 
         let scaledPoint = curve.calcPointMultiplication(scale, point);
-        highlightPoint(scaledPoint, 1000, curve.fieldOrder);
+        highlightPointTimeout(scaledPoint, 1000, curve.fieldOrder);
         
     }
 });
@@ -245,7 +253,7 @@ function drawLineDirectGood (point, point3, options) {
 function drawPoints (arrayPoints, fieldOrder) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let point of arrayPoints) {
-        drawPoint(point, fieldOrder, 3, "black");
+        drawPointElement(point, fieldOrder, 5, "black");
     }
 }
 
@@ -258,7 +266,22 @@ function drawPoint (point, size, pointSize, color) {
     ctx.stroke();
 }
 
-function highlightPoint (point, time, size) {
+function highlightPointTimeout (point, time, size) {
+    let svg = document.getElementById("highlightSVG");
+    var svgns = "http://www.w3.org/2000/svg";
+    var circle = document.createElementNS(svgns, 'circle');
+    let x = point.x * canvas.width / size;
+    let y = canvas.height - (point.y * canvas.height / size);
+    circle.setAttributeNS(null, 'cx', x);
+    circle.setAttributeNS(null, 'cy', y);
+    circle.setAttributeNS(null, 'r', 10);
+    circle.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 1px;' );
+    svg.appendChild(circle);
+    setTimeout(() => {
+        svg.removeChild(circle);
+    }, time);
+}
+function highlightPoint (point, size) {
     let svg = document.getElementById("highlightSVG");
     var svgns = "http://www.w3.org/2000/svg";
     var circle = document.createElementNS(svgns, 'circle');
@@ -267,9 +290,35 @@ function highlightPoint (point, time, size) {
     circle.setAttributeNS(null, 'r', 10);
     circle.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 1px;' );
     svg.appendChild(circle);
-    setTimeout(() => {
-        svg.removeChild(circle);
-    }, time);
+    return circle;
+}
+
+function drawPointElement (point, size, pointSize, color) {
+    let svg = document.getElementById("highlightSVG");
+    var svgns = "http://www.w3.org/2000/svg";
+    var circle = document.createElementNS(svgns, 'circle');
+    circle.setAttributeNS(null, 'cx', point.x * canvas.width / size);
+    circle.setAttributeNS(null, 'cy', canvas.height - (point.y * canvas.height / size));
+    circle.setAttributeNS(null, 'r', pointSize);
+    circle.setAttributeNS(null, 'style', `fill: ${color}; stroke: ${color}; stroke-width: 1px;` );
+    svg.appendChild(circle);
+
+    circle.addEventListener("click", () => {
+        let output = document.getElementById("pointInfo");
+        let index;
+        curve.points.forEach((elem, i) => {
+            if (elem.x === point.x && elem.y === point.y){
+                index = i;
+            }
+        });
+        let string = `Point x: ${point.x}, Point y: ${point.y}, Point index: ${index}`;
+        output.textContent = string;
+    });
+    circle.addEventListener("mouseover", () => {
+        highlightPointTimeout(point, 400, curve.fieldOrder);
+    });
+
+    
 }
 
 function calcPointAdditionPrime (p1, p2) {
@@ -310,9 +359,7 @@ function calcPointAdditionGF2 (p1, p2) {
             additiveXOR(p2.y, p1.y),                                                                                    //(y_2 + y_1) * 
             findInverseGF2(additiveXOR(p2.x, p1.x), this.mod), this.mod);                                               //... 1 / (x_2 + x_1) 
         
-        let xR = additiveXOR(                                                                                           //x_3 = x_2 + x_1 + alfa^2 + c * alfa
-            additiveXOR(p2.x, p1.x),                                                                                    //x_2 + x_1 + 
-            additiveXOR(multiplicativeXOR(alfa, alfa, this.mod), multiplicativeXOR(this.c, alfa, this.mod)));           //... alfa^2 + c * alfa
+        let xR = aXOR(p2.x, p1.x, mXOR(this.mod, alfa, alfa), mXOR(this.mod, this.c, alfa));                            //x_3 = x_2 + x_1 + alfa^2 + c * alfa
 
         let yR = additiveXOR(                                                                                           //y_3 = -cx_3 - d - y_1 + alfa * (x_1 + x_3)
             additiveXOR(multiplicativeXOR(this.c, xR, this.mod), this.d),                                               //c * x_3 + d +
