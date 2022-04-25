@@ -178,4 +178,4 @@ function createPointsPrime () {
     }
 }
 
-export {createCurveABCD as createCurve, createCurveAXY };
+export {createCurveABCD, createCurveAXY };
