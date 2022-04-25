@@ -28,7 +28,7 @@ function convertToXY(point) {
     return { x: point[0], y: point[1] };
 }
 
-function graphToCoords(myGraph, point) { // DONE
+function graphToCoords(myGraph, point) {
     const x = (point.x - myGraph.centerX) / myGraph.scaleX;
     const y = (point.y - myGraph.centerY) / myGraph.scaleY;
 
@@ -37,7 +37,7 @@ function graphToCoords(myGraph, point) { // DONE
 
 function movePoint(event, myGraph) {
     const mousePos = mouseToGraph(myGraph, event.clientX, event.clientY);
-    const coords = graphToCoords(myGraph, mousePos); // DONE
+    const coords = graphToCoords(myGraph, mousePos);
 
     if (mousePos.y > myGraph.centerY) {
         moveSection('point', mousePos.x, myGraph.centerY - (-myGraph.equationP(coords.x) * myGraph.scaleY));
