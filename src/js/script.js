@@ -40,6 +40,7 @@ function deletePoints() {
         document.getElementsByClassName('workingPoints'),
         document.getElementsByClassName('linesConnecting'),
         document.getElementsByClassName('calculatedPoints'),
+        document.getElementsByClassName('textLabel')
     ];
 
     Array.from(allSVG).forEach((key) => {
@@ -205,7 +206,7 @@ document.getElementById('layer2').addEventListener('click', (e) => {
     if (document.getElementById('pointAddition').disabled) {
         if (pointsOnGraph.length === 1) {
             addPointOnClick(myGraph);
-            pointAddition(myGraph); // TODO Zoom out if point is outside view
+            pointAddition(myGraph);
         } else if (pointsOnGraph.length === 0) {
             addPointOnClick(myGraph);
         } else {
@@ -275,7 +276,7 @@ document.getElementById('curve')[0].addEventListener('keypress', (e) => {
 
         changeEquation(firstParameter.value, secondParameter.value);
         deletePoints();
-        drawEquations(myGraph);
+        drawEquations();
     }
 });
 document.getElementById('curve')[1].addEventListener('keypress', (e) => {
@@ -289,7 +290,7 @@ document.getElementById('curve')[1].addEventListener('keypress', (e) => {
 
         changeEquation(firstParameter.value, secondParameter.value);
         deletePoints();
-        drawEquations(myGraph);
+        drawEquations();
     }
 });
 
@@ -306,7 +307,7 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
 });
 
 function init() {
-    drawEquations(myGraph);
+    drawEquations();
 
     const operations = document.querySelectorAll('#pointAddition, #pointDoubling, #pointMultiplication');
 
@@ -354,7 +355,7 @@ function init() {
     });
 }
 
-function drawEquations() { // TODO Remove myGraph from this
+function drawEquations() {
     drawEquation((x) => myGraph.equationP(x), 'rgb(59,129,246)', 3, myGraph);
 
     drawEquation((x) => -myGraph.equationP(x), 'rgb(59,129,246)', 3, myGraph);
@@ -385,22 +386,33 @@ function redrawGraph(zoom) {
     drawXAxis(myGraph);
     drawYAxis(myGraph);
 
-    drawEquations(myGraph);
+    drawEquations();
 
-    const points = document.querySelectorAll('.workingPoints,.calculatedPoints,.point');
+    const points = document.querySelectorAll('.workingPoints, .calculatedPoints, .point, .textLabel');
     let graphPos; let graphPos2;
 
     for (let i = 0; i < points.length; i += 1) {
+        let cx; let cy;
         const el = points[i];
 
-        const cx = el.getAttribute('cx');
-        const cy = el.getAttribute('cy');
+        if (el.tagName === 'text') {
+            cx = el.getAttribute('x');
+            cy = el.getAttribute('y');
+        } else {
+            cx = el.getAttribute('cx');
+            cy = el.getAttribute('cy');
+        }
         const coords = graphToCoords(myGraph, { x: cx, y: cy });
 
         graphPos = coordsToGraph(myGraph, coords.x * zoom, coords.y * zoom);
 
-        el.setAttribute('cx', graphPos.x);
-        el.setAttribute('cy', graphPos.y);
+        if (el.tagName === 'text') {
+            el.setAttribute('x', graphPos.x);
+            el.setAttribute('y', graphPos.y);
+        } else {
+            el.setAttribute('cx', graphPos.x);
+            el.setAttribute('cy', graphPos.y);
+        }
     }
 
     const lines = document.getElementsByClassName('linesConnecting');
