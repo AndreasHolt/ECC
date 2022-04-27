@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+        #rcorners2 {
+        border: 2px solid black;  
+}
+    </style>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <td>
+                    <div id="privateKey">
+                        <table>
+                            <p>Your private key is: <span id="userPrivateKey">1234</span></p>
+                            <button>New key</button>
+                        </table>
+                    </div>
+                    <div>
+                        <table>
+                            <tr>
+                                <td>
+                                    <form id="inputMessageForm">
+                                        <labal for="messageInput">Input message: </label>
+                                        <input type="text" id="messageInput"><br><br>
+                                        <input type="submit" value="Encrypt">
+                                    </form>
+                                </td>
+                                <td>
+                                    <p id="tekstPreview">Message preview</p>
+                                    <button>Send message</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+                <td>
+                    <table style="border: 1px solid black; border-radius: 10px;">
+                        <tr>
+                            <td style="border: 1px solid black; border-radius: 10px;">
+                                <h1>Encryption</h1>
+                            </td>
+                            <td style="border: 1px solid black; border-radius: 10px;">
+                                <h1>Public communication</h1>
+                            </td>
+                            <td style="border: 1px solid black; border-radius: 10px;">
+                                <h1>Decryption</h1>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table style="border: 1px solid black; border-radius: 10px;">
+                        <tr>
+                            <th >
+                            Public keys:
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p id="publickey-A">Person A:</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p id="publickey-B">Person B:</p>        
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p  id="publickey-B">Person C:</p>
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="border: 1px solid black; border-radius: 10px;">
+                        <tr>
+                            <th>
+                            <p>Person A keys: </p>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                            <p id="privatekey-A">privateKey: </p>
+                            </td>
+                        </tr>
+                        <table style="border: 1px solid black; border-radius: 10px;">
+                            <tr>
+                                <th>
+                                <p>Person B keys:</p>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                <p id="privatekey-B">privateKey: </p>
+                                </td>
+                            </tr>
+                        </table >
+                        <table style="border: 1px solid black; border-radius: 10px;">
+                            <tr>
+                                <th>
+                                <p>Person C keys:</p>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                <p id="privatekey-C">privateKey: </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+    <script defer type="module" src="/src/js/elgamal/Elgamal.js"></script>
+</html>
+
+

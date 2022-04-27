@@ -2,4 +2,8 @@ function numberOfBits2 (val) {
     return Math.floor(Math.log2(val)) + 1;
 }
 
-export {numberOfBits2};
+function Mod (val, mod) {
+    return ((val % mod) + mod) % mod;
+}
+
+export {numberOfBits2, Mod};
