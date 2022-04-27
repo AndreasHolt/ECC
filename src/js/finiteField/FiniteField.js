@@ -1,11 +1,12 @@
 import { multiplicativeXOR, additiveXOR, findInverseGF2, aXOR, mXOR } from "./gf2.js";
-import {numberOfBits2} from "./Bits.js";
-import {createCurveABCD, createCurveAXY} from "./curves.js";
-
-export {Mod,  };
+import {numberOfBits2, Mod} from "./Bits.js";
+import {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2} from "./curves.js";
 
 const canvas = document.getElementById("curveGraph");
-const ctx = canvas.getContext("2d");
+let ctx;
+if (canvas) {
+    ctx = canvas.getContext("2d");
+}
 //let table = document.querySelector("#table");
 
 let curve;
@@ -321,59 +322,11 @@ function drawPointElement (point, size, pointSize, color) {
     
 }
 
-function calcPointAdditionPrime (p1, p2) {
-    if (p1.x === p2.x && p1.y === p2.y) {
-        let alfa = Mod((3*(p1.x*p1.x) + this.a)*inversePrime(Mod(2*p1.y, this.mod), this.mod), this.mod);
-        let xR = Mod((alfa*alfa - 2*p1.x), this.mod);
-        let yR = Mod(this.fieldOrder - (p1.y + alfa*(xR - p1.x)), this.mod);
-        let R = {x: xR, y: yR, alfa: alfa};
-        return R;
-    } else {
-        let alfa = Mod((p1.y - p2.y)*inversePrime(Mod(p1.x-p2.x, this.mod), this.mod), this.mod);
-        let xR = Mod((-p1.x - p2.x + alfa*alfa), this.mod);
-        let yR = Mod(-p1.y + alfa*(p1.x-xR), this.mod);
-        let R = {x: xR, y: yR, alfa:alfa};
-        return R;
-    }
-}
-function calcPointAdditionGF2 (p1, p2) {
-    if (p1.x === p2.x && p1.y === p2.y) {
-        let alfa = multiplicativeXOR(                                                                                   //alfa = (3 * x^2 + a + c * y) / (2 * y + c * x + d)
-            additiveXOR( multiplicativeXOR(3, multiplicativeXOR(p1.x, p1.x, this.mod), this.mod),                       //(3 * x^2 + 
-            additiveXOR(this.a, multiplicativeXOR(this.c, p1.y, this.mod))),                                            //... a + c * y) *
-            findInverseGF2(additiveXOR(additiveXOR(multiplicativeXOR(2, p1.y, this.mod),                                //... 1 / (2y +
-            multiplicativeXOR(this.c, p1.x, this.mod)),                                                                 //... c * x + 
-                this.d), this.mod), this.mod);                                                                          //... d)
-            
-
-        let xR = additiveXOR(multiplicativeXOR(alfa, alfa, this.mod), multiplicativeXOR(this.c, alfa, this.mod));       //x_3 = alfa^2 + alfa
-
-        let yR = additiveXOR(additiveXOR(                                                                               //y_3 = c * x_3 + d + y_1 + alfa * (x_1 + x_3)
-            multiplicativeXOR(this.c, xR, this.mod), this.d),                                                           //c * x_3 + d +
-            additiveXOR(p1.y, multiplicativeXOR(alfa, additiveXOR(p1.x, xR), this.mod)));                               //... y_1 + alfa * (x_1 + x_3)
-        
-        let R = {x: xR, y: yR, alfa: alfa};
-        return R;
-    } else {
-        let alfa = multiplicativeXOR(                                                                                   //alfa = (y_2 + y_1) / (x_2 + x_1)
-            additiveXOR(p2.y, p1.y),                                                                                    //(y_2 + y_1) * 
-            findInverseGF2(additiveXOR(p2.x, p1.x), this.mod), this.mod);                                               //... 1 / (x_2 + x_1) 
-        
-        let xR = aXOR(p2.x, p1.x, mXOR(this.mod, alfa, alfa), mXOR(this.mod, this.c, alfa));                            //x_3 = x_2 + x_1 + alfa^2 + c * alfa
-
-        let yR = additiveXOR(                                                                                           //y_3 = -cx_3 - d - y_1 + alfa * (x_1 + x_3)
-            additiveXOR(multiplicativeXOR(this.c, xR, this.mod), this.d),                                               //c * x_3 + d +
-            additiveXOR(p1.y, multiplicativeXOR(alfa, additiveXOR(p1.x, xR), this.mod)));                               //... y_1 + alfa * (x_1 + x_3)
-        let R = {x: xR, y: yR, alfa:alfa}
-        return R;
-    }
-}
 
 
 
-function Mod (val, mod) {
-    return ((val % mod) + mod) % mod;
-}
+
+
 
 
 function createTableHTML (tableArray, tableSize, htmlID) {
