@@ -36,7 +36,7 @@ function pointDouble(myGraph) {
     const point = document.getElementsByClassName('workingPoints')[0];
     const storePoint = getXY(point);
     const coords = graphToCoords(myGraph, storePoint);
-    coords.y = -coords.y; // TODO Need comment on why we do this
+    coords.y = -coords.y;
 
     const double = calculateDouble(myGraph, coords);
 
