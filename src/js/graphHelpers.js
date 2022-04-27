@@ -144,9 +144,15 @@ function addTextToPoints(myGraph, pointC, i) {
     if (i === 0) {
         textEl.setAttribute('y', point1.y);
         textNode = document.createTextNode('-R');
-    } else {
+    } else if (i === 1) {
         textEl.setAttribute('y', point2.y);
         textNode = document.createTextNode('R');
+    } else if (i === 2) {
+        textEl.setAttribute('y', point2.y);
+        textNode = document.createTextNode('P');
+    } else {
+        textEl.setAttribute('y', point1.y);
+        textNode = document.createTextNode('Q');
     }
 
     textEl.setAttribute('x', point1.x);
@@ -174,7 +180,7 @@ function addTextToPoints(myGraph, pointC, i) {
 }
 
 function addCalculatedPoint(myGraph, point, pointOperation) {
-    document.querySelectorAll('.calculatedPoints, .linesConnecting, .textLabel').forEach((el) => {
+    document.querySelectorAll('.calculatedPoints, .linesConnecting').forEach((el) => {
         el.remove();
     });
 
@@ -211,7 +217,11 @@ function addCalculatedPoint(myGraph, point, pointOperation) {
             drawLine(myGraph, '-', 'orange', i, point.x, point.y, svg, pointOperation);
         }
 
-        addTextToPoints(myGraph, point, i);
+        if (pointOperation === 3) {
+            addTextToPoints(myGraph, point, i+1);
+        } else {
+            addTextToPoints(myGraph, point, i);
+        }
     }
 
     document.getElementById('Rx').value = `${twoDecimalRound(point.x)}`;
@@ -236,10 +246,13 @@ function addPointOnClick(myGraph) {
     if (document.getElementsByClassName('workingPoints').length === 1) {
         document.getElementById('Px').value = `${(point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX}`;
         document.getElementById('Py').value = `${-(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY}`;
-        // addTextToPoints(myGraph, pointC, i)
+
+        addTextToPoints(myGraph, {x: (point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: -(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY}, 2)
     } else if (document.getElementsByClassName('workingPoints').length === 2) {
         document.getElementById('Qx').value = `${(point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX}`;
         document.getElementById('Qy').value = `${-(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY}`;
+
+        addTextToPoints(myGraph, {x: (point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: (point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY}, 3)
     }
 }
 
