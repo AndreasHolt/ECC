@@ -71,20 +71,18 @@ function calculateAddition(myGraph, pointArr) {
     }
     const lambda = ((pointArr[1].y - pointArr[0].y) / (pointArr[1].x - pointArr[0].x));
     let newX = (lambda * lambda) - pointArr[1].x - pointArr[0].x;
-    let newY = 0;
+    let newY = pointArr[1].y + lambda * newX + lambda * (-pointArr[1].x);
 
     // Handle edge case: same x coordinate for both points, but not same y coordinate
     if (pointArr[1].x === pointArr[0].x && pointArr[0].y !== pointArr[1].y) {
         newY = 9999999; // TODO find javascript value for this
         newX = pointArr[0].x;
 
-        return { x: newX, y: newY };
-    } if (pointArr[1].x === pointArr[0].x && pointArr[0].y === pointArr[1].y) {
+    } else if(pointArr[1].x === pointArr[0].x && pointArr[0].y === pointArr[1].y) {
         // Handle edge case: both points are the same, so double the point
         pointDouble(myGraph);
         return 0;
     }
-    newY = pointArr[1].y + lambda * newX + lambda * (-pointArr[1].x);
 
     return { x: newX, y: newY };
 }
