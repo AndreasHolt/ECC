@@ -9,6 +9,7 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
     points.y = twoDecimalRound(points.y);
 
     const binary = convertToBinary(scalar, 0);
+    console.log('binary is , ', binary)
 
     const arrayPowerOfTwo = [];
     const arrayPowerOfTwoOnes = [];
@@ -82,7 +83,7 @@ function convertToBinary(scalar, arrayBool) {
     let binary = (num % 2).toString();
 
     while (num > 1) {
-        num = parseFloat(num / 2);
+        num = parseInt(num / 2);
         binary = (num % 2) + (binary);
     }
 
@@ -91,6 +92,7 @@ function convertToBinary(scalar, arrayBool) {
     }
 
     const binaryArray = (`${binary}`).split('').reverse();
+    console.log('binaryArray: ', binaryArray, ' binary: ', binary)
 
     return binaryArray;
 }
@@ -100,7 +102,7 @@ function pointMultiplication(myGraph) {
     const point = graphToCoords(myGraph, getXY(pointEl));
     point.y = -point.y;
 
-    const scalar = document.getElementById('scalarForm').value;
+    let scalar = document.getElementById('scalarForm').value;
     const binary = convertToBinary(scalar, 1); // the array of bits, from msb to lsb
 
     const Q = 0;

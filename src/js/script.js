@@ -187,7 +187,7 @@ document.getElementById('pointP').addEventListener('keypress', (e) => {
 
                     MathJax.typeset();
                 }
-                addPointOnClick(myGraph);
+                addPointByInput('Px', myGraph);
                 pointMultiplication(myGraph);
             } else if (pointsOnGraph.length === 1) {
                 deletePoints();
@@ -361,6 +361,8 @@ function drawEquations() { // TODO Remove myGraph from this
 }
 
 function setGraph(zoom) {
+    document.getElementById('myCanvas').setAttribute('scaleZoom', zoom);
+
     return new Graph({
         canvasId: 'myCanvas',
         minX: -zoom,
@@ -377,6 +379,7 @@ function redrawGraph(zoom) {
     myGraph.context.clearRect(0, 0, widthGraph, heightGraph, myGraph);
 
     scaleZoom /= zoom;
+
     myGraph = setGraph(scaleZoom);
 
     drawXAxis(myGraph);
@@ -417,5 +420,27 @@ function redrawGraph(zoom) {
         el.setAttribute('y2', graphPos2.y);
     }
 }
+
+function checkPoints(child) {
+    let point = { x: child.getAttribute('cx'), y: child.getAttribute('cy') };
+    const zoom = document.getElementById('myCanvas').getAttribute('scaleZoom');
+
+    point = graphToCoords(myGraph, point);
+
+    if (point.y > zoom) {
+        redrawGraph(1 / (point.y / zoom));
+    }
+}
+
+const observer = new MutationObserver((mutationList) => {
+    mutationList.forEach((mutation) => {
+        mutation.addedNodes.forEach((child) => {
+            if (child.tagName !== 'circle') { return; }
+
+            checkPoints(child);
+        });
+    });
+});
+observer.observe(document.getElementById('layer2'), { childList: true, subtree: true });
 
 init();
