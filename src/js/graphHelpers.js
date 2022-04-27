@@ -135,8 +135,46 @@ function drawLine(myGraph, operator, color, i, x, y, svg, pointOperation) {
     svg.appendChild(newLine);
 }
 
+function addTextToPoints(myGraph, pointC, i) {
+    let textNode;
+    const textEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    const point1 = coordsToGraph(myGraph, pointC.x, pointC.y);
+    const point2 = coordsToGraph(myGraph, pointC.x, -pointC.y);
+
+    if (i === 0) {
+        textEl.setAttribute('y', point1.y);
+        textNode = document.createTextNode('-R');
+    } else {
+        textEl.setAttribute('y', point2.y);
+        textNode = document.createTextNode('R');
+    }
+
+    textEl.setAttribute('x', point1.x);
+
+    console.log(pointC);
+
+    // if (pointC.y > 0) {
+    //     textNode = document.createTextNode('-R');
+    // } else {
+    //     textNode = document.createTextNode('R');
+    // }
+
+    // console.log(pointC.y);
+    // if (pointC.y > 0) {
+    //     textNode = document.createTextNode('////R');
+    // } else {
+    //     textNode = document.createTextNode('////-R');
+    // }
+
+    textEl.appendChild(textNode);
+    textEl.classList.add('textLabel');
+    textEl.classList.add('text-xl');
+
+    document.getElementById('pointSVG').appendChild(textEl);
+}
+
 function addCalculatedPoint(myGraph, point, pointOperation) {
-    document.querySelectorAll('.calculatedPoints, .linesConnecting').forEach(el => {
+    document.querySelectorAll('.calculatedPoints, .linesConnecting, .textLabel').forEach((el) => {
         el.remove();
     });
 
@@ -157,8 +195,10 @@ function addCalculatedPoint(myGraph, point, pointOperation) {
             circle.setAttribute('fill', 'fuchsia');
         }
 
-        circle.setAttribute('cx', (point.x * myGraph.scaleX) + myGraph.centerX);
-        circle.setAttribute('cy', (-arrayIntersectInverted[i] * myGraph.scaleY) + myGraph.centerY);
+        const pointG = coordsToGraph(myGraph, point.x, -arrayIntersectInverted[i]);
+
+        circle.setAttribute('cx', pointG.x);
+        circle.setAttribute('cy', pointG.y);
         circle.classList.add('calculatedPoints');
         circle.setAttribute('r', 5);
 
@@ -170,13 +210,14 @@ function addCalculatedPoint(myGraph, point, pointOperation) {
         } else if (pointOperation !== 3) {
             drawLine(myGraph, '-', 'orange', i, point.x, point.y, svg, pointOperation);
         }
-        document.getElementById('Rx').value = `${twoDecimalRound(point.x)}`;
-        document.getElementById('Ry').value = `${twoDecimalRound(point.y)}`;
-        document.getElementById('negRx').value = `${-twoDecimalRound(point.x)}`;
-        document.getElementById('negRy').value = `${-twoDecimalRound(point.y)}`;
+
+        addTextToPoints(myGraph, point, i);
     }
 
-    // TODO zoom out if point is out of view
+    document.getElementById('Rx').value = `${twoDecimalRound(point.x)}`;
+    document.getElementById('Ry').value = `${twoDecimalRound(point.y)}`;
+    document.getElementById('negRx').value = `${twoDecimalRound(point.x)}`;
+    document.getElementById('negRy').value = `${-twoDecimalRound(point.y)}`;
 }
 
 function addPointOnClick(myGraph) {
@@ -195,6 +236,7 @@ function addPointOnClick(myGraph) {
     if (document.getElementsByClassName('workingPoints').length === 1) {
         document.getElementById('Px').value = `${(point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX}`;
         document.getElementById('Py').value = `${-(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY}`;
+        // addTextToPoints(myGraph, pointC, i)
     } else if (document.getElementsByClassName('workingPoints').length === 2) {
         document.getElementById('Qx').value = `${(point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX}`;
         document.getElementById('Qy').value = `${-(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY}`;

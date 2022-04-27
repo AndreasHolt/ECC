@@ -9,7 +9,6 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
     points.y = twoDecimalRound(points.y);
 
     const binary = convertToBinary(scalar, 0);
-    console.log('binary is , ', binary)
 
     const arrayPowerOfTwo = [];
     const arrayPowerOfTwoOnes = [];
@@ -92,7 +91,6 @@ function convertToBinary(scalar, arrayBool) {
     }
 
     const binaryArray = (`${binary}`).split('').reverse();
-    console.log('binaryArray: ', binaryArray, ' binary: ', binary)
 
     return binaryArray;
 }
