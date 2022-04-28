@@ -128,7 +128,7 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
         if (index1 !== index2) {
             //drawLineDirect(point1, point2, 16);
         }
-        //drawLineDirectGood(point1, newPoint, options);
+        drawLineDirectGood(point1, newPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
     } catch (e) {
         console.log("Error! find selv ud af det!");
         console.log(e);
@@ -165,7 +165,7 @@ document.getElementById("scalarForm").addEventListener("submit", (event) => {
     if (point) {
         let scaledPoint = curve.calcPointMultiplication(scale, point);
         drawPoint(scaledPoint, curve.fieldOrder, 5, "red");
-        drawLineDirectGood(point, scaledPoint, options);
+        drawLineDirectGood(point, scaledPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
     }
 });
 
