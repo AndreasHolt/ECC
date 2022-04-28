@@ -244,13 +244,13 @@ function addPointOnClick(myGraph) {
     svg.appendChild(circle);
 
     if (document.getElementsByClassName('workingPoints').length === 1) {
-        document.getElementById('Px').value = `${(point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX}`;
-        document.getElementById('Py').value = `${-(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY}`;
+        document.getElementById('Px').value = `${twoDecimalRound((point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX)}`;
+        document.getElementById('Py').value = `${twoDecimalRound(-(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY)}`;
 
         addTextToPoints(myGraph, {x: (point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: -(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY}, 2)
     } else if (document.getElementsByClassName('workingPoints').length === 2) {
-        document.getElementById('Qx').value = `${(point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX}`;
-        document.getElementById('Qy').value = `${-(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY}`;
+        document.getElementById('Qx').value = `${twoDecimalRound((point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX)}`;
+        document.getElementById('Qy').value = `${twoDecimalRound(-(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY)}`;
 
         addTextToPoints(myGraph, {x: (point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: (point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY}, 3)
     }
