@@ -99,13 +99,14 @@ function createCurve (fieldOrder, mod, additionFunction) {
             return n;
         },
         inverseOfPoint: function (p) {
-            
+            let oppositeY = Mod(this.fieldOrder-p.y, this.fieldOrder);
+            return {x:p.x, y:oppositeY};
         },
         messageToPoint: function (m) {
-            if (this.points.length >= 26) {
-                let mIntVal = m.charCodeAt(0) - 97;
-                if (mIntVal < 0 || mIntVal > 25) {
-                    throw("message must be single lower case character");
+            if (this.points.length >= 128) {
+                let mIntVal = m.charCodeAt(0);
+                if (mIntVal < 0 || mIntVal >= 128) {
+                    throw("message must be a single utf-8 character");
                 } else {
                     return this.points[m.charCodeAt(0)];
                 }
@@ -120,8 +121,15 @@ function createCurve (fieldOrder, mod, additionFunction) {
             }
             return point;
         },
-        pointToMessage: function () {
-
+        pointToMessage: function (p) {
+            let index = curve.points.findIndex((obj) => {
+                return (obj.x === p.x && obj.y === p.y);
+            });
+            if (index === -1) {
+                throw("Point not in array.");
+            } else {
+                return String.fromCharCode(index);
+            }
         }
     };
 
@@ -187,22 +195,10 @@ function calcPointAdditionGF2 (p1, p2) {
 function createPointsGF2 () {
     for (let x = 0; x < this.fieldOrder ; x++) {
         let y;
-        let rightSide = additiveXOR(
-            additiveXOR(
-                multiplicativeXOR(x, multiplicativeXOR(x, x, this.mod), this.mod),
-                multiplicativeXOR(this.a, x, this.mod)
-            ),
-            this.b
-        );
-        let cx = multiplicativeXOR(this.c, x, this.mod);
+        let rightSide = aXOR(mXOR(this.mod, x, x, x), mXOR(this.mod, this.a, x), this.b);
+        let cx = mXOR(this.mod, this.c, x);
         for (y = 0; y < this.fieldOrder; y++) {
-            let leftSide = additiveXOR(
-                additiveXOR(
-                    multiplicativeXOR(y, y, this.mod),
-                    multiplicativeXOR(cx, y, this.mod)
-                ),
-                multiplicativeXOR(this.d, y, this.mod)
-            );
+            let leftSide = aXOR(mXOR(this.mod, y, y), mXOR(this.mod, cx, y), mXOR(this.mod, this.d, y));
             if (leftSide === rightSide)
             {
                 this.points.push({x: x, y: y});
@@ -225,7 +221,7 @@ function createPointsPrime () {
         for (let y = 0 ; y < this.fieldOrder ; y++) {
             if (Mod((y*y), this.fieldOrder) === rightSide) {
                 this.points.push({x: x, y: y});
-                let oppositeY = this.fieldOrder-y;
+                let oppositeY = Mod(this.fieldOrder-y, this.fieldOrder);    //Skal der ikke laves mod her?
                 if (oppositeY === this.fieldOrder) {
                     break;
                 }
