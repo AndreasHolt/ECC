@@ -417,19 +417,6 @@ function calculateElements(size, mod, combinationFunction) {
 
 
 
-
-function inversePrime (x, mod) {        //Enhance later (Double and add /// sqaure and multiply)
-    let result = x;
-
-    for (let i = 0 ; i < mod - 3 ; ++i) {
-        result = Mod(result * x, mod);
-    }
-
-    return result;
-}
-
-
-
 function gcd (val1, val2) {
 
 }
