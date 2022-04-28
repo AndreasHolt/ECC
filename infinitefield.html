@@ -23,9 +23,8 @@
   </li>
 </ul>
 
-<table>
-  <tr>
-    <td id="inputColumn">
+<div class="flex flex-row mt-10 px-10 py-10">
+    <div id="inputColumn" class=" w-64 basis-1/4">
       <div id="inputDiv">
         <form id="form">
           <!--
@@ -40,7 +39,8 @@
           </div>
           -->
 
-          <select name="curveList" id="curveList">
+
+          <select name="curveList" id="curveList" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center">
             <option>GF2 4</option>
             <option>GF2 5</option>
             <option>GF2 8</option>
@@ -49,7 +49,7 @@
             <option>Prime 37</option>
             <option>Prime 131</option>
           </select>
-          <input type="submit">
+          <input type="submit" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center">
         </form>
         <form id="additionForm">
           <label for="index1">Index1: </label>
@@ -67,27 +67,32 @@
         </form>
       </div>
 
-    </td>
-    <td id="outputTableColumn">
 
-    </td>
-    <td id="outputGraphColumn">
-      <div style="position: relative;">
-        <canvas id="curveGraph" width="800" height="800" style="border:1px solid #000000;"></canvas>
-        <svg id="highlightSVG" style="position: absolute;
+    </div>
+
+  <div id="outputGraphColumn" class="basis-3/4">
+    <div style="position: relative;">
+      <canvas id="curveGraph" width="600" height="600" style="border:1px solid #000000;"></canvas>
+      <svg id="highlightSVG" style="position: absolute;
                                     left: 0px;
                                     top:0px;
                                     z-index: 2;
                                     width: 800px;
                                     height: 800px;">
-        </svg>
-      </div>
-      <div>
-        <p id="pointInfo"></p>
-      </div>
-    </td>
-  </tr>
-</table>
+      </svg>
+    </div>
+    <div>
+      <p id="pointInfo"></p>
+    </div>
+  </div>
+
+
+
+</div>
+
+<div id="outputTableColumn" class="flex flex-row mt-10 px-10 py-10">
+
+</div>
 <script defer type="module" src="./src/js/FiniteField/FiniteField.js"></script>
 </body>
 </html>
