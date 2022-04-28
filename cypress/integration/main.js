@@ -3,11 +3,11 @@
 import {
     movePoint, moveSection, mouseToGraph, graphToCoords, coordsToGraph, getPointPlacement,
     addCalculatedPoint, logicPointAddition, drawLine, addPointOnClick,
-} from '../../src/js/graphHelpers';
+} from '../../src/js/InfiniteField/graphHelpers';
 
-import { calculateAddition } from '../../src/js/realsAddition';
+import { calculateAddition } from '../../src/js/InfiniteField/realsAddition';
 
-import { calculateDouble } from '../../src/js/realsDoubling';
+import { calculateDouble } from '../../src/js/InfiniteField/realsDoubling';
 
 const myGraph = {
     canvas: {},
