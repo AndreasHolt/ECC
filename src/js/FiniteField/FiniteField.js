@@ -121,9 +121,10 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
         }
         
         let newPoint = curve.calcPointAddition(point1, point2);
-        drawPoint(newPoint, curve.fieldOrder, 5, "red");
-        drawPoint(point1,curve.fieldOrder, 5, "blue");
-        drawPoint(point2,curve.fieldOrder, 5, "yellow");
+        drawPointElement(newPoint, curve.fieldOrder, 5, "orange");
+        highlightPointTimeout(newPoint, 5, curve.fieldOrder);
+        drawPointElement(point1, curve.fieldOrder, 5, "red");
+        drawPointElement(point2, curve.fieldOrder, 5, "red");
         //drawLine(0, 16, 0, 1, curve.fieldOrder);
         if (index1 !== index2) {
             //drawLineDirect(point1, point2, 16);
@@ -224,6 +225,8 @@ function drawLineDirectGood (point, point3, options) {
     } else if (options.prime == true) {
         point3.y = Mod(curve.fieldOrder - point3.y, curve.fieldOrder);
     }
+    
+    drawPointElement(point3, curve.fieldOrder, 5, "fuchsia");
 
     while(((tempPoint.x != point3.x) || (tempPoint.y != point3.y)) && i < 100) {
         tempPoint.x += 1;
@@ -260,7 +263,7 @@ function drawLineDirectGood (point, point3, options) {
 function drawPoints (arrayPoints, fieldOrder) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let point of arrayPoints) {
-        drawPointElement(point, fieldOrder, 5, "black");
+        drawPointElement(point, fieldOrder, 5, "rgb(59,129,246)");
     }
 }
 
