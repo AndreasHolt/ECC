@@ -51,34 +51,53 @@
           </select>
           <input type="submit" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center">
         </form>
-        <form id="additionForm">
-          <label for="index1">Index1: </label>
-          <input type="number" name="index1" id="index1" value="3"><br>
-          <label for="index2">Index2: </label>
-          <input type="number" name="index2" id="index2" value="5"><br>
-          <input type="submit">
-        </form>
-        <form id="scalarForm">
-          <label for="index">Index: </label>
-          <input type="number" name="index" id="index" value="3"><br>
-          <label for="Scalar">Scalar: </label>
-          <input type="number" name="Scalar" id="Scalar" value="5"><br>
-          <input type="submit">
-        </form>
+
+        <div id="additionForm" class="flex flex-wrap -mx-3 mb-6 justify-center mt-10">
+          <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+          <label for="index1" class="block tracking-wide text-gray-700 text-x font-bold mb-2">Index1: </label>
+          <input type="number" name="index1" id="index1" value="3" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"><br>
+          </div>
+          <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+          <label for="index2" class="block tracking-wide text-gray-700 text-x font-bold mb-2">Index2: </label>
+          <input type="number" name="index2" id="index2" value="5" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"><br>
+          </div>
+
+          <div class="w-full md:w-2/2 px-3 mb-6 md:mb-0">
+          <input type="submit" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow ">
+          </div>
+        </div>
+
+        <div id="scalarForm" class="flex flex-wrap -mx-3 mb-6 justify-center mt-10">
+          <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <label class="block tracking-wide text-gray-700 text-x font-bold mb-2" for="index">Index: </label>
+            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="number" name="index" id="index" value="3"><br>
+          </div>
+          <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <label class="block tracking-wide text-gray-700 text-x font-bold mb-2" for="Scalar">Scalar: </label>
+            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="number" name="Scalar" id="Scalar" value="5"><br>
+          </div>
+
+          <div class="w-full md:w-2/2 px-3 mb-6 md:mb-0">
+            <input type="submit" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow ">
+          </div>
+        </div>
+
+
+
       </div>
 
 
     </div>
 
   <div id="outputGraphColumn" class="basis-3/4">
-    <div style="position: relative;">
+    <div class="ml-20" style="position: relative;">
       <canvas id="curveGraph" width="600" height="600" style="border:1px solid #000000;"></canvas>
       <svg id="highlightSVG" style="position: absolute;
                                     left: 0px;
                                     top:0px;
                                     z-index: 2;
-                                    width: 800px;
-                                    height: 800px;">
+                                    width: 600px;
+                                    height: 600px;">
       </svg>
     </div>
     <div>
