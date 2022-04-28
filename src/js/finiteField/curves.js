@@ -3,6 +3,9 @@ import {numberOfBits2, Mod} from "./Bits.js";
 
 
 function createCurveAXY (a, x, y, fieldOrder, mod, additionFunction) {
+    if (fieldOrder === mod) {
+        throw("This method works only for GF2");
+    }
     let curve = createCurve(fieldOrder, mod, additionFunction);
     curve.a = a;
     curve.b = additiveXOR(multiplicativeXOR(a,x, mod), additiveXOR(additiveXOR(multiplicativeXOR(y, y, mod), y), multiplicativeXOR(x, multiplicativeXOR(x,x, mod),mod)));
@@ -214,6 +217,15 @@ function createPointsGF2 () {
     console.log(this.points);
 }
 
+function inversePrime (x, mod) {        //Enhance later (Double and add /// sqaure and multiply)
+    let result = x;
+
+    for (let i = 0 ; i < mod - 3 ; ++i) {
+        result = Mod(result * x, mod);
+    }
+
+    return result;
+}
 
 function createPointsPrime () {
     for (let x = 0 ; x < this.fieldOrder ; x++) {
