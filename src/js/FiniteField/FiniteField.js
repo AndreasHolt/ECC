@@ -18,6 +18,10 @@ document.querySelector("#form").addEventListener("submit", (event) => {
     let modoli;
     let additionFunction;
     let createPointsFunction;
+    document.querySelectorAll("circle").forEach( (el) => {
+        el.remove();
+    });
+
     switch (event.target["curveList"].value) {
         case ("Prime 5"):
             prime = 5;
@@ -216,6 +220,7 @@ function drawLineDirect_AUX (alfa, progress, speed, previousPoint, delay) {
 }
 
 function drawLineDirectGood (point, point3, options) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     let point1 = {x: point.x, y: point.y};
     let tempPoint = {x: point1.x, y: point1.y};
     let i = 0;
