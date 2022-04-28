@@ -125,11 +125,11 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
         }
 
         let newPoint = curve.calcPointAddition(point1, point2);
-        drawPointElement(newPoint, curve.fieldOrder, 5, "orange");
+        drawPointElement(newPoint, curve.fieldOrder, 5, "orange", true);
 
         highlightPointTimeout(newPoint, 5, curve.fieldOrder);
-        drawPointElement(point1, curve.fieldOrder, 5, "red");
-        drawPointElement(point2, curve.fieldOrder, 5, "red");
+        drawPointElement(point1, curve.fieldOrder, 5, "red", true);
+        drawPointElement(point2, curve.fieldOrder, 5, "red", true);
         //drawLine(0, 16, 0, 1, curve.fieldOrder);
         if (index1 !== index2) {
             //drawLineDirect(point1, point2, 16);
@@ -177,8 +177,8 @@ document.getElementById("scalarForm").addEventListener("submit", (event) => {
 
 function drawLine (x1, x2, y1, y2, size, color = "black") {
     ctx.beginPath();
-    ctx.moveTo(x1 * canvas.width / size, canvas.height - (y1 * canvas.height / size));
-    ctx.lineTo(x2 * canvas.width / size, canvas.height - (y2 * canvas.height / size));
+    ctx.moveTo((x1 * canvas.width / size)-3, (canvas.height - (y1 * canvas.height / size)) -3);
+    ctx.lineTo((x2 * canvas.width / size)-3, (canvas.height - (y2 * canvas.height / size)) - 3);
     ctx.strokeStyle = color;
     ctx.stroke();
 
@@ -232,7 +232,7 @@ function drawLineDirectGood (point, point3, options) {
         point3.y = Mod(curve.fieldOrder - point3.y, curve.fieldOrder);
     }
 
-    drawPointElement(point3, curve.fieldOrder, 5, "fuchsia");
+    drawPointElement(point3, curve.fieldOrder, 5, "fuchsia", true);
 
     while(((tempPoint.x != point3.x) || (tempPoint.y != point3.y)) && i < 100) {
         tempPoint.x += 1;
@@ -310,7 +310,7 @@ function highlightPoint (point, size) {
     return circle;
 }
 
-function drawPointElement (point, size, pointSize, color) {
+function drawPointElement (point, size, pointSize, color, temp = false) {
     let svg = document.getElementById("highlightSVG");
     var svgns = "http://www.w3.org/2000/svg";
     var circle = document.createElementNS(svgns, 'circle');
@@ -320,6 +320,8 @@ function drawPointElement (point, size, pointSize, color) {
     circle.setAttributeNS(null, 'style', `fill: ${color}; stroke: ${color}; stroke-width: 1px;` );
     svg.appendChild(circle);
 
+
+    
     circle.addEventListener("click", () => {
         let output = document.getElementById("pointInfo");
         let index;
@@ -331,15 +333,14 @@ function drawPointElement (point, size, pointSize, color) {
         let string = `Point x: ${point.x}, Point y: ${point.y}, Point index: ${index}`;
         output.textContent = string;
     });
+    
     circle.addEventListener("mouseover", () => {
         highlightPointTimeout(point, 400, curve.fieldOrder);
     });
 
-    if(color == "orange" || color == "red") {
+    if(temp) {
         circle.style.pointerEvents = "none"
     }
-
-
 }
 
 
