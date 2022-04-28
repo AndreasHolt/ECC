@@ -62,20 +62,25 @@ document.querySelector("#form").addEventListener("submit", (event) => {
             additionFunction = calcPointAdditionGF2;
             break;
     }
-    //curve = createCurveABCD(2,1,1,1, Math.pow(prime, power), modoli, additionFunction);
-    curve = createCurveAXY(Math.floor(Math.random()*Math.pow(prime, power)), 1, 0, Math.pow(prime, power), modoli, additionFunction);
+    //curve = createCurveABCD(Math.floor(Math.random()*Math.pow(prime, power)),1,1,1, Math.pow(prime, power), modoli, additionFunction);
+    curve = createCurveABCD(118,0,0,0, Math.pow(prime, power), modoli, additionFunction);
+    
+    //curve = createCurveAXY(Math.floor(Math.random()*Math.pow(prime, power)), 1, 0, Math.pow(prime, power), modoli, additionFunction);
 
 
     let optionsList = [{mode:"multiplicative"},{mode:"additive"}];    
     for (let options of optionsList) {
-        let arrayValues = createTable(curve.fieldOrder, curve.mod, options);
-        createTableHTML(arrayValues, curve.fieldOrder, options.mode);
+        //let arrayValues = createTable(curve.fieldOrder, curve.mod, options);
+        //createTableHTML(arrayValues, curve.fieldOrder, options.mode);
     }
 
 
     //console.log("Subgroup for G: " + curve.calcSubGroup(curve.G));
     console.log("a: " + curve.a);
     curve.createPoints();
+    curve.G = curve.points[15];
+    console.log(`G.x: ${curve.G.x}, G.y: ${curve.G.y}.`);
+    console.log("Number of points: " + curve.points.length);
     drawPoints(curve.points, curve.fieldOrder);
     /*
     curve.points = [];
@@ -164,8 +169,8 @@ document.getElementById("scalarForm").addEventListener("submit", (event) => {
     
     if (point) {
         let scaledPoint = curve.calcPointMultiplication(scale, point);
-        drawPoint(scaledPoint, curve.fieldOrder, 5, "red");
-        drawLineDirectGood(point, scaledPoint, options);
+        drawPoint(scaledPoint, curve.fieldOrder, 10, "red");
+        //drawLineDirectGood(point, scaledPoint,options);
     }
 });
 
@@ -418,15 +423,7 @@ function calculateElements(size, mod, combinationFunction) {
 
 
 
-function inversePrime (x, mod) {        //Enhance later (Double and add /// sqaure and multiply)
-    let result = x;
 
-    for (let i = 0 ; i < mod - 3 ; ++i) {
-        result = Mod(result * x, mod);
-    }
-
-    return result;
-}
 
 
 
