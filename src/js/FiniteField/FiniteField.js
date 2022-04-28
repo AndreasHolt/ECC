@@ -177,8 +177,8 @@ document.getElementById("scalarForm").addEventListener("submit", (event) => {
 
 function drawLine (x1, x2, y1, y2, size, color = "black") {
     ctx.beginPath();
-    ctx.moveTo(x1 * canvas.width / size, canvas.height - (y1 * canvas.height / size));
-    ctx.lineTo(x2 * canvas.width / size, canvas.height - (y2 * canvas.height / size));
+    ctx.moveTo((x1 * canvas.width / size)-3, (canvas.height - (y1 * canvas.height / size)) -3);
+    ctx.lineTo((x2 * canvas.width / size)-3, (canvas.height - (y2 * canvas.height / size)) - 3);
     ctx.strokeStyle = color;
     ctx.stroke();
 
