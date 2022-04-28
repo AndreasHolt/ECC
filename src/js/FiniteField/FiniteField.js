@@ -126,6 +126,7 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
 
         let newPoint = curve.calcPointAddition(point1, point2);
         drawPointElement(newPoint, curve.fieldOrder, 5, "orange");
+
         highlightPointTimeout(newPoint, 5, curve.fieldOrder);
         drawPointElement(point1, curve.fieldOrder, 5, "red");
         drawPointElement(point2, curve.fieldOrder, 5, "red");
@@ -230,7 +231,7 @@ function drawLineDirectGood (point, point3, options) {
     } else if (options.prime == true) {
         point3.y = Mod(curve.fieldOrder - point3.y, curve.fieldOrder);
     }
-    
+
     drawPointElement(point3, curve.fieldOrder, 5, "fuchsia");
 
     while(((tempPoint.x != point3.x) || (tempPoint.y != point3.y)) && i < 100) {
@@ -291,6 +292,7 @@ function highlightPointTimeout (point, time, size) {
     circle.setAttributeNS(null, 'cy', y);
     circle.setAttributeNS(null, 'r', 10);
     circle.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 1px;' );
+    circle.style.zIndex = '50000';
     svg.appendChild(circle);
     setTimeout(() => {
         svg.removeChild(circle);
@@ -332,6 +334,10 @@ function drawPointElement (point, size, pointSize, color) {
     circle.addEventListener("mouseover", () => {
         highlightPointTimeout(point, 400, curve.fieldOrder);
     });
+
+    if(color == "orange" || color == "red") {
+        circle.style.pointerEvents = "none"
+    }
 
 
 }
