@@ -125,11 +125,11 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
         }
 
         let newPoint = curve.calcPointAddition(point1, point2);
-        drawPointElement(newPoint, curve.fieldOrder, 5, "orange");
+        drawPointElement(newPoint, curve.fieldOrder, 5, "orange", true);
 
         highlightPointTimeout(newPoint, 5, curve.fieldOrder);
-        drawPointElement(point1, curve.fieldOrder, 5, "red");
-        drawPointElement(point2, curve.fieldOrder, 5, "red");
+        drawPointElement(point1, curve.fieldOrder, 5, "red", true);
+        drawPointElement(point2, curve.fieldOrder, 5, "red", true);
         //drawLine(0, 16, 0, 1, curve.fieldOrder);
         if (index1 !== index2) {
             //drawLineDirect(point1, point2, 16);
@@ -232,7 +232,7 @@ function drawLineDirectGood (point, point3, options) {
         point3.y = Mod(curve.fieldOrder - point3.y, curve.fieldOrder);
     }
 
-    drawPointElement(point3, curve.fieldOrder, 5, "fuchsia");
+    drawPointElement(point3, curve.fieldOrder, 5, "fuchsia", true);
 
     while(((tempPoint.x != point3.x) || (tempPoint.y != point3.y)) && i < 100) {
         tempPoint.x += 1;
@@ -321,28 +321,26 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     svg.appendChild(circle);
 
 
-    if (!temp) {
-        circle.addEventListener("click", () => {
-            let output = document.getElementById("pointInfo");
-            let index;
-            curve.points.forEach((elem, i) => {
-                if (elem.x === point.x && elem.y === point.y){
-                    index = i;
-                }
-            });
-            let string = `Point x: ${point.x}, Point y: ${point.y}, Point index: ${index}`;
-            output.textContent = string;
+    
+    circle.addEventListener("click", () => {
+        let output = document.getElementById("pointInfo");
+        let index;
+        curve.points.forEach((elem, i) => {
+            if (elem.x === point.x && elem.y === point.y){
+                index = i;
+            }
         });
-    }
+        let string = `Point x: ${point.x}, Point y: ${point.y}, Point index: ${index}`;
+        output.textContent = string;
+    });
+    
     circle.addEventListener("mouseover", () => {
         highlightPointTimeout(point, 400, curve.fieldOrder);
     });
 
-    if(color == "orange" || color == "red") {
+    if(temp) {
         circle.style.pointerEvents = "none"
     }
-
-
 }
 
 
