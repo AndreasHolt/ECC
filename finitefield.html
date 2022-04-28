@@ -24,8 +24,9 @@
 </ul>
 
 <div class="flex flex-row mt-10 px-10 py-10">
-    <div id="inputColumn" class=" w-64 basis-1/4">
+    <div id="inputColumn" class="w-64 basis-1/4">
       <div id="inputDiv">
+        <p class="font-bold text-xl mb-2 text-gray-800 mb-2">Choose the field</p>
         <form id="form">
           <!--
 
@@ -52,13 +53,17 @@
           <input type="submit" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center">
         </form>
 
+
+
+        <p class="mt-10 font-bold text-xl mb-2 text-gray-800 -mb-8">Point addition</p>
         <form id="additionForm" class="flex flex-wrap -mx-3 mb-6 justify-center mt-10">
+
           <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <label for="index1" class="block tracking-wide text-gray-700 text-x font-bold mb-2">Index1: </label>
+          <label for="index1" class="block tracking-wide text-gray-700 text-x font-bold mb-2">Index of 1st point: </label>
           <input type="number" name="index1" id="index1" value="3" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"><br>
           </div>
           <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <label for="index2" class="block tracking-wide text-gray-700 text-x font-bold mb-2">Index2: </label>
+          <label for="index2" class="block tracking-wide text-gray-700 text-x font-bold mb-2">Index of 2nd point: </label>
           <input type="number" name="index2" id="index2" value="5" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"><br>
           </div>
 
@@ -67,14 +72,15 @@
           </div>
         </form>
 
+        <p class="mt-10 font-bold text-xl mb-2 text-gray-800 -mb-8">Point multiplication</p>
         <form id="scalarForm" class="flex flex-wrap -mx-3 mb-6 justify-center mt-10">
 
           <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <label class="block tracking-wide text-gray-700 text-x font-bold mb-2" for="index">Index: </label>
+            <label class="block tracking-wide text-gray-700 text-x font-bold mb-2" for="index">Index of point: </label>
             <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="number" name="index" id="index" value="3"><br>
           </div>
           <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <label class="block tracking-wide text-gray-700 text-x font-bold mb-2" for="Scalar">Scalar: </label>
+            <label class="block tracking-wide text-gray-700 text-x font-bold mb-2" for="Scalar">Scalar to multiply: </label>
             <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="number" name="Scalar" id="Scalar" value="5"><br>
           </div>
 
@@ -110,7 +116,6 @@
 
 
 </div>
-
 <div id="outputTableColumn" class="flex flex-row mt-10 px-10 py-10">
 
 </div>

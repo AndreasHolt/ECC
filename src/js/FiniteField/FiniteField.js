@@ -66,7 +66,7 @@ document.querySelector("#form").addEventListener("submit", (event) => {
     curve = createCurveAXY(Math.floor(Math.random()*Math.pow(prime, power)), 1, 0, Math.pow(prime, power), modoli, additionFunction);
 
 
-    let optionsList = [{mode:"multiplicative"},{mode:"additive"}];    
+    let optionsList = [{mode:"multiplicative"},{mode:"additive"}];
     for (let options of optionsList) {
         let arrayValues = createTable(curve.fieldOrder, curve.mod, options);
         createTableHTML(arrayValues, curve.fieldOrder, options.mode);
@@ -96,12 +96,12 @@ document.querySelector("#form").addEventListener("submit", (event) => {
         curve.d = 0;
     }
     curve.mod = modoli;
-    
+
     for (let options of optionsList) {
         let arrayValues = createTable(sizeOfTable, modoli, options);
         createTableHTML(arrayValues, sizeOfTable, options.mode);
     }
-    
+
     createPoints(curve, sizeOfTable, modoli);
     curve.drawDots(sizeOfTable);
 */
@@ -119,7 +119,7 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
         } else {
             options.prime = false;
         }
-        
+
         let newPoint = curve.calcPointAddition(point1, point2);
         drawPointElement(newPoint, curve.fieldOrder, 5, "orange");
         highlightPointTimeout(newPoint, 5, curve.fieldOrder);
@@ -152,7 +152,7 @@ document.getElementById("Scalar").addEventListener("input", (event) => {
 
         let scaledPoint = curve.calcPointMultiplication(scale, point);
         highlightPointTimeout(scaledPoint, 1000, curve.fieldOrder);
-        
+
     }
 });
 
@@ -162,7 +162,7 @@ document.getElementById("scalarForm").addEventListener("submit", (event) => {
     let point = curve.points[index];
     let scale = Number(event.target["Scalar"].value);
     drawPoint(point, curve.fieldOrder, 5, "blue");
-    
+
     if (point) {
         let scaledPoint = curve.calcPointMultiplication(scale, point);
         drawPoint(scaledPoint, curve.fieldOrder, 5, "red");
@@ -176,7 +176,7 @@ function drawLine (x1, x2, y1, y2, size, color = "black") {
     ctx.lineTo(x2 * canvas.width / size, canvas.height - (y2 * canvas.height / size));
     ctx.strokeStyle = color;
     ctx.stroke();
-    
+
     /*if (progress < curve.fieldOrder) {
         setTimeout(() => {drawLine(point1, point3, progress + 0.01)}, 0.1);
         let newPoint = {"x":Mod(point1.x + (progress),curve.fieldOrder), "y":Mod(point1.y+(point3.alfa*progress),curve.fieldOrder)};
@@ -328,7 +328,7 @@ function drawPointElement (point, size, pointSize, color) {
         highlightPointTimeout(point, 400, curve.fieldOrder);
     });
 
-    
+
 }
 
 
@@ -344,30 +344,51 @@ function createTableHTML (tableArray, tableSize, htmlID) {
     newTable.id = htmlID;
 
     let headerRow = document.createElement("tr");
+
     for (let i = -1; i < tableSize; i++) {
         let header = document.createElement("th");
+
+
         if (i !== -1) {
             header.textContent = i;
+            header.classList.add("text-sm", "text-white", "font-medium", "px-2", "py-2", "whitespace-nowrap")
+
         } else {
+            header.classList.add("border-b", "bg-gray-800", "border-gray-800")
+
+            header.classList.add("text-sm", "text-white", "font-medium", "px-6", "py-6", "whitespace-nowrap")
+            newTable.classList.add("inline-block", "relative", "w-64", "basis-1/2", "table-fixed")
+
             if (htmlID === "multiplicative") {
                 header.textContent = "*";
+
+
             } else if (htmlID === "additive"){
                 header.textContent = "+";
+
             }
         }
+        headerRow.classList.add("border-b", "bg-gray-800", "border-gray-900")
+
         headerRow.appendChild(header);
     }
     newTable.appendChild(headerRow);
 
+
     //For each row
     for (let rowIndex = 0; rowIndex < tableSize; rowIndex++) {
         let row = document.createElement("tr");
+
         let dataCell = document.createElement("td");
         dataCell.textContent = rowIndex;
+
         row.appendChild(dataCell);
+
+        row.firstChild.classList.add("border-b", "bg-gray-800", "border-gray-800", "text-sm", "text-white", "font-medium", "whitespace-nowrap", "text-center")
         for (let i = 0; i < tableSize; i++) {
             let dataCell = document.createElement("td");
             dataCell.textContent = tableArray[i][rowIndex];
+            dataCell.classList.add('mx-10', 'my-100')
             row.appendChild(dataCell);
         }
         newTable.appendChild(row);
@@ -376,7 +397,7 @@ function createTableHTML (tableArray, tableSize, htmlID) {
     if (oldTable) {
         oldTable.replaceWith(newTable);
     } else {
-        document.getElementById("outputTableColumn").after(newTable);
+        document.getElementById("outputTableColumn").appendChild(newTable);
     }
 
 }
@@ -386,11 +407,11 @@ function createTable (sizeOfTable, mod, options) {
     let arrayValues = [];
     if (options.mode === "additive") {
         arrayValues = calculateElements(sizeOfTable, mod, additiveXOR);
-        
+
     } else if (options.mode === "multiplicative") {
         arrayValues = calculateElements(sizeOfTable, mod, multiplicativeXOR);
     }
-    
+
     return arrayValues;
 }
 
@@ -426,12 +447,12 @@ function gcd (val1, val2) {
 
 function calcIreduciblePoly (size) {
 
-    
+
 }
 
 
 function isPrime(val){
-    
+
 }
 
 
@@ -443,7 +464,7 @@ function showTable(arrayValues) {
 function clmul32(x1, x2, mod) {         //https://www.youtube.com/watch?v=v4HKU_VBbqM
     let result = 0;
     //x2 |= 0;                            //Kun nødvendig hvis der er chance for at input er double
-    
+
     while (x1 !== 0) {
         result ^= x2 * (x1 & -x1);
         x1 &= x1 - 1;
