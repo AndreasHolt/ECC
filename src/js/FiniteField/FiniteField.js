@@ -371,11 +371,10 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
         });
 
 
-        let pointDetails = [`<span class="detailKey">Index:</span> ${index}`, `<span class="detailKey">Point:</span> (${point.x}, ${point.y})`, `<span class="detailKey">Inverse:</span> (${pointDetailArray.negation.x}, ${pointDetailArray.negation.y})`, `<span class="detailKey>"Order of sub group: "</span> ${orderOfSubGroupString}`];
+        let pointDetails = [`<span class="detailKey">Index:</span> ${index}`, `<span class="detailKey">Point:</span> (${point.x}, ${point.y})`, `<span class="detailKey">Inverse:</span> (${pointDetailArray.negation.x}, ${pointDetailArray.negation.y})`, `<span class="detailKey">Subgroup: </span> ${pointDetailArray.orderOfSubGroup + 2}`,`<span class="detailKey">Generated sub group: </span> ${orderOfSubGroupString}`];
 
         output.innerHTML = "";
 
-        console.log(pointDetailArray.orderOfSubGroup, 'test');
         for(let i = 0; i < pointDetails.length; i++) {
             let p = document.createElement("p");
             output.appendChild(p);
@@ -383,10 +382,8 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 
             p.innerHTML += pointDetails[i];
 
-            //let detailKey = 
-            //document.getElementsByClassName("detailKey");
-            //detailKey[i].classList.add("tracking-wide", 
-            //"text-gray-700", "text-x", "font-bold", "mb-2")
+            let detailKey = document.getElementsByClassName("detailKey");
+            detailKey[i].classList.add("tracking-wide", "text-gray-700", "text-x", "font-bold", "mb-2")
 
 
         }
