@@ -23,92 +23,119 @@
             </li>
             <li class="flex-1 mr-2">
               <a class="text-center block border border-white hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-2 px-4"
-                 href="infinitefield.html">Elliptic Curves over Finite Fields (𝔽 <sub>p</sub>)</a>
+                 href="finitefield.html">Elliptic Curves over Finite Fields (𝔽 <sub>p</sub>)</a>
             </li>
             <li class="text-center flex-1">
               <a class="text-center block border border-blue-500 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white"
-                 href="#">EC El Gamal</a>
+                 href="elgamal.html">EC El Gamal</a>
             </li>
         </ul>
 
-        <div class="flex flex-row mt-6">
+        <div class="flex flex-row mt-6" id="elgamalOuterDiv">
             <div id="privateKey" 
-            class="basis-1/4 h-1000px space-">
-                <div>
-                    <p>Your private key is: <span id="userPrivateKey">1234</span></p>
-                    <button id="newKeyButton">New key</button>
+            class="basis-1/4 grid place-content-center">
+                <div class="">
+                    <p class="font-bold text-xl mb-2 text-gray-800">Your private key is: <span id="userPrivateKey">1234</span></p>
+                    <button class="border-2 border-slate-700 rounded-md w-20" id="newKeyButton">New key</button>
                 </div>
-                <div>
+                <div class="mt-20">
                     <form id="inputMessageForm">
                         <label for="messageInput">Input message: </label>
-                        <input type="text" id="messageInput"><br><br>
-                        <input type="submit" value="Encrypt">
+                        <input class="border border-slate-400" type="text" placeholder="Message text" id="messageInput"><br>
+                        <input class="border-2 border-black rounded-md w-20" type="submit" value="Encrypt">
                     </form>
                 </div>
             </div>
             <div class="basis-1/2 flex flex-col">
                 <div class="basis-1/3">
-                    <div class="flex flex-row border-2 border-black rounded-md">
-                        <div class="basis-1/3">
-                            <h1>Encryption</h1>
+                    <p class="font-bold text-xl mb-2 text-blue-400">From you to person A</p>
+                    <div class="grid grid-cols-3 grid-rows-5 gap-1 border-4 border-black rounded-md">
+                        <div class="col-span-3 row-span-4 flex flex-row p-0.5 space-x-1">
+                            <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
+                                <h1 class="font-bold text-xl mb-2 text-gray-800">Encryption</h1>
+                            </div>
+                            <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
+                                <h1 class="font-bold text-xl mb-2 text-gray-800">Public communication</h1>
+                            </div>
+                            <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
+                                <h1 class="font-bold text-xl mb-2 text-gray-800">Decryption</h1>
+                            </div>
                         </div>
-                        <div class="basis-1/3">
-                            <h1>Public communication</h1>
+                        <div class="col-span-2 px-0.5 py-1"
+                        id="textfelter">
+                            <input class="border-2 border-black w-6/12" 
+                            type="text" id="textPreview" readonly="true" placeholder="Encrypted text">
                         </div>
-                        <div class="basis-1/3">
-                            <h1>Decryption</h1>
-                        </div>
-                    </div>
-                    <div id="textfelter">
-                        <input type="text" id="textPreview" readonly="true" placeholder="Encrypted text">
-                        <input type="text" id="textDecrypted" readonly="true" placeholder="Decrypted text">
-                    </div>
-                    <div>
-                        <button id="sendMessage" >Send message</button>
-                    </div>
-                </div>
-                <div class="basis-1/3">
-                    <div class="flex flex-row border-2 border-black rounded-md">
-                        <div class="basis-1/3">
-                            <h1>Encryption</h1>
-                        </div>
-                        <div class="basis-1/3">
-                            <h1>Public communication</h1>
-                        </div>
-                        <div class="basis-1/3">
-                            <h1>Decryption</h1>
+                        <div class="pr-0.5 pl-0 py-1">
+                            <input class="border-2 border-black w-full"
+                            type="text" id="textDecrypted" readonly="true" placeholder="Decrypted text">
                         </div>
                     </div>
-                    <div id="textfelter">
-                        <input type="text" id="textPreview" readonly="true" placeholder="Encrypted text">
-                        <input type="text" id="textDecrypted" readonly="true" placeholder="Decrypted text">
-                    </div>
-                    <div>
-                        <button id="sendMessage" >Send message</button>
+                    <div class="p-0.5">
+                        <button class="border-2 rounded-md border-slate-700"
+                        id="sendMessage" >Send message</button>
                     </div>
                 </div>
                 <div class="basis-1/3">
-                    <div class="flex flex-row border-2 border-black rounded-md">
-                        <div class="basis-1/3">
-                            <h1>Encryption</h1>
+                    <p class="font-bold text-xl mb-2 text-red-400">From you to person B</p>
+                    <div class="grid grid-cols-3 grid-rows-5 gap-1 border-4 border-black rounded-md">
+                        <div class="col-span-3 row-span-4 flex flex-row p-0.5 space-x-1">
+                            <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
+                                <h1 class="font-bold text-xl mb-2 text-gray-800">Encryption</h1>
+                            </div>
+                            <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
+                                <h1 class="font-bold text-xl mb-2 text-gray-800">Public communication</h1>
+                            </div>
+                            <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
+                                <h1 class="font-bold text-xl mb-2 text-gray-800">Decryption</h1>
+                            </div>
                         </div>
-                        <div class="basis-1/3">
-                            <h1>Public communication</h1>
+                        <div class="col-span-2 px-0.5 py-1"
+                        id="textfelter">
+                            <input class="border-2 border-black w-6/12" 
+                            type="text" id="textPreview" readonly="true" placeholder="Encrypted text">
                         </div>
-                        <div class="basis-1/3">
-                            <h1>Decryption</h1>
+                        <div class="pr-0.5 pl-0 py-1">
+                            <input class="border-2 border-black w-full"
+                            type="text" id="textDecrypted" readonly="true" placeholder="Decrypted text">
                         </div>
                     </div>
-                    <div id="textfelter">
-                        <input type="text" id="textPreview" readonly="true" placeholder="Encrypted text">
-                        <input type="text" id="textDecrypted" readonly="true" placeholder="Decrypted text">
+                    <div class="p-0.5">
+                        <button class="border-2 rounded-md border-slate-700"
+                        id="sendMessage" >Send message</button>
                     </div>
-                    <div>
-                        <button id="sendMessage" >Send message</button>
+                </div>
+                <div class="basis-1/3">
+                    <p class="font-bold text-xl mb-2 text-green-600">From you to person C</p>
+                    <div class="grid grid-cols-3 grid-rows-5 gap-1 border-4 border-black rounded-md">
+                        <div class="col-span-3 row-span-4 flex flex-row p-0.5 space-x-1">
+                            <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
+                                <h1 class="font-bold text-xl mb-2 text-gray-800">Encryption</h1>
+                            </div>
+                            <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
+                                <h1 class="font-bold text-xl mb-2 text-gray-800">Public communication</h1>
+                            </div>
+                            <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
+                                <h1 class="font-bold text-xl mb-2 text-gray-800">Decryption</h1>
+                            </div>
+                        </div>
+                        <div class="col-span-2 px-0.5 py-1"
+                        id="textfelter">
+                            <input class="border-2 border-black w-6/12" 
+                            type="text" id="textPreview" readonly="true" placeholder="Encrypted text">
+                        </div>
+                        <div class="pr-0.5 pl-0 py-1">
+                            <input class="border-2 border-black w-full"
+                            type="text" id="textDecrypted" readonly="true" placeholder="Decrypted text">
+                        </div>
+                    </div>
+                    <div class="p-0.5">
+                        <button class="border-2 rounded-md border-slate-700"
+                        id="sendMessage" >Send message</button>
                     </div>
                 </div>
             </div>
-            <div class="basis-1/7 ml-40">
+            <div class="basis-1/4 grid place-items-center">
                 <div>
                     <table style="border: 1px solid black; border-radius: 10px;">
                         <tr>
