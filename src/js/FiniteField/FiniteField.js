@@ -341,9 +341,10 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     svg.appendChild(circle);
 
 
-    let pointDetailArray = pointDescription(point);
     
     circle.addEventListener("click", () => {
+
+        let pointDetailArray = pointDescription(point);
         let output = document.getElementById("pointInfo");
         let index;
         curve.points.forEach((elem, i) => {
@@ -357,6 +358,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
         let pointDetails = [`<span class="detailKey">Index:</span> ${index}`, `<span class="detailKey">Point:</span> (${point.x}, ${point.y})`, `<span class="detailKey">Inverse:</span> (${pointDetailArray.negation.x}, ${pointDetailArray.negation.y})`];
         output.innerHTML = "";
 
+        console.log(pointDetailArray.subGroup);
         for(let i = 0; i < pointDetails.length; i++) {
             let p = document.createElement("p");
             output.appendChild(p);
