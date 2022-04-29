@@ -321,11 +321,14 @@ function pointDescription(point) {
         }
     }
 
-    while (subGroupPoint.x !== negation.x && subGroupPoint.y !== negation.y) {
+    while (subGroupPoint.x !== negation.x || subGroupPoint.y !== negation.y) {
         subGroupPoint = curve.calcPointAddition(subGroupPoint, point);
-        subGroup[i] = subGroupPoint;
+        subGroup[orderOfSubGroup] = subGroupPoint;
         orderOfSubGroup++;
+        
     }
+
+    console.log(subGroup)
 
     return {negation, subGroup, orderOfSubGroup};
 }
@@ -340,11 +343,25 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     circle.setAttributeNS(null, 'style', `fill: ${color}; stroke: ${color}; stroke-width: 1px;` );
     svg.appendChild(circle);
 
+    console.log("ab: ", curve.a,curve.b)
+
+
 
     
     circle.addEventListener("click", () => {
 
         let pointDetailArray = pointDescription(point);
+
+
+        let orderOfSubGroupString = `(${point.x}, ${point.y}), `;
+        for(let i = 0; i < pointDetailArray.orderOfSubGroup; i++) {
+            console.log(i)
+            orderOfSubGroupString += `(${pointDetailArray.subGroup[i].x}, ${pointDetailArray.subGroup[i].y}), `;
+
+        }
+
+        orderOfSubGroupString += `∞`;
+
         let output = document.getElementById("pointInfo");
         let index;
         curve.points.forEach((elem, i) => {
@@ -353,12 +370,12 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
             }
         });
 
-        let string = `Point x: ${point.x}, Point y: ${point.y}, Point index: ${index}`;
-        console.log(curve.fieldOrder)
-        let pointDetails = [`<span class="detailKey">Index:</span> ${index}`, `<span class="detailKey">Point:</span> (${point.x}, ${point.y})`, `<span class="detailKey">Inverse:</span> (${pointDetailArray.negation.x}, ${pointDetailArray.negation.y})`];
+
+        let pointDetails = [`<span class="detailKey">Index:</span> ${index}`, `<span class="detailKey">Point:</span> (${point.x}, ${point.y})`, `<span class="detailKey">Inverse:</span> (${pointDetailArray.negation.x}, ${pointDetailArray.negation.y})`, `<span class="detailKey>"Order of sub group: "</span> ${orderOfSubGroupString}`];
+
         output.innerHTML = "";
 
-        console.log(pointDetailArray.subGroup);
+        console.log(pointDetailArray.orderOfSubGroup, 'test');
         for(let i = 0; i < pointDetails.length; i++) {
             let p = document.createElement("p");
             output.appendChild(p);
@@ -366,8 +383,10 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 
             p.innerHTML += pointDetails[i];
 
-            let detailKey = document.getElementsByClassName("detailKey");
-            detailKey[i].classList.add("tracking-wide", "text-gray-700", "text-x", "font-bold", "mb-2")
+            //let detailKey = 
+            //document.getElementsByClassName("detailKey");
+            //detailKey[i].classList.add("tracking-wide", 
+            //"text-gray-700", "text-x", "font-bold", "mb-2")
 
 
         }
