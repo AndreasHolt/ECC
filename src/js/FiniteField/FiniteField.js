@@ -310,6 +310,26 @@ function highlightPoint (point, size) {
     return circle;
 }
 
+function pointDescription(point) {
+    let negation, subGroupPoint = point;
+    let subGroup = [];
+    let orderOfSubGroup = 0;
+
+    for (let i of curve.points) {
+        if (i.x === point.x && i.y !== point.y) {
+            negation = i;
+        }
+    }
+
+    while (subGroupPoint.x !== negation.x && subGroupPoint.y !== negation.y) {
+        subGroupPoint = curve.calcPointAddition(subGroupPoint, point);
+        subGroup[i] = subGroupPoint;
+        orderOfSubGroup++;
+    }
+
+    return {negation, subGroup, orderOfSubGroup};
+}
+
 function drawPointElement (point, size, pointSize, color, temp = false) {
     let svg = document.getElementById("highlightSVG");
     var svgns = "http://www.w3.org/2000/svg";
@@ -321,6 +341,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     svg.appendChild(circle);
 
 
+    let pointDetailArray = pointDescription(point);
     
     circle.addEventListener("click", () => {
         let output = document.getElementById("pointInfo");
@@ -330,8 +351,25 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
                 index = i;
             }
         });
+
         let string = `Point x: ${point.x}, Point y: ${point.y}, Point index: ${index}`;
-        output.textContent = string;
+        console.log(curve.fieldOrder)
+        let pointDetails = [`<span class="detailKey">Index:</span> ${index}`, `<span class="detailKey">Point:</span> (${point.x}, ${point.y})`, `<span class="detailKey">Inverse:</span> (${pointDetailArray.negation.x}, ${pointDetailArray.negation.y})`];
+        output.innerHTML = "";
+
+        for(let i = 0; i < pointDetails.length; i++) {
+            let p = document.createElement("p");
+            output.appendChild(p);
+            p.setAttribute("class", "pointDetails");
+
+            p.innerHTML += pointDetails[i];
+
+            let detailKey = document.getElementsByClassName("detailKey");
+            detailKey[i].classList.add("tracking-wide", "text-gray-700", "text-x", "font-bold", "mb-2")
+
+
+        }
+
         //svg.appendChild(pointText(point, temp));
     });
     
