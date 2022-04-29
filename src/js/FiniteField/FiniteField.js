@@ -316,7 +316,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     var circle = document.createElementNS(svgns, 'circle');
     circle.setAttributeNS(null, 'cx', point.x * canvas.width / size);
     circle.setAttributeNS(null, 'cy', canvas.height - (point.y * canvas.height / size));
-    circle.setAttributeNS(null, 'r', pointSize);
+    circle.setAttributeNS(null, 'r', pointSize);                                                             //(canvas.height / (curve.fieldOrder * 1.2)) <= 5 ? (canvas.height / (curve.fieldOrder * 1.2)) : 5)
     circle.setAttributeNS(null, 'style', `fill: ${color}; stroke: ${color}; stroke-width: 1px;` );
     svg.appendChild(circle);
 
@@ -332,6 +332,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
         });
         let string = `Point x: ${point.x}, Point y: ${point.y}, Point index: ${index}`;
         output.textContent = string;
+        //svg.appendChild(pointText(point, temp));
     });
     
     circle.addEventListener("mouseover", () => {
@@ -344,7 +345,23 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 }
 
 
+function pointText (point, eq = "") {
+    let textNode;
+    const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
+    textElement.setAttribute('x', point.x * canvas.width / curve.fieldOrder);
+    textElement.setAttribute('y', canvas.height - (point.y * canvas.height / curve.fieldOrder));
+
+    if (eq) {
+        textNode = document.createTextNode(eq + `(${point.x}, ${point.y})`);
+        //textElement.setAttribute('id', eq);
+    } else {
+        textNode = document.createTextNode(`(${point.x}, ${point.y})`);
+    }
+
+    textElement.appendChild(textNode);
+    return textElement;
+}
 
 
 
