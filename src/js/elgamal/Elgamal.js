@@ -1,10 +1,12 @@
 import { createCurveAXY, createCurveABCD, calcPointAdditionPrime, calcPointAdditionGF2 } from "../finiteField/curves.js";
+import { Mod } from "../finiteField/Bits.js";
 
 let curve = createCurveABCD(118, 0, 0, 0, 131, 131, calcPointAdditionPrime); //140 points
 curve.createPoints();
 curve.G = curve.points[15];//curve.points[Math.floor(Math.random()*curve.points.length)];
 console.log(`G.x: ${curve.G.x}, G.y: ${curve.G.y}.`);
 
+let base = 256;
 
 let userPrivateKeyHTML = document.getElementById("userPrivateKey");
 let users = [];
@@ -56,38 +58,58 @@ document.getElementById("sendMessage").addEventListener("click", () => {
 
 function encrypt (curve, message, sender, reciever) {
     let pointResult = [];
-    let textResult = "";
+    let numberResult = [];
     for (let char of message) {
         let encryptedPoint = encryptBlock(curve, char, sender, reciever);
         pointResult.push(encryptedPoint);
-        textResult += curve.pointToMessage(encryptedPoint);
+        numberResult.push(curve.pointToNumber(encryptedPoint));
     }
-    return textResult;
+    return combineLettersToNumber(numberResult, base);
 }
 
 function encryptBlock (curve, char, sender, reciever) {
-    let pointMessage = curve.messageToPoint(char);
+    let pointMessage = curve.numberToPoint(char.charCodeAt(0));
     let akG = curve.calcPointMultiplication(sender.privateKey, reciever.publicKey);
     let point = curve.calcPointAddition(pointMessage, akG);
 
     return point;
 }
 
-function decrypt (curve, message, sender, reciever) {
+function decrypt (curve, number, sender, reciever) {
     let result = "";
-    for (let char of message) {
-        console.log(char);
-        result += decryptBlock(curve, curve.messageToPoint(char), sender, reciever);
+    let valuesArr = seperateLettersFromNumber(number, base);
+    for (let val of valuesArr) {
+        result += decryptBlock(curve, curve.numberToPoint(val), sender, reciever);
     }
     return result;
 }
 
+
 function decryptBlock (curve, point, sender, reciever) {
     let pointAKG = curve.calcPointMultiplication(reciever.privateKey, sender.publicKey);
     let pointPM = curve.calcPointAddition(point, curve.inverseOfPoint(pointAKG));
-    return curve.pointToMessage(pointPM);
+    return String.fromCharCode(curve.pointToNumber(pointPM));
 }
 
 
+function combineLettersToNumber (numbers, base) {
+    let sum = 0
+    for(let i = 0; i < numbers.length; i++) {
+        let value = numbers[i];
+        sum += value * Math.pow(base, i);
+    }
+    return sum;
+}
+
+function seperateLettersFromNumber (number, base) {
+    let result = [];
+    let i = 0;
+    let val;
+    while ((val = Math.floor(number / Math.pow(base,i))) > 0) {
+        result.push(Mod(val,base));
+        i++;
+    }
+    return result;
+}
 
 
