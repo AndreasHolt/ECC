@@ -105,13 +105,12 @@ function createCurve (fieldOrder, mod, additionFunction) {
             let oppositeY = Mod(this.fieldOrder-p.y, this.fieldOrder);
             return {x:p.x, y:oppositeY};
         },
-        messageToPoint: function (m) {
+        numberToPoint: function (num) {
             if (this.points.length >= 128) {
-                let mIntVal = m.charCodeAt(0);
-                if (mIntVal < 0 || mIntVal >= 128) {
+                if (num < 0 || num >= 128) {
                     throw("message must be a single utf-8 character");
                 } else {
-                    return this.points[m.charCodeAt(0)];
+                    return this.points[num];
                 }
             } else {
                 throw("Not enough points on curve.")
@@ -124,14 +123,14 @@ function createCurve (fieldOrder, mod, additionFunction) {
             }
             return point;
         },
-        pointToMessage: function (p) {
+        pointToNumber: function (p) {
             let index = curve.points.findIndex((obj) => {
                 return (obj.x === p.x && obj.y === p.y);
             });
             if (index === -1) {
                 throw("Point not in array.");
             } else {
-                return String.fromCharCode(index);
+                return index;
             }
         }
     };
