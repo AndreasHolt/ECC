@@ -107,7 +107,7 @@ function createCurve (fieldOrder, mod, additionFunction) {
         },
         numberToPoint: function (num) {
             if (this.points.length >= 128) {
-                if (num < 0 || num >= 128) {
+                if (num < 0 || num >= this.points.lengt) {
                     throw("message must be a single utf-8 character");
                 } else {
                     return this.points[num];
@@ -146,11 +146,22 @@ function createCurve (fieldOrder, mod, additionFunction) {
 
 
 function calcPointAdditionPrime (p1, p2) {
+    if(p1.x === Infinity) {
+        return p2;
+    }
+    if (p2.x === Infinity) {
+        return p1;
+    }
     if (p1.x === p2.x && p1.y === p2.y) {
         let alfa = Mod((3*(p1.x*p1.x) + this.a)*inversePrime(Mod(2*p1.y, this.mod), this.mod), this.mod);
         let xR = Mod((alfa*alfa - 2*p1.x), this.mod);
         let yR = Mod(this.fieldOrder - (p1.y + alfa*(xR - p1.x)), this.mod);
         let R = {x: xR, y: yR, alfa: alfa};
+        return R;
+    } else if (p1.x === p2.x) {
+        let xR = Infinity;
+        let yR = Infinity;
+        let R = {x: xR, y: yR};
         return R;
     } else {
         let alfa = Mod((p1.y - p2.y)*inversePrime(Mod(p1.x-p2.x, this.mod), this.mod), this.mod);
@@ -213,6 +224,7 @@ function createPointsGF2 () {
             }
         }
     }
+    this.points.push({x: Infinity, y: Infinity});
     console.log(this.points);
 }
 
@@ -243,6 +255,7 @@ function createPointsPrime () {
             }
         }
     }
+    this.points.push({x: Infinity, y: Infinity});
 }
 
 export {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2 };
