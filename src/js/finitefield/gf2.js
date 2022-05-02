@@ -1,4 +1,4 @@
-import {numberOfBits2} from "./Bits.js";
+import {numberOfBits2} from "./bits.js";
 
 
 function aXOR (...theArgs) {

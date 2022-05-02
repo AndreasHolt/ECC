@@ -1,5 +1,5 @@
-import { createCurveAXY, createCurveABCD, calcPointAdditionPrime, calcPointAdditionGF2 } from "../finiteField/curves.js";
-import { Mod } from "../finiteField/Bits.js";
+import { createCurveAXY, createCurveABCD, calcPointAdditionPrime, calcPointAdditionGF2 } from "../finitefield/curves.js";
+import { Mod } from "../finitefield/bits.js";
 
 let curve = createCurveABCD(118, 0, 0, 0, 131, 131, calcPointAdditionPrime); //140 points
 curve.createPoints();
@@ -35,7 +35,7 @@ let inputField = document.getElementById("messageInput");
 
 document.getElementById("inputMessageForm").addEventListener("submit", (Event) => {
     Event.preventDefault();
-    let textOut = document.getElementById("textPreview");
+    let textOut = document.getElementById("textPreviewA");
     console.log(inputField.value);
     let encryptedText = encrypt(curve, inputField.value, users[0], users[1]);
     console.log(encryptedText);

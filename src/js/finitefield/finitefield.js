@@ -1,5 +1,5 @@
 import { multiplicativeXOR, additiveXOR, findInverseGF2, aXOR, mXOR } from "./gf2.js";
-import {numberOfBits2, Mod} from "./Bits.js";
+import {numberOfBits2, Mod} from "./bits.js";
 import {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2} from "./curves.js";
 
 const canvas = document.getElementById("curveGraph");
