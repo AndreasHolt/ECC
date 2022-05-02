@@ -1,4 +1,4 @@
-import {Mod } from "./Bits.js";
+import {Mod } from "./bits.js";
 export {inversePrime };
 
 

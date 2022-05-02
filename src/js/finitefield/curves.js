@@ -1,5 +1,5 @@
 import { aXOR, mXOR, multiplicativeXOR, additiveXOR, findInverseGF2 } from "./gf2.js";
-import {numberOfBits2, Mod} from "./Bits.js";
+import {numberOfBits2, Mod} from "./bits.js";
 
 
 function createCurveAXY (a, x, y, fieldOrder, mod, additionFunction) {
