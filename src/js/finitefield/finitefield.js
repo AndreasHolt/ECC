@@ -128,11 +128,11 @@ function pointAdditionFinite(index1, index2) {
         }
 
         let newPoint = curve.calcPointAddition(point1, point2);
-        newCalculatedPoints[0] = drawPointElement(newPoint, curve.fieldOrder, 5, "orange", true);
+        newCalculatedPoints.push(drawPointElement(newPoint, curve.fieldOrder, 5, "orange", true));
 
         highlightPointTimeout(newPoint, 5, curve.fieldOrder);
-        newCalculatedPoints[1] = drawPointElement(point1, curve.fieldOrder, 5, "red", true);
-        newCalculatedPoints[2] = drawPointElement(point2, curve.fieldOrder, 5, "red", true);
+        newCalculatedPoints.push(drawPointElement(point1, curve.fieldOrder, 5, "red", true));
+        newCalculatedPoints.push(drawPointElement(point2, curve.fieldOrder, 5, "red", true));
 
         console.log('calc: ', newCalculatedPoints);
             
@@ -146,6 +146,11 @@ function pointAdditionFinite(index1, index2) {
         console.log("Error! find selv ud af det!");
         console.log(e);
     }
+    newCalculatedPoints.forEach(point => {
+        point.remove()
+
+    });
+
 }
 
 document.getElementById("additionForm").addEventListener("submit", (event) => {
@@ -247,7 +252,7 @@ function drawLineDirectGood (point, point3, options) {
         point3.y = Mod(curve.fieldOrder - point3.y, curve.fieldOrder);
     }
 
-    drawPointElement(point3, curve.fieldOrder, 5, "fuchsia", true);
+    newCalculatedPoints.push(drawPointElement(point3, curve.fieldOrder, 5, "fuchsia", true));
 
     while(((tempPoint.x != point3.x) || (tempPoint.y != point3.y)) && i < 100) {
         tempPoint.x += 1;
