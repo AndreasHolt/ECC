@@ -1,6 +1,6 @@
 import { multiplicativeXOR, additiveXOR, findInverseGF2, aXOR, mXOR } from "./gf2.js";
 import {numberOfBits2, Mod} from "./bits.js";
-import {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
+import {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2} from "./curves.js";
 
 const canvas = document.getElementById("curveGraph");
 let ctx;
@@ -13,6 +13,9 @@ let curve;
 
 let newCalculatedPoints = [];
 
+
+init();
+
 document.querySelector("#form").addEventListener("submit", (event) => {
     console.log(event);
     event.preventDefault();
@@ -21,13 +24,6 @@ document.querySelector("#form").addEventListener("submit", (event) => {
     let modoli;
     let additionFunction;
     let createPointsFunction;
-    let discriminant;
-
-    let a = event.target["a"].value;
-    let b = event.target["b"].value;
-    let c = 0;
-    let d = 0;
-
     document.querySelectorAll("circle").forEach( (el) => {
         el.remove();
     });
@@ -57,12 +53,6 @@ document.querySelector("#form").addEventListener("submit", (event) => {
             modoli = 131;
             additionFunction = calcPointAdditionPrime;
             break;
-        case ("Prime 257"):
-            prime = 257;
-            power = 1;
-            modoli = 257;
-            additionFunction = calcPointAdditionPrime;
-            break;
         case ("GF2 4"):
             prime = 2;
             power = 4;
@@ -82,24 +72,7 @@ document.querySelector("#form").addEventListener("submit", (event) => {
             additionFunction = calcPointAdditionGF2;
             break;
     }
-
-    if (event.target["curveList"].value.includes("GF")) {
-        c = event.target["c"].value;
-        d = event.target["d"].value;
-        discriminant = calcDiscriminantGF2(a, b, c, d, modoli);
-    } else {
-        discriminant = calcDiscriminant(a, b, c, d);
-    }
-    
-    try {
-        if (!discriminant) {
-            throw "Discriminant is 0, please choose another curve";
-        } 
-    } catch (error) {
-        alert(error);
-    }
-
-    curve = createCurveABCD(a, b, c, d, Math.pow(prime, power), modoli, additionFunction);
+    curve = createCurveABCD(2,1,1,1, Math.pow(prime, power), modoli, additionFunction);
     //curve = createCurveAXY(Math.floor(Math.random()*Math.pow(prime, 
     //power)), 1, 0, Math.pow(prime, power), modoli, additionFunction);
 
@@ -361,8 +334,7 @@ function highlightPoint (point, size) {
 }
 
 function pointDescription(point) {
-    let negation;
-    let subGroupPoint = point;
+    let negation, subGroupPoint = point;
     let subGroup = [];
     let orderOfSubGroup = 0;
 
@@ -667,3 +639,65 @@ function clmul32(x1, x2, mod) {         //https://www.youtube.com/watch?v=v4HKU_
 
     return result;                      //
 }
+
+
+
+function init() {
+    console.log('running')
+    let operationHeader = document.getElementById('operationHeader')
+    let label1 = document.getElementById('labelForm1')
+    let label2 = document.getElementById('labelForm2')
+    let form = document.querySelector("#operationForm > form:first-of-type")
+
+const operations = document.querySelectorAll('#pointAddition, #pointMultiplication');
+    console.log(operations)
+
+document.getElementById('pointAddition').addEventListener('click', (e) => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        Array.from(operations).forEach((buttons) => {
+            if (buttons.disabled === true) {
+                // eslint-disable-next-line no-param-reassign
+                buttons.disabled = false;
+            }
+        });
+
+    operationHeader.innerHTML = "Point addition";
+    label1.innerHTML = "Index of 1st point:"
+    label2.innerHTML = "Index of 2nd point:"
+    form.removeAttribute('scalarForm')
+    form.setAttribute('id', 'additionForm')
+
+
+
+
+        e.target.disabled = true;
+    });
+
+document.getElementById('pointMultiplication').addEventListener('click', (e) => {
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        Array.from(operations).forEach((buttons) => {
+            if (buttons.disabled === true) {
+                // eslint-disable-next-line no-param-reassign
+                buttons.disabled = false;
+            }
+        });
+
+    operationHeader.innerHTML = "Point multiplication";
+    label1.innerHTML = "Index of point:"
+    label2.innerHTML = "Scalar to multiply"
+    form.removeAttribute('additionForm')
+    form.setAttribute('id', 'scalarForm')
+    
+
+
+
+
+        e.target.disabled = true;
+    });
+}
+
+
+
