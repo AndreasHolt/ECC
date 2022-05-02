@@ -11,6 +11,8 @@ if (canvas) {
 
 let curve;
 
+let newCalculatedPoints = [];
+
 document.querySelector("#form").addEventListener("submit", (event) => {
     console.log(event);
     event.preventDefault();
@@ -126,11 +128,15 @@ function pointAdditionFinite(index1, index2) {
         }
 
         let newPoint = curve.calcPointAddition(point1, point2);
-        drawPointElement(newPoint, curve.fieldOrder, 5, "orange", true);
+        newCalculatedPoints[0] = drawPointElement(newPoint, curve.fieldOrder, 5, "orange", true);
 
         highlightPointTimeout(newPoint, 5, curve.fieldOrder);
-        drawPointElement(point1, curve.fieldOrder, 5, "red", true);
-        drawPointElement(point2, curve.fieldOrder, 5, "red", true);
+        newCalculatedPoints[1] = drawPointElement(point1, curve.fieldOrder, 5, "red", true);
+        newCalculatedPoints[2] = drawPointElement(point2, curve.fieldOrder, 5, "red", true);
+
+        console.log('calc: ', newCalculatedPoints);
+            
+
         //drawLine(0, 16, 0, 1, curve.fieldOrder);
         if (index1 !== index2) {
             //drawLineDirect(point1, point2, 16);
@@ -344,9 +350,17 @@ function pointDescription(point) {
 
 
 function drawPointElement (point, size, pointSize, color, temp = false) {
+    if(newCalculatedPoints.length !== 0) {
+        newCalculatedPoints.forEach(point => {
+            point.remove()
+
+        });
+    }
+
     let svg = document.getElementById("highlightSVG");
     var svgns = "http://www.w3.org/2000/svg";
     var circle = document.createElementNS(svgns, 'circle');
+    circle.style.pointerEvents = 'none' // TODO: Maybe remove later
     circle.setAttributeNS(null, 'cx', point.x * canvas.width / size);
     circle.setAttributeNS(null, 'cy', canvas.height - (point.y * canvas.height / size));
     circle.setAttributeNS(null, 'r', pointSize);                                                             //(canvas.height / (curve.fieldOrder * 1.2)) <= 5 ? (canvas.height / (curve.fieldOrder * 1.2)) : 5)
@@ -387,8 +401,10 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
         }
         circle.classList.add('clickedPoint')
 
+        console.log('curve.points: ', curve.points)
+
         if(clickedPoints.length === 2) {
-            for(let i = 0; i < document.querySelectorAll('circle').length; i++) {
+            for(let i = 0; i < curve.points.length; i++) {
                 if(circles[i].classList.contains('clickedPoint')){
                     console.log('Pushing: ', i)
                     indexOfClickedPoints.push(i);
@@ -454,6 +470,8 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     if(temp) {
         circle.style.pointerEvents = "none"
     }
+
+    return circle;
 }
 
 
