@@ -349,6 +349,15 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 
     
     circle.addEventListener("click", () => {
+        let clickedPoints = document.getElementsByClassName('clickedPoint')
+        for(let i = 0; i < clickedPoints.length; i++) {
+            clickedPoints[i].setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
+
+        }
+
+
+        circle.classList.add('clickedPoint')
+        circle.setAttributeNS(null, 'style', 'fill: red; stroke: red; stroke-width: 1px;' );
 
         let pointDetailArray = pointDescription(point);
 
@@ -356,7 +365,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
         let orderOfSubGroupString = `(${point.x}, ${point.y}), `;
         for(let i = 0; i < pointDetailArray.orderOfSubGroup; i++) {
             console.log(i)
-            orderOfSubGroupString += `(${pointDetailArray.subGroup[i].x}, ${pointDetailArray.subGroup[i].y}), `;
+            orderOfSubGroupString += `(${pointDetailArray.subGroup[i].x}, ${pointDetailArray.subGroup[i].y}) → `;
 
         }
 
