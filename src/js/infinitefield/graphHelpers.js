@@ -138,33 +138,55 @@ function drawLine(myGraph, operator, color, i, x, y, svg, pointOperation) {
 function addTextToPoints(myGraph, pointC, i) {
     let textNode;
     const textEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     const point1 = coordsToGraph(myGraph, pointC.x, pointC.y);
     const point2 = coordsToGraph(myGraph, pointC.x, -pointC.y);
 
     if (i === 0) {
+        circle.setAttributeNS(null, 'cy', point1.y);
+        circle.classList.add('pointMinusR');
+
         textEl.setAttribute('y', point1.y);
         textNode = document.createTextNode('-R');
         textEl.classList.add('pointMinusR');
     } else if (i === 1) {
+        circle.setAttributeNS(null, 'cy', point2.y);
+        circle.classList.add('pointR');
+
         textEl.setAttribute('y', point2.y);
         textNode = document.createTextNode('R');
         textEl.classList.add('pointR');
     } else if (i === 2) {
+        circle.setAttributeNS(null, 'cy', point2.y);
+        circle.classList.add('pointP');
+
         textEl.setAttribute('y', point2.y);
         textNode = document.createTextNode('P');
         textEl.classList.add('pointP');
     } else {
+        circle.setAttributeNS(null, 'cy', point1.y);
+        circle.classList.add('pointQ');
+
         textEl.setAttribute('y', point1.y);
         textNode = document.createTextNode('Q');
         textEl.classList.add('pointQ');
     }
 
-    textEl.setAttribute('x', point1.x);
+    circle.setAttributeNS(null, 'r', 12);
+    circle.setAttributeNS(null, 'style', 'fill: lightgray;');
+    circle.setAttributeNS(null, 'cx', point1.x);
+    circle.classList.add('textLabel');
 
-    textEl.appendChild(textNode);
+    textEl.setAttribute('x', point1.x);
+    textEl.setAttribute('fill', 'white');
+    textEl.setAttribute('dominant-baseline', 'middle');
+    textEl.setAttribute('text-anchor', 'middle');
     textEl.classList.add('textLabel');
     textEl.classList.add('text-xl');
 
+    textEl.appendChild(textNode);
+
+    document.getElementById('pointText').appendChild(circle);
     document.getElementById('pointText').appendChild(textEl);
 }
 
