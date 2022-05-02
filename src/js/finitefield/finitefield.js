@@ -11,6 +11,8 @@ if (canvas) {
 
 let curve;
 
+let newCalculatedPoints = [];
+
 document.querySelector("#form").addEventListener("submit", (event) => {
     console.log(event);
     event.preventDefault();
@@ -67,8 +69,9 @@ document.querySelector("#form").addEventListener("submit", (event) => {
             additionFunction = calcPointAdditionGF2;
             break;
     }
-    //curve = createCurveABCD(2,1,1,1, Math.pow(prime, power), modoli, additionFunction);
-    curve = createCurveAXY(Math.floor(Math.random()*Math.pow(prime, power)), 1, 0, Math.pow(prime, power), modoli, additionFunction);
+    curve = createCurveABCD(2,1,1,1, Math.pow(prime, power), modoli, additionFunction);
+    //curve = createCurveAXY(Math.floor(Math.random()*Math.pow(prime, 
+    //power)), 1, 0, Math.pow(prime, power), modoli, additionFunction);
 
 
     let optionsList = [{mode:"multiplicative"},{mode:"additive"}];
@@ -125,11 +128,15 @@ function pointAdditionFinite(index1, index2) {
         }
 
         let newPoint = curve.calcPointAddition(point1, point2);
-        drawPointElement(newPoint, curve.fieldOrder, 5, "orange", true);
+        newCalculatedPoints.push(drawPointElement(newPoint, curve.fieldOrder, 5, "orange", true));
 
         highlightPointTimeout(newPoint, 5, curve.fieldOrder);
-        drawPointElement(point1, curve.fieldOrder, 5, "red", true);
-        drawPointElement(point2, curve.fieldOrder, 5, "red", true);
+        newCalculatedPoints.push(drawPointElement(point1, curve.fieldOrder, 5, "red", true));
+        newCalculatedPoints.push(drawPointElement(point2, curve.fieldOrder, 5, "red", true));
+
+        console.log('calc: ', newCalculatedPoints);
+            
+
         //drawLine(0, 16, 0, 1, curve.fieldOrder);
         if (index1 !== index2) {
             //drawLineDirect(point1, point2, 16);
@@ -139,6 +146,11 @@ function pointAdditionFinite(index1, index2) {
         console.log("Error! find selv ud af det!");
         console.log(e);
     }
+    newCalculatedPoints.forEach(point => {
+        point.remove()
+
+    });
+
 }
 
 document.getElementById("additionForm").addEventListener("submit", (event) => {
@@ -240,7 +252,7 @@ function drawLineDirectGood (point, point3, options) {
         point3.y = Mod(curve.fieldOrder - point3.y, curve.fieldOrder);
     }
 
-    drawPointElement(point3, curve.fieldOrder, 5, "fuchsia", true);
+    newCalculatedPoints.push(drawPointElement(point3, curve.fieldOrder, 5, "fuchsia", true));
 
     while(((tempPoint.x != point3.x) || (tempPoint.y != point3.y)) && i < 100) {
         tempPoint.x += 1;
@@ -343,9 +355,17 @@ function pointDescription(point) {
 
 
 function drawPointElement (point, size, pointSize, color, temp = false) {
+    if(newCalculatedPoints.length !== 0) {
+        newCalculatedPoints.forEach(point => {
+            point.remove()
+
+        });
+    }
+
     let svg = document.getElementById("highlightSVG");
     var svgns = "http://www.w3.org/2000/svg";
     var circle = document.createElementNS(svgns, 'circle');
+    circle.style.pointerEvents = 'none' // TODO: Maybe remove later
     circle.setAttributeNS(null, 'cx', point.x * canvas.width / size);
     circle.setAttributeNS(null, 'cy', canvas.height - (point.y * canvas.height / size));
     circle.setAttributeNS(null, 'r', pointSize);                                                             //(canvas.height / (curve.fieldOrder * 1.2)) <= 5 ? (canvas.height / (curve.fieldOrder * 1.2)) : 5)
@@ -386,8 +406,10 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
         }
         circle.classList.add('clickedPoint')
 
+        console.log('curve.points: ', curve.points)
+
         if(clickedPoints.length === 2) {
-            for(let i = 0; i < document.querySelectorAll('circle').length; i++) {
+            for(let i = 0; i < curve.points.length; i++) {
                 if(circles[i].classList.contains('clickedPoint')){
                     console.log('Pushing: ', i)
                     indexOfClickedPoints.push(i);
@@ -453,6 +475,8 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     if(temp) {
         circle.style.pointerEvents = "none"
     }
+
+    return circle;
 }
 
 
