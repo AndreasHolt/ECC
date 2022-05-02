@@ -10,10 +10,12 @@
     "preview": "vite preview",
     "eslint": "eslint --ext .js ./",
     "eslintfix": "eslint --ext .js ./ --fix",
-    "test": "jest"
+    "test": "concurrently -k 'wait-on http://localhost:3000/ & cypress run' 'npm run dev'",
+    "cypress": "cypress open"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.4",
+    "concurrently": "^7.1.0",
     "cypress": "^9.5.3",
     "eslint": "^8.11.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -22,5 +24,6 @@
     "postcss": "^8.4.12",
     "tailwindcss": "^3.0.23",
     "vite": "^2.9.1"
+    "wait-on": "^6.0.1"
   }
 }
