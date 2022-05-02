@@ -45,7 +45,7 @@ class User {
         this.sendMessageButton.addEventListener("click", () => {
             let encryptedMessage = BigInt(this.encryptedTextField.value);           ///Works????
             let textOut = this.decryptedTextField;
-            let decryptedMessage = decrypt(curve, encryptedMessage, humanUser, this);
+            let decryptedMessage = this.decrypt(curve, encryptedMessage, humanUser);
             textOut.value = decryptedMessage;
         });
         /*document.getElementById("sendMessageA").addEventListener("click", () => {
@@ -96,7 +96,25 @@ class User {
         document.getElementById(`textDecrypted${this.label}temp`).replaceWith(this.decryptedTextField);
         document.getElementById(`sendMessage${this.label}temp`).replaceWith(this.sendMessageButton);
     }
-
+    encrypt (curve, message, reciever) {
+        let pointResult = [];
+        let numberResult = [];
+        for (let char of message) {
+            let encryptedPoint = encryptBlock(curve, char, this, reciever);
+            pointResult.push(encryptedPoint);
+            console.log(char);
+            numberResult.push(curve.pointToNumber(encryptedPoint));
+        }
+        return combineLettersToNumber(numberResult, base);
+    }
+    decrypt (curve, number, sender) {
+        let result = "";
+        let valuesArr = seperateLettersFromNumber(number, base);
+        for (let val of valuesArr) {
+            result += decryptBlock(curve, curve.numberToPoint(val), sender, this);
+        }
+        return result;
+    }
 }
 
 
@@ -136,7 +154,7 @@ document.getElementById("inputMessageForm").addEventListener("submit", (Event) =
     Event.preventDefault();
     for (let user of users) {
         let textOut = document.getElementById("encryptedText" + user.label);
-        let encryptedText = encrypt(curve, inputField.value, humanUser, user);
+        let encryptedText = humanUser.encrypt(curve, inputField.value, user);
         textOut.value = encryptedText;
     }
 });
@@ -155,17 +173,7 @@ document.getElementById("newKeyButton").addEventListener("click", () => {
 
 
 
-function encrypt (curve, message, sender, reciever) {
-    let pointResult = [];
-    let numberResult = [];
-    for (let char of message) {
-        let encryptedPoint = encryptBlock(curve, char, sender, reciever);
-        pointResult.push(encryptedPoint);
-        console.log(char);
-        numberResult.push(curve.pointToNumber(encryptedPoint));
-    }
-    return combineLettersToNumber(numberResult, base);
-}
+
 
 function encryptBlock (curve, char, sender, reciever) {
     let pointMessage = curve.numberToPoint(char.charCodeAt(0));
@@ -175,14 +183,6 @@ function encryptBlock (curve, char, sender, reciever) {
     return point;
 }
 
-function decrypt (curve, number, sender, reciever) {
-    let result = "";
-    let valuesArr = seperateLettersFromNumber(number, base);
-    for (let val of valuesArr) {
-        result += decryptBlock(curve, curve.numberToPoint(val), sender, reciever);
-    }
-    return result;
-}
 
 
 function decryptBlock (curve, point, sender, reciever) {
