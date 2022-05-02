@@ -12,6 +12,7 @@ if (canvas) {
 let curve;
 
 document.querySelector("#form").addEventListener("submit", (event) => {
+    console.log(event);
     event.preventDefault();
     let prime;
     let power;
