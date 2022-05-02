@@ -15,7 +15,7 @@ const heightGraph = 390;
 
 let myGraph = setGraph(scaleZoom);
 
-document.getElementById('pointSVG').addEventListener('wheel', (e) => {
+document.getElementById('pointText').addEventListener('wheel', (e) => {
     e.preventDefault(); // Prevents page scroll when zooming
     movePoint(e, myGraph); // Move point when scrolling
 
@@ -40,7 +40,7 @@ function deletePoints() {
         document.getElementsByClassName('workingPoints'),
         document.getElementsByClassName('linesConnecting'),
         document.getElementsByClassName('calculatedPoints'),
-        document.getElementsByClassName('textLabel')
+        document.getElementsByClassName('textLabel'),
     ];
 
     Array.from(allSVG).forEach((key) => {
@@ -65,7 +65,7 @@ function deletePoints() {
     removeBinaryParagraphs();
 }
 
-document.getElementById('pointSVG').addEventListener('mousemove', (e) => {
+document.getElementById('pointText').addEventListener('mousemove', (e) => {
     movePoint(e, myGraph);
 });
 
@@ -197,7 +197,7 @@ document.getElementById('pointP').addEventListener('keypress', (e) => {
     }
 });
 
-document.getElementById('layer2').addEventListener('click', (e) => {
+document.getElementById('layer3').addEventListener('click', (e) => {
     movePoint(e, myGraph); // Ensures that the point is on the graph when clicked
 
     const pointsOnGraph = document.getElementsByClassName('workingPoints');
@@ -236,7 +236,7 @@ document.getElementById('layer2').addEventListener('click', (e) => {
                 document.getElementById('scalarFormsActive').innerHTML = html;
 
                 document.getElementById('scalarForm').addEventListener('input', () => {
-                    pointMultiplication(myGraph);
+                    pointMultiplication(myGraph, true);
                 });
 
                 MathJax.typeset();
@@ -453,6 +453,6 @@ const observer = new MutationObserver((mutationList) => {
         });
     });
 });
-observer.observe(document.getElementById('layer2'), { childList: true, subtree: true });
+observer.observe(document.getElementById('layer3'), { childList: true, subtree: true });
 
 init();
