@@ -1,9 +1,11 @@
 import { aXOR, mXOR, multiplicativeXOR, additiveXOR, findInverseGF2 } from "./gf2.js";
 import {numberOfBits2, Mod} from "./Bits.js";
-import {inversePrime } from "./gfp.js";
 
 
 function createCurveAXY (a, x, y, fieldOrder, mod, additionFunction) {
+    if (fieldOrder === mod) {
+        throw("This method works only for GF2");
+    }
     let curve = createCurve(fieldOrder, mod, additionFunction);
     curve.a = a;
     curve.b = additiveXOR(multiplicativeXOR(a,x, mod), additiveXOR(additiveXOR(multiplicativeXOR(y, y, mod), y), multiplicativeXOR(x, multiplicativeXOR(x,x, mod),mod)));
@@ -103,13 +105,12 @@ function createCurve (fieldOrder, mod, additionFunction) {
             let oppositeY = Mod(this.fieldOrder-p.y, this.fieldOrder);
             return {x:p.x, y:oppositeY};
         },
-        messageToPoint: function (m) {
+        numberToPoint: function (num) {
             if (this.points.length >= 128) {
-                let mIntVal = m.charCodeAt(0);
-                if (mIntVal < 0 || mIntVal >= 128) {
+                if (num < 0 || num >= this.points.lengt) {
                     throw("message must be a single utf-8 character");
                 } else {
-                    return this.points[m.charCodeAt(0)];
+                    return this.points[num];
                 }
             } else {
                 throw("Not enough points on curve.")
@@ -122,14 +123,14 @@ function createCurve (fieldOrder, mod, additionFunction) {
             }
             return point;
         },
-        pointToMessage: function (p) {
+        pointToNumber: function (p) {
             let index = curve.points.findIndex((obj) => {
                 return (obj.x === p.x && obj.y === p.y);
             });
             if (index === -1) {
                 throw("Point not in array.");
             } else {
-                return String.fromCharCode(index);
+                return index;
             }
         }
     };
@@ -145,11 +146,22 @@ function createCurve (fieldOrder, mod, additionFunction) {
 
 
 function calcPointAdditionPrime (p1, p2) {
+    if(p1.x === Infinity) {
+        return p2;
+    }
+    if (p2.x === Infinity) {
+        return p1;
+    }
     if (p1.x === p2.x && p1.y === p2.y) {
         let alfa = Mod((3*(p1.x*p1.x) + this.a)*inversePrime(Mod(2*p1.y, this.mod), this.mod), this.mod);
         let xR = Mod((alfa*alfa - 2*p1.x), this.mod);
         let yR = Mod(this.fieldOrder - (p1.y + alfa*(xR - p1.x)), this.mod);
         let R = {x: xR, y: yR, alfa: alfa};
+        return R;
+    } else if (p1.x === p2.x) {
+        let xR = Infinity;
+        let yR = Infinity;
+        let R = {x: xR, y: yR};
         return R;
     } else {
         let alfa = Mod((p1.y - p2.y)*inversePrime(Mod(p1.x-p2.x, this.mod), this.mod), this.mod);
@@ -212,9 +224,19 @@ function createPointsGF2 () {
             }
         }
     }
+    this.points.push({x: Infinity, y: Infinity});
     console.log(this.points);
 }
 
+function inversePrime (x, mod) {        //Enhance later (Double and add /// sqaure and multiply)
+    let result = x;
+
+    for (let i = 0 ; i < mod - 3 ; ++i) {
+        result = Mod(result * x, mod);
+    }
+
+    return result;
+}
 
 function createPointsPrime () {
     for (let x = 0 ; x < this.fieldOrder ; x++) {
@@ -233,6 +255,7 @@ function createPointsPrime () {
             }
         }
     }
+    this.points.push({x: Infinity, y: Infinity});
 }
 
 export {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2 };
