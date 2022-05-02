@@ -6,7 +6,7 @@ curve.createPoints();
 curve.G = curve.points[15];//curve.points[Math.floor(Math.random()*curve.points.length)];
 console.log(`G.x: ${curve.G.x}, G.y: ${curve.G.y}.`);
 
-let base = 256;
+let base = BigInt(256);
 
 let userPrivateKeyHTML = document.getElementById("userPrivateKey");
 let users = [];
@@ -47,7 +47,7 @@ document.getElementById("newKeyButton").addEventListener("click", () => {
     userPrivateKeyHTML.textContent = users[0].privateKey;
 });
 document.getElementById("sendMessage").addEventListener("click", () => {
-    let encryptedMessage = document.getElementById("textPreview").value;
+    let encryptedMessage = BigInt(document.getElementById("textPreview").value);
     let textOut = document.getElementById("textDecrypted");
     console.log(encryptedMessage);
     let decryptedMessage = decrypt(curve, encryptedMessage, users[0], users[1]);
@@ -62,6 +62,7 @@ function encrypt (curve, message, sender, reciever) {
     for (let char of message) {
         let encryptedPoint = encryptBlock(curve, char, sender, reciever);
         pointResult.push(encryptedPoint);
+        console.log(char);
         numberResult.push(curve.pointToNumber(encryptedPoint));
     }
     return combineLettersToNumber(numberResult, base);
@@ -93,19 +94,19 @@ function decryptBlock (curve, point, sender, reciever) {
 
 
 function combineLettersToNumber (numbers, base) {
-    let sum = 0
-    for(let i = 0; i < numbers.length; i++) {
-        let value = numbers[i];
-        sum += value * Math.pow(base, i);
+    let sum = BigInt(0);
+    for(let i = BigInt(0); i < numbers.length; i++) {
+        let value = BigInt(numbers[i]);
+        sum += value * (base ** i);//Math.pow(base, i);
     }
     return sum;
 }
 
 function seperateLettersFromNumber (number, base) {
     let result = [];
-    let i = 0;
-    let val;
-    while ((val = Math.floor(number / Math.pow(base,i))) > 0) {
+    let i = BigInt(0);
+    let val = BigInt(0);
+    while ((val = number / (base ** i)) > 0) {
         result.push(Mod(val,base));
         i++;
     }
