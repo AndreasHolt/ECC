@@ -106,7 +106,7 @@ function createCurve (fieldOrder, mod, additionFunction) {
             return {x:p.x, y:oppositeY};
         },
         numberToPoint: function (num) {
-            if (this.points.length >= 128) {
+            if (this.points.length >= 256) {
                 if (num < 0 || num >= this.points.lengt) {
                     throw("message must be a single utf-8 character");
                 } else {
@@ -258,4 +258,4 @@ function createPointsPrime () {
     this.points.push({x: Infinity, y: Infinity});
 }
 
-export {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2 };
+export {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2 };
