@@ -457,7 +457,8 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 
 
         circle.setAttributeNS(null, 'style', 'fill: red; stroke: red; stroke-width: 1px;' );
-
+    });
+    circle.addEventListener("mouseover", () => {
         let pointDetailArray = pointDescription(point);
 
 
