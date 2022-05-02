@@ -144,39 +144,28 @@ function addTextToPoints(myGraph, pointC, i) {
     if (i === 0) {
         textEl.setAttribute('y', point1.y);
         textNode = document.createTextNode('-R');
+        textEl.classList.add('pointMinusR');
     } else if (i === 1) {
         textEl.setAttribute('y', point2.y);
         textNode = document.createTextNode('R');
+        textEl.classList.add('pointR');
     } else if (i === 2) {
         textEl.setAttribute('y', point2.y);
         textNode = document.createTextNode('P');
+        textEl.classList.add('pointP');
     } else {
         textEl.setAttribute('y', point1.y);
         textNode = document.createTextNode('Q');
+        textEl.classList.add('pointQ');
     }
 
     textEl.setAttribute('x', point1.x);
-
-    console.log(pointC);
-
-    // if (pointC.y > 0) {
-    //     textNode = document.createTextNode('-R');
-    // } else {
-    //     textNode = document.createTextNode('R');
-    // }
-
-    // console.log(pointC.y);
-    // if (pointC.y > 0) {
-    //     textNode = document.createTextNode('////R');
-    // } else {
-    //     textNode = document.createTextNode('////-R');
-    // }
 
     textEl.appendChild(textNode);
     textEl.classList.add('textLabel');
     textEl.classList.add('text-xl');
 
-    document.getElementById('pointSVG').appendChild(textEl);
+    document.getElementById('pointText').appendChild(textEl);
 }
 
 function addCalculatedPoint(myGraph, point, pointOperation) {
