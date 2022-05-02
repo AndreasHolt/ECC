@@ -110,11 +110,10 @@ document.querySelector("#form").addEventListener("submit", (event) => {
     curve.drawDots(sizeOfTable);
 */
 });
-document.getElementById("additionForm").addEventListener("submit", (event) => {
-    event.preventDefault();
-    try {
-        let index1 = Number(event.target["index1"].value);
-        let index2 = Number(event.target["index2"].value);
+
+function pointAdditionFinite(index1, index2) {
+
+ try {
         let point1 = curve.points[index1];
         let point2 = curve.points[index2];
         let options = {};
@@ -139,7 +138,15 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
         console.log("Error! find selv ud af det!");
         console.log(e);
     }
+}
+
+document.getElementById("additionForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    let index1 = Number(event.target["index1"].value);
+    let index2 = Number(event.target["index2"].value);
+    pointAdditionFinite(index1, index2);
 });
+
 
 /*document.getElementById("power").addEventListener("input", () => {
     if (document.getElementById("power").value > 1) {
@@ -333,6 +340,7 @@ function pointDescription(point) {
     return {negation, subGroup, orderOfSubGroup};
 }
 
+
 function drawPointElement (point, size, pointSize, color, temp = false) {
     let svg = document.getElementById("highlightSVG");
     var svgns = "http://www.w3.org/2000/svg";
@@ -349,14 +357,51 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 
     
     circle.addEventListener("click", () => {
+        ctx.clearRect(0, 0, 600, 600);
         let clickedPoints = document.getElementsByClassName('clickedPoint')
-        for(let i = 0; i < clickedPoints.length; i++) {
-            clickedPoints[i].setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
+        console.log('Clicked points: ', clickedPoints)
+        let circles = document.querySelectorAll('circle')
+
+
+        circles.forEach(circle => {
+            if(!circle.classList.contains('clickedPoint')) {
+                circle.setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
+            } else if(circle.hasAttribute('pointerEvents')) {
+                circle.remove();
+            }
+
+        });
+        
+        let indexOfClickedPoints = [];
+
+
+        if(clickedPoints.length ===  2) {
+            for(let i = clickedPoints.length - 1; i >= 0; i--) {
+                console.log(clickedPoints[i].value)
+                clickedPoints[i].setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
+                clickedPoints[i].classList.remove('clickedPoint')
+            }
+
+        }
+        circle.classList.add('clickedPoint')
+
+        if(clickedPoints.length === 2) {
+            for(let i = 0; i < document.querySelectorAll('circle').length; i++) {
+                if(circles[i].classList.contains('clickedPoint')){
+                    console.log('Pushing: ', i)
+                    indexOfClickedPoints.push(i);
+                }
+
+            }
+            
+
+            console.log('Calling point addition on indexes: ', indexOfClickedPoints)
+
+            pointAdditionFinite(indexOfClickedPoints[0], indexOfClickedPoints[1])
 
         }
 
 
-        circle.classList.add('clickedPoint')
         circle.setAttributeNS(null, 'style', 'fill: red; stroke: red; stroke-width: 1px;' );
 
         let pointDetailArray = pointDescription(point);
