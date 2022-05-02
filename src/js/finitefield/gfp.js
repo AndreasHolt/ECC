@@ -4,7 +4,7 @@ export {inversePrime };
 
 function inversePrime (x, mod) {        //Enhance later (Double and add /// sqaure and multiply)
     let result = 1;
-    let exp = mod - 4;
+    let exp = mod - 2;
     let temp = 1 << (numberOfBits2(exp) - 1);
 
     //for (let i = 0 ; i < mod - 3 ; ++i) {
