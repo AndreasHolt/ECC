@@ -95,12 +95,20 @@ function convertToBinary(scalar, arrayBool) {
     return binaryArray;
 }
 
-function pointMultiplication(myGraph) {
+function pointMultiplication(myGraph, changedScalar = false) {
     const pointEl = document.getElementsByClassName('workingPoints')[0];
     const point = graphToCoords(myGraph, getXY(pointEl));
     point.y = -point.y;
 
-    let scalar = document.getElementById('scalarForm').value;
+    if (changedScalar) {
+        const els = document.getElementsByClassName('pointR');
+
+        Array.from(els).forEach((el) => {
+            el.remove();
+        });
+    }
+
+    const scalar = document.getElementById('scalarForm').value;
     const binary = convertToBinary(scalar, 1); // the array of bits, from msb to lsb
 
     const Q = 0;
