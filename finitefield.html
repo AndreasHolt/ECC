@@ -41,15 +41,54 @@
           -->
 
 
-          <select name="curveList" id="curveList" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center">
-            <option>GF2 4</option>
-            <option>GF2 5</option>
-            <option>GF2 8</option>
+          <select name="curveList" id="curveList" onchange="curveParameters()" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center">
             <option>Prime 5</option>
             <option>Prime 17</option>
             <option>Prime 37</option>
             <option>Prime 131</option>
+            <option>GF2 4</option>
+            <option>GF2 5</option>
+            <option>GF2 8</option>
           </select>
+
+          <p class="font-bold text-xl mb-2 text-gray-800 mb-10" id="parameters">Pick curve parameters: \(y^2 = x^3
+            + ax + b\)</p>
+  
+  
+          <div class="flex flex-wrap -mx-3 mb-6 justify-center">
+              <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                  <label class="block tracking-wide text-gray-700 text-x font-bold mb-2" for="a"> Value for
+                      coefficient \(a\)</label>
+                  <input
+                      class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                      type="number" id="a" name="a" min="-5" placeholder="Ex: -4" value="-5">
+              </div>
+              <div class="w-full md:w-1/2 px-3 justify-center">
+                  <label class="block tracking-wide text-gray-700 text-x font-bold mb-2" for="b">Value for
+                      coefficient \(b\)</label>
+                  <input
+                      class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                      type="number" id="b" name="b" placeholder="Ex: 15" value="15">
+              </div>
+
+              <div id="weierstrass" style="display: none;" >
+                  <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                    <label class="block tracking-wide text-gray-700 text-x font-bold mb-2" for="c">Value for
+                        coefficient \(c\)</label>
+                    <input
+                        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                        type="number" id="c" name="c" placeholder="Ex: 15" value="0">
+                  </div>
+                  <div class="w-full md:w-1/2 px-3 justify-center">
+                    <label class="block tracking-wide text-gray-700 text-x font-bold mb-2" for="d">Value for
+                        coefficient \(d\)</label>
+                    <input
+                        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                        type="number" id="d" name="d" placeholder="Ex: 15" value="0">
+                  </div>
+              </div>
+          </div>
+
           <input type="submit" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center">
         </form>
 
@@ -123,5 +162,21 @@
 
 </div>
 <script defer type="module" src="./src/js/finitefield/finitefield.js"></script>
+<script>
+  function curveParameters() {
+    const curveList = document.getElementById("curveList");
+
+    if (curveList.value.includes("GF")) {
+      let weierstrassCurve = "Pick curve parameters: \(y^2 + cxy + dy = x^3 + ax + b\)";
+      document.getElementById("parameters").innerText = weierstrassCurve;
+      document.getElementById("weierstrass").style.display = "block";
+    } else {
+      document.getElementById("weierstrass").style.display = "none";
+
+      let generalCurve = "Pick curve parameters: \(y^2 = x^3 + ax + b\)";
+      document.getElementById("parameters").innerText = generalCurve
+    }
+}
+</script>
 </body>
 </html>
