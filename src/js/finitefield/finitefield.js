@@ -50,6 +50,12 @@ document.querySelector("#form").addEventListener("submit", (event) => {
             modoli = 131;
             additionFunction = calcPointAdditionPrime;
             break;
+        case ("Prime 257"):
+            prime = 257;
+            power = 1;
+            modoli = 257;
+            additionFunction = calcPointAdditionPrime;
+            break;
         case ("GF2 4"):
             prime = 2;
             power = 4;
@@ -69,7 +75,7 @@ document.querySelector("#form").addEventListener("submit", (event) => {
             additionFunction = calcPointAdditionGF2;
             break;
     }
-    curve = createCurveABCD(2,1,1,1, Math.pow(prime, power), modoli, additionFunction);
+    curve = createCurveABCD(118, 0, 0, 0, Math.pow(prime, power), modoli, additionFunction);
     //curve = createCurveAXY(Math.floor(Math.random()*Math.pow(prime, 
     //power)), 1, 0, Math.pow(prime, power), modoli, additionFunction);
 
