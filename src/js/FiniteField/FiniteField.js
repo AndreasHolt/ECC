@@ -310,6 +310,29 @@ function highlightPoint (point, size) {
     return circle;
 }
 
+function pointDescription(point) {
+    let negation, subGroupPoint = point;
+    let subGroup = [];
+    let orderOfSubGroup = 0;
+
+    for (let i of curve.points) {
+        if (i.x === point.x && i.y !== point.y) {
+            negation = i;
+        }
+    }
+
+    while (subGroupPoint.x !== negation.x || subGroupPoint.y !== negation.y) {
+        subGroupPoint = curve.calcPointAddition(subGroupPoint, point);
+        subGroup[orderOfSubGroup] = subGroupPoint;
+        orderOfSubGroup++;
+        
+    }
+
+    console.log(subGroup)
+
+    return {negation, subGroup, orderOfSubGroup};
+}
+
 function drawPointElement (point, size, pointSize, color, temp = false) {
     let svg = document.getElementById("highlightSVG");
     var svgns = "http://www.w3.org/2000/svg";
@@ -320,9 +343,34 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     circle.setAttributeNS(null, 'style', `fill: ${color}; stroke: ${color}; stroke-width: 1px;` );
     svg.appendChild(circle);
 
+    console.log("ab: ", curve.a,curve.b)
+
+
 
     
     circle.addEventListener("click", () => {
+        let clickedPoints = document.getElementsByClassName('clickedPoint')
+        for(let i = 0; i < clickedPoints.length; i++) {
+            clickedPoints[i].setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
+
+        }
+
+
+        circle.classList.add('clickedPoint')
+        circle.setAttributeNS(null, 'style', 'fill: red; stroke: red; stroke-width: 1px;' );
+
+        let pointDetailArray = pointDescription(point);
+
+
+        let orderOfSubGroupString = `(${point.x}, ${point.y}), `;
+        for(let i = 0; i < pointDetailArray.orderOfSubGroup; i++) {
+            console.log(i)
+            orderOfSubGroupString += `(${pointDetailArray.subGroup[i].x}, ${pointDetailArray.subGroup[i].y}) → `;
+
+        }
+
+        orderOfSubGroupString += `∞`;
+
         let output = document.getElementById("pointInfo");
         let index;
         curve.points.forEach((elem, i) => {
@@ -330,8 +378,25 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
                 index = i;
             }
         });
-        let string = `Point x: ${point.x}, Point y: ${point.y}, Point index: ${index}`;
-        output.textContent = string;
+
+
+        let pointDetails = [`<span class="detailKey">Index:</span> ${index}`, `<span class="detailKey">Point:</span> (${point.x}, ${point.y})`, `<span class="detailKey">Inverse:</span> (${pointDetailArray.negation.x}, ${pointDetailArray.negation.y})`, `<span class="detailKey">Subgroup: </span> ${pointDetailArray.orderOfSubGroup + 2}`,`<span class="detailKey">Generated sub group: </span> ${orderOfSubGroupString}`];
+
+        output.innerHTML = "";
+
+        for(let i = 0; i < pointDetails.length; i++) {
+            let p = document.createElement("p");
+            output.appendChild(p);
+            p.setAttribute("class", "pointDetails");
+
+            p.innerHTML += pointDetails[i];
+
+            let detailKey = document.getElementsByClassName("detailKey");
+            detailKey[i].classList.add("tracking-wide", "text-gray-700", "text-x", "font-bold", "mb-2")
+
+
+        }
+
         //svg.appendChild(pointText(point, temp));
     });
     
