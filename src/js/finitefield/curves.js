@@ -258,4 +258,4 @@ function createPointsPrime () {
     this.points.push({x: Infinity, y: Infinity});
 }
 
-export {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2 };
+export {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2 };
