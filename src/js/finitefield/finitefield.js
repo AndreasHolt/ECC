@@ -67,8 +67,9 @@ document.querySelector("#form").addEventListener("submit", (event) => {
             additionFunction = calcPointAdditionGF2;
             break;
     }
-    //curve = createCurveABCD(2,1,1,1, Math.pow(prime, power), modoli, additionFunction);
-    curve = createCurveAXY(Math.floor(Math.random()*Math.pow(prime, power)), 1, 0, Math.pow(prime, power), modoli, additionFunction);
+    curve = createCurveABCD(2,1,1,1, Math.pow(prime, power), modoli, additionFunction);
+    //curve = createCurveAXY(Math.floor(Math.random()*Math.pow(prime, 
+    //power)), 1, 0, Math.pow(prime, power), modoli, additionFunction);
 
 
     let optionsList = [{mode:"multiplicative"},{mode:"additive"}];
