@@ -1,9 +1,9 @@
 import { createCurveAXY, createCurveABCD, calcPointAdditionPrime, calcPointAdditionGF2 } from "../finitefield/curves.js";
 import { Mod } from "../finitefield/bits.js";
 
-let curve = createCurveABCD(118, 0, 0, 0, 131, 131, calcPointAdditionPrime); //140 points
+let curve = createCurveABCD(118, 0, 0, 0, 257, 257, calcPointAdditionPrime); //256 points??
 curve.createPoints();
-curve.G = curve.points[91];//curve.points[Math.floor(Math.random()*curve.points.length)];
+curve.G = curve.points[143];//curve.points[Math.floor(Math.random()*curve.points.length)];
 console.log(`G.x: ${curve.G.x}, G.y: ${curve.G.y}.`);
 
 let base = BigInt(256);
@@ -57,6 +57,7 @@ class User {
         });*/
 
         this.privateKey = Math.floor(Math.random() * 100);
+        console.log(this.label + " has private key: " + this.privateKey);
         this.publicKey = curve.calcPointMultiplication(this.privateKey, curve.G);
     }
     insertMessageRecieveHTML () {
@@ -140,9 +141,9 @@ document.getElementById("inputMessageForm").addEventListener("submit", (Event) =
     }
 });
 document.getElementById("newKeyButton").addEventListener("click", () => {
-    users[0].privateKey = 25;//Math.floor(Math.random() * 100);
-    users[0].publicKey = curve.calcPointMultiplication(users[0].privateKey, curve.G);
-    userPrivateKeyHTML.textContent = users[0].privateKey;
+    humanUser.privateKey = Math.floor(Math.random() * 100);
+    humanUser.publicKey = curve.calcPointMultiplication(humanUser.privateKey, curve.G);
+    userPrivateKeyHTML.textContent = humanUser.privateKey;
 });
 /*document.getElementById("sendMessageA").addEventListener("click", () => {
     let encryptedMessage = BigInt(document.getElementById("textPreviewA").value);
