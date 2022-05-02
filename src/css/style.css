@@ -2,6 +2,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#elgamalOuterDiv {
+	height: 900px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
 #myCanvas {
     padding-left: 0;
     padding-right: 0;
@@ -22,18 +28,28 @@
     display: grid;
 }
 
-.layer1, .layer2 {
+.layer1, .layer2, .layer3 {
     grid-column: 1;
     grid-row: 1;
 }
 
+.layer3 {
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+	cursor: default;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
+	-webkit-appearance: none;
+	margin: 0;
+	}
 
 /* Firefox */
 input[type=number] {
-  -moz-appearance: textfield;
+  	-moz-appearance: textfield;
 }
