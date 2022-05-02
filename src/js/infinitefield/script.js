@@ -440,7 +440,7 @@ function checkPoints(child) {
     point = graphToCoords(myGraph, point);
 
     if (point.y > zoom) {
-        redrawGraph(1 / (point.y / zoom));
+        redrawGraph(1 / ((point.y * 1.10) / zoom));
     }
 }
 
@@ -453,6 +453,8 @@ const observer = new MutationObserver((mutationList) => {
         });
     });
 });
-observer.observe(document.getElementById('layer3'), { childList: true, subtree: true });
+observer.observe(document.getElementById('layer2'), { 
+    childList: true, subtree: true
+});
 
 init();
