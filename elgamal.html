@@ -37,13 +37,20 @@
             class="basis-1/4 grid place-content-center">
                 <div class="">
                     <p class="font-bold text-xl mb-2 text-gray-800">Your private key is: <span id="userPrivateKey">1234</span></p>
-                    <button class="border-2 border-slate-700 rounded-md w-20" id="newKeyButton">New key</button>
+                    <!-- <button class="border-2 border-slate-700 rounded-md w-20" id="newKeyButton">New key</button> -->
+                    <button class="bg-white hover:bg-gray-100 
+                    disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 
+                    border border-gray-400 rounded shadow inline-flex items-center 
+                    mb-10" id="newKeyButton">New key</button>
                 </div>
                 <div class="mt-20">
                     <form id="inputMessageForm">
                         <label for="messageInput">Input message: </label>
-                        <input class="border border-slate-400" type="text" placeholder="Message text" id="messageInput"><br>
-                        <input class="border-2 border-black rounded-md w-20" type="submit" value="Encrypt">
+                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" placeholder="Message text" id="messageInput"><br>
+                        <input class="bg-white hover:bg-gray-100 
+                        disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 
+                        border border-gray-400 rounded shadow inline-flex items-center 
+                        mb-10" type="submit" value="Encrypt">
                     </form>
                 </div>
             </div>
