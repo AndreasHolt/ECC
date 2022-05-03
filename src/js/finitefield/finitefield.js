@@ -367,16 +367,24 @@ function highlightPoint (point, size) {
 }
 
 function pointDescription(point) {
-    let negation = point // If unable to find negation use ifself
-    let subGroupPoint = point;
+    let negation = {x: point.x, y: point.y}; // If unable to find negation use ifself
+    let subGroupPoint = {x: point.x, y: point.y}; //virker ikke
     let subGroup = [];
     let orderOfSubGroup = 0;
+    if (point.x === Infinity) {
+        return {negation, subGroup, orderOfSubGroup: orderOfSubGroup - 2};
+    }
 
-    for (let i of curve.points) {
-        if (i.x === point.x && i.y !== point.y) {
-            negation = i;
+    if (curve.mod === curve.fieldOrder) {
+        negation.y = (curve.fieldOrder - point.y) % curve.fieldOrder;
+    } else {
+        for (let i of curve.points) {
+            if (i.x === point.x && i.y !== point.y) {
+                negation = i;
+            }
         }
     }
+    
 
     while (subGroupPoint.x !== negation.x || subGroupPoint.y !== negation.y) {
         subGroupPoint = curve.calcPointAddition(subGroupPoint, point);
