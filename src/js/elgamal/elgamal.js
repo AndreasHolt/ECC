@@ -99,10 +99,22 @@ class User {
     encrypt (curve, message, reciever) {
         let pointResult = [];
         let numberResult = [];
-        for (let char of message) {
-            let encryptedPoint = encryptBlock(curve, char, this, reciever);
+        let numPoints = BigInt(curve.points.length);
+        let blockSize = estLog2BigIntFloor(numPoints)/estLog2BigIntFloor(base);    //log__base(points)
+        if (blockSize < 1) {
+            throw("Not enough points on curve");
+        }
+        let blocks = BigInt(message.length) / blockSize;
+        if (blockSize * blocks !== BigInt(message.length)) {
+            blocks = blocks + 1;
+        }
+        for (let i = 0; i < blocks; i++) {
+            let block = message.substring(BigInt(i)*blockSize, Math.min(Number((BigInt(i)+1n)*blockSize), message.length-1));
+            let charValuesArr;
+            block.array.forEach((element) => {charValuesArr.push(element.charCodeAt(0))});
+            let blockValue = combineLettersToNumber(charValuesArr,base);
+            let encryptedPoint = encryptBlock(curve, blockValue, this, reciever);
             pointResult.push(encryptedPoint);
-            // console.log(char);
             numberResult.push(curve.pointToNumber(encryptedPoint));
         }
         return combineLettersToNumber(numberResult, base);
@@ -175,8 +187,8 @@ document.getElementById("newKeyButton").addEventListener("click", () => {
 
 
 
-function encryptBlock (curve, char, sender, reciever) {
-    let pointMessage = curve.numberToPoint(char.charCodeAt(0));
+function encryptBlock (curve, number, sender, reciever) {
+    let pointMessage = curve.numberToPoint(number);
     let akG = curve.calcPointMultiplication(sender.privateKey, reciever.publicKey);
     let point = curve.calcPointAddition(pointMessage, akG);
 
@@ -210,6 +222,20 @@ function seperateLettersFromNumber (number, base) {
         i++;
     }
     return result;
+}
+
+function estLog2BigIntCeil(bigInt) {
+    let bits = BigInt(bigInt.toString(2).length);
+    if (2 ** bits === bigInt) {
+        return bits;
+    } else {
+        return bits + 1;
+    }
+    return 
+}
+
+function estLog2BigIntFloor(bigInt) {
+    return BigInt(bigInt.toString(2).length);
 }
 
 
