@@ -341,7 +341,8 @@ function highlightPoint (point, size) {
 }
 
 function pointDescription(point) {
-    let negation, subGroupPoint = point;
+    let negation = point // If unable to find negation use ifself
+    let subGroupPoint = point;
     let subGroup = [];
     let orderOfSubGroup = 0;
 
