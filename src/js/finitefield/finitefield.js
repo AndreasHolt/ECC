@@ -83,11 +83,7 @@ document.querySelector("#form").addEventListener("submit", (event) => {
     //power)), 1, 0, Math.pow(prime, power), modoli, additionFunction);
 
 
-    let optionsList = [{mode:"multiplicative"},{mode:"additive"}];
-    for (let options of optionsList) {
-        let arrayValues = createTable(curve.fieldOrder, curve.mod, options);
-        createTableHTML(arrayValues, curve.fieldOrder, options.mode);
-    }
+    
 
 
     //console.log("Subgroup for G: " + curve.calcSubGroup(curve.G));
@@ -178,7 +174,7 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
     }
 });*/
 
-document.getElementById("Scalar").addEventListener("input", (event) => {
+/*document.getElementById("Scalar").addEventListener("input", (event) => {
     let index = Number(document.getElementById("index").value);
     let point = curve.points[index];
     let scale = Number(event.target.value);
@@ -187,6 +183,15 @@ document.getElementById("Scalar").addEventListener("input", (event) => {
         let scaledPoint = curve.calcPointMultiplication(scale, point);
         highlightPointTimeout(scaledPoint, 1000, curve.fieldOrder);
 
+    }
+});*/
+let createTableButton = document.getElementById("createTablesButton");
+createTableButton.addEventListener("click", () => {
+    console.log("Hello");
+    let optionsList = [{mode:"multiplicative"},{mode:"additive"}];
+    for (let options of optionsList) {
+        let arrayValues = createTable(curve.fieldOrder, curve.mod, options);
+        createTableHTML(arrayValues, curve.fieldOrder, options.mode);
     }
 });
 
