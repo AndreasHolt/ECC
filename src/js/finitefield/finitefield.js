@@ -1,6 +1,6 @@
 import { multiplicativeXOR, additiveXOR, findInverseGF2, aXOR, mXOR } from "./gf2.js";
 import {numberOfBits2, Mod} from "./bits.js";
-import {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2} from "./curves.js";
+import {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
 
 const canvas = document.getElementById("curveGraph");
 let ctx;
@@ -23,9 +23,16 @@ document.querySelector("#form").addEventListener("submit", (event) => {
     let modoli;
     let additionFunction;
     let createPointsFunction;
+    let discriminant;
+
     document.querySelectorAll("circle").forEach( (el) => {
         el.remove();
     });
+
+    let a = event.target["a"].value;
+    let b = event.target["b"].value;
+    let c = 0;
+    let d = 0;
 
     switch (event.target["curveList"].value) {
         case ("Prime 5"):
@@ -77,10 +84,24 @@ document.querySelector("#form").addEventListener("submit", (event) => {
             additionFunction = calcPointAdditionGF2;
             break;
     }
-    curve = createCurveABCD(2,1,1,1, Math.pow(prime, power), modoli, additionFunction);
-    //curve = createCurveAXY(Math.floor(Math.random()*Math.pow(prime, 
-    //power)), 1, 0, Math.pow(prime, power), modoli, additionFunction);
+    
+    if (event.target["curveList"].value.includes("GF")) {
+        c = event.target["c"].value;
+        d = event.target["d"].value;
+        discriminant = calcDiscriminantGF2(a, b, c, d, modoli);
+    } else {
+        discriminant = calcDiscriminant(a, b, c, d);
+    }
+    
+    try {
+        if (!discriminant) {
+            throw "Discriminant is 0, please choose another curve";
+        } 
+    } catch (error) {
+        alert(error);
+    }
 
+    curve = createCurveABCD(a, b, c, d, Math.pow(prime, power), modoli, additionFunction);
 
     
 
