@@ -318,8 +318,13 @@ function highlightPointTimeout (point, time, size) {
     var circle = document.createElementNS(svgns, 'circle');
     let x = point.x * canvas.width / size;
     let y = canvas.height - (point.y * canvas.height / size);
-    circle.setAttributeNS(null, 'cx', x);
-    circle.setAttributeNS(null, 'cy', y);
+    if (point.x === Infinity) {
+        circle.setAttributeNS(null, 'cx', canvas.width);
+        circle.setAttributeNS(null, 'cy', 0);
+    } else {
+        circle.setAttributeNS(null, 'cx', x);
+        circle.setAttributeNS(null, 'cy', y);
+    }
     circle.setAttributeNS(null, 'r', 10);
     circle.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 1px;' );
     circle.style.zIndex = '50000';
@@ -375,8 +380,14 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     var svgns = "http://www.w3.org/2000/svg";
     var circle = document.createElementNS(svgns, 'circle');
     circle.style.pointerEvents = 'none' // TODO: Maybe remove later
-    circle.setAttributeNS(null, 'cx', point.x * canvas.width / size);
-    circle.setAttributeNS(null, 'cy', canvas.height - (point.y * canvas.height / size));
+    if (point.x === Infinity) {
+        circle.setAttributeNS(null, 'cx', canvas.width);
+        circle.setAttributeNS(null, 'cy', 0);
+    } else {
+        circle.setAttributeNS(null, 'cx', point.x * canvas.width / size);
+        circle.setAttributeNS(null, 'cy', canvas.height - (point.y * canvas.height / size));
+    }
+    
     circle.setAttributeNS(null, 'r', pointSize);                                                             //(canvas.height / (curve.fieldOrder * 1.2)) <= 5 ? (canvas.height / (curve.fieldOrder * 1.2)) : 5)
     circle.setAttributeNS(null, 'style', `fill: ${color}; stroke: ${color}; stroke-width: 1px;` );
     svg.appendChild(circle);
