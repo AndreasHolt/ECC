@@ -453,12 +453,15 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 
         let output = document.getElementById("pointInfo");
         let index;
-        curve.points.forEach((elem, i) => {
+        curve.points.every((elem, i) => {
             if (elem.x === point.x && elem.y === point.y){
                 index = i;
+                return false;
             }
-        });
 
+            console.log("hey");
+            return true;
+        });
 
         let pointDetails = [`<span class="detailKey">Index:</span> ${index}`, `<span class="detailKey">Point:</span> (${point.x}, ${point.y})`, `<span class="detailKey">Inverse:</span> (${pointDetailArray.negation.x}, ${pointDetailArray.negation.y})`, `<span class="detailKey">Subgroup: </span> ${pointDetailArray.orderOfSubGroup + 2}`,`<span class="detailKey">Generated sub group: </span> ${orderOfSubGroupString}`];
 
