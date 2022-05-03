@@ -147,14 +147,24 @@
 
 
     <div class="ml-20" style="position: relative;">
-      <canvas id="curveGraph" width="600" height="600" style="border:3px 
+      <canvas id="curveGraph" width="600" height="600" style="border:0px 
                   solid rgb(155,163,175);"></canvas>
       <svg id="highlightSVG" style="position: absolute;
                                     left: 0px;
                                     top:0px;
                                     z-index: 2;
                                     width: 600px;
-                                    height: 600px;">
+                                    height: 600px;
+									overflow: visible;">
+			<!-- <line x1="0%" y1="50%" x2="100%" y2="50%" stroke="rgb(227, 231, 238)" /> -->
+			<!-- <rect width="100%" height="100%" style="fill: none;
+													stroke-width:3;
+													stroke:rgb(155,163,175)"/> -->
+			<line x1="0%" y1="0%" x2="0%" y2="100%" class="stroke-gray-400" />
+			<line x1="0%" y1="100%" x2="100%" y2="100%" class="stroke-gray-400" />
+			<text x="-5%" y="50%" class="font-bold text-gray-700">y</text>
+			<text x="50%" y="105%" class="font-bold text-gray-700">x</text>
+			<!-- <text x="-5%" y="105%" class="font- text-gray-700">(0, 0)</text> -->
       </svg>
     </div>
   </div>
@@ -224,8 +234,7 @@
     } else {
       document.getElementById("weierstrass").style.display = "none";
 
-      let generalCurve = "Pick curve parameters: \(y^2 = x^3 + ax + 
-              b\)";
+      let generalCurve = "Pick curve parameters: \(y^2 = x^3 + ax + b\)";
       document.getElementById("parameters").innerText = generalCurve
     }
 }
