@@ -26,7 +26,7 @@
   </li>
 </ul>
 
-<div class="flex flex-row mt-10 px-10 py-10">
+<div class="flex flex-row mt-10 px-10 pt-10">
     <div id="inputColumn" class="w-64 basis-1/4">
       <div id="inputDiv">
         <p class="font-bold text-xl mb-2 text-gray-800 mb-2">1. Choose 
@@ -94,8 +94,14 @@
               </div>
           </div>
 
-          <input type="submit" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center">
+          <input type="submit" class="bg-white hover:bg-gray-100 
+          disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 
+          border border-gray-400 rounded shadow inline-flex items-center 
+          mb-10">
         </form>
+        
+
+        <hr>
 
 
 
@@ -188,8 +194,9 @@
 
 
 </div>
-<div class="flex flex-row mt-10 px-10 py-10">
-  <div id="pointInfo" class="">
+<div class="flex flex-row place-items-center justify-center mt-2 px-80 
+            py-2 text-justify">
+  <div id="pointInfo" class="text-left">
     <p id="pointInfoX"></p>
     <p id="pointInfoY"></p>
     <p id="pointInfoIndex"></p>
@@ -198,6 +205,11 @@
 
 
 <div id="outputTableColumn" class="flex flex-row mt-10 px-10 py-10">
+  <button
+    id="createTablesButton"
+    class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center">
+    Create tables
+  </button>
 
 </div>
 <script defer type="module" src="./src/js/finitefield/finitefield.js"></script>
@@ -212,7 +224,8 @@
     } else {
       document.getElementById("weierstrass").style.display = "none";
 
-      let generalCurve = "Pick curve parameters: \(y^2 = x^3 + ax + b\)";
+      let generalCurve = "Pick curve parameters: \(y^2 = x^3 + ax + 
+              b\)";
       document.getElementById("parameters").innerText = generalCurve
     }
 }
