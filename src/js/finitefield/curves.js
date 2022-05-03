@@ -42,13 +42,10 @@ function calcDiscriminant (a,b,c,d) {
     let b6 = d*d+4*b;
     let b8 = c*c*b-c*d*a-a*a;
     let D = -(b2*b2*b8)-8*b4*b4*b4-27*b6*b6+9*b2*b4*b6;
-    console.log("Discriminant: " + D);
     return D;
 }
 function calcDiscriminantGF2 (a,b,c,d, mod) {
-    console.log(additiveXOR(multiplicativeXOR(c, c, mod), multiplicativeXOR(4, a, mod)));
     let b2 = aXOR(mXOR(mod, c, c), mXOR(mod, 4, a));
-    console.log(b2);
     //additiveXOR(multiplicativeXOR(2,a, mod), multiplicativeXOR(c,d,mod));
     let b4 = aXOR(mXOR(mod, 2, a), mXOR(mod, c, d));
     //additiveXOR(multiplicativeXOR(d,d,mod), multiplicativeXOR(4,b,mod));
@@ -63,7 +60,6 @@ function calcDiscriminantGF2 (a,b,c,d, mod) {
     );*/
     //-(b2*b2*b8)-8*b4*b4*b4-27*b6*b6+9*b2*b4*b6; 
     let D = aXOR(mXOR(mod, b2, b2, b8), mXOR(mod, 8, b4, b4, b4), mXOR(mod, 27, b6, b6), mXOR(mod, 9, b2, b4, b6));
-    console.log("Discriminant: " + D);
     return D;
 }
 
@@ -216,7 +212,7 @@ function createPointsGF2 () {
             {
                 this.points.push({x: x, y: y});
                 if (additiveXOR(x, y) === this.b) {
-                    console.log(`x: ${x}, y: ${y}, is xor = ${this.b}.`);
+                    // console.log(`x: ${x}, y: ${y}, is xor = ${this.b}.`);
                 }
                 if (additiveXOR(leftSide, rightSide) === 0) {
                     //console.log(`x: ${x}, y: ${y}, left: ${leftSide} + right: (${rightSide}) = 0.`);
@@ -225,7 +221,6 @@ function createPointsGF2 () {
         }
     }
     this.points.push({x: Infinity, y: Infinity});
-    console.log(this.points);
 }
 
 function inversePrime (x, mod) {        //Enhance later (Double and add /// sqaure and multiply)

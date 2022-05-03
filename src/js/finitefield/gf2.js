@@ -41,7 +41,7 @@ function findInverseGF2 (x1, modoli) {
     
 
     //Magic
-    console.log("Inverse: " + inverse);
+    // console.log("Inverse: " + inverse);
     //ExtEuclidAlgXOR(modoli, x1, modoli);
 
     return inverse;

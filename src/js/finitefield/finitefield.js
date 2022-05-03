@@ -17,7 +17,6 @@ let newCalculatedPoints = [];
 init();
 
 document.querySelector("#form").addEventListener("submit", (event) => {
-    console.log(event);
     event.preventDefault();
     let prime;
     let power;
@@ -87,7 +86,6 @@ document.querySelector("#form").addEventListener("submit", (event) => {
 
 
     //console.log("Subgroup for G: " + curve.calcSubGroup(curve.G));
-    console.log("a: " + curve.a);
     curve.createPoints();
     drawPoints(curve.points, curve.fieldOrder);
     /*
@@ -139,9 +137,6 @@ function pointAdditionFinite(index1, index2) {
         newCalculatedPoints.push(drawPointElement(point1, curve.fieldOrder, 5, "red", true));
         newCalculatedPoints.push(drawPointElement(point2, curve.fieldOrder, 5, "red", true));
 
-        console.log('calc: ', newCalculatedPoints);
-            
-
         //drawLine(0, 16, 0, 1, curve.fieldOrder);
         if (index1 !== index2) {
             //drawLineDirect(point1, point2, 16);
@@ -187,7 +182,6 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
 });*/
 let createTableButton = document.getElementById("createTablesButton");
 createTableButton.addEventListener("click", () => {
-    console.log("Hello");
     let optionsList = [{mode:"multiplicative"},{mode:"additive"}];
     for (let options of optionsList) {
         let arrayValues = createTable(curve.fieldOrder, curve.mod, options);
@@ -364,8 +358,6 @@ function pointDescription(point) {
         
     }
 
-    console.log(subGroup)
-
     return {negation, subGroup, orderOfSubGroup};
 }
 
@@ -388,15 +380,9 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     circle.setAttributeNS(null, 'style', `fill: ${color}; stroke: ${color}; stroke-width: 1px;` );
     svg.appendChild(circle);
 
-    console.log("ab: ", curve.a,curve.b)
-
-
-
-    
     circle.addEventListener("click", () => {
         ctx.clearRect(0, 0, 600, 600);
         let clickedPoints = document.getElementsByClassName('clickedPoint')
-        console.log('Clicked points: ', clickedPoints)
         let circles = document.querySelectorAll('circle')
 
 
@@ -414,7 +400,6 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 
         if(clickedPoints.length ===  2) {
             for(let i = clickedPoints.length - 1; i >= 0; i--) {
-                console.log(clickedPoints[i].value)
                 clickedPoints[i].setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
                 clickedPoints[i].classList.remove('clickedPoint')
             }
@@ -422,20 +407,14 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
         }
         circle.classList.add('clickedPoint')
 
-        console.log('curve.points: ', curve.points)
-
         if(clickedPoints.length === 2) {
             for(let i = 0; i < curve.points.length; i++) {
                 if(circles[i].classList.contains('clickedPoint')){
-                    console.log('Pushing: ', i)
                     indexOfClickedPoints.push(i);
                 }
 
             }
             
-
-            console.log('Calling point addition on indexes: ', indexOfClickedPoints)
-
             pointAdditionFinite(indexOfClickedPoints[0], indexOfClickedPoints[1])
 
         }
@@ -449,9 +428,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 
         let orderOfSubGroupString = `(${point.x}, ${point.y}), `;
         for(let i = 0; i < pointDetailArray.orderOfSubGroup; i++) {
-            console.log(i)
             orderOfSubGroupString += `(${pointDetailArray.subGroup[i].x}, ${pointDetailArray.subGroup[i].y}) → `;
-
         }
 
         orderOfSubGroupString += `∞`;
@@ -464,7 +441,6 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
                 return false;
             }
 
-            console.log("hey");
             return true;
         });
 
@@ -660,14 +636,12 @@ function clmul32(x1, x2, mod) {         //https://www.youtube.com/watch?v=v4HKU_
 
 
 function init() {
-    console.log('running')
     let operationHeader = document.getElementById('operationHeader')
     let label1 = document.getElementById('labelForm1')
     let label2 = document.getElementById('labelForm2')
     let form = document.querySelector("#operationForm > form:first-of-type")
 
 const operations = document.querySelectorAll('#pointAddition, #pointMultiplication');
-    console.log(operations)
 
 document.getElementById('pointAddition').addEventListener('click', (e) => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);

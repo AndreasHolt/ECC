@@ -4,7 +4,7 @@ import { Mod } from "../finitefield/bits.js";
 let curve = createCurveABCD(118, 0, 0, 0, 257, 257, calcPointAdditionPrime); //256 points??
 curve.createPoints();
 curve.G = curve.points[143];//curve.points[Math.floor(Math.random()*curve.points.length)];
-console.log(`G.x: ${curve.G.x}, G.y: ${curve.G.y}.`);
+// console.log(`G.x: ${curve.G.x}, G.y: ${curve.G.y}.`);
 
 let base = BigInt(256);
 
@@ -57,7 +57,7 @@ class User {
         });*/
 
         this.privateKey = Math.floor(Math.random() * 100);
-        console.log(this.label + " has private key: " + this.privateKey);
+        // console.log(this.label + " has private key: " + this.privateKey);
         this.publicKey = curve.calcPointMultiplication(this.privateKey, curve.G);
     }
     insertMessageRecieveHTML () {
@@ -102,7 +102,7 @@ class User {
         for (let char of message) {
             let encryptedPoint = encryptBlock(curve, char, this, reciever);
             pointResult.push(encryptedPoint);
-            console.log(char);
+            // console.log(char);
             numberResult.push(curve.pointToNumber(encryptedPoint));
         }
         return combineLettersToNumber(numberResult, base);
