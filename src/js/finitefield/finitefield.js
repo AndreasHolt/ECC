@@ -301,9 +301,11 @@ function drawLineDirectGood (point, point3, options) {
 }
 
 function drawPoints (arrayPoints, fieldOrder) {
+    let pointSize = canvas.width / (fieldOrder * 1.25) < 5 ? canvas.width / (fieldOrder * 1.25) : 5;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let point of arrayPoints) {
-        drawPointElement(point, fieldOrder, 5, "rgb(59,129,246)");
+        drawPointElement(point, fieldOrder, pointSize, "rgb(59,129,246)");
     }
 }
 
