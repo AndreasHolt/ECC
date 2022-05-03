@@ -53,6 +53,12 @@ document.querySelector("#form").addEventListener("submit", (event) => {
             modoli = 131;
             additionFunction = calcPointAdditionPrime;
             break;
+        case ("Prime 257"):
+            prime = 257;
+            power = 1;
+            modoli = 257;
+            additionFunction = calcPointAdditionPrime;
+            break;
         case ("GF2 4"):
             prime = 2;
             power = 4;
