@@ -47,6 +47,7 @@ class User {
             let textOut = this.decryptedTextField;
             let decryptedMessage = this.decrypt(curve, encryptedMessage, humanUser);
             textOut.value = decryptedMessage;
+            encryptionVisualization(this.label);
         });
         /*document.getElementById("sendMessageA").addEventListener("click", () => {
             let encryptedMessage = BigInt(document.getElementById("textPreviewA").value);
@@ -65,16 +66,20 @@ class User {
         outerDiv.classList.add("basis-1/3");
         outerDiv.innerHTML = `
             <p class="font-bold text-xl mb-2 text-blue-400">From you to person ${this.label}</p>
+            <p id="titleBox${this.label}"></p>
             <div class="grid grid-cols-3 grid-rows-5 gap-1 border-4 border-black rounded-md">
                 <div class="col-span-3 row-span-4 flex flex-row p-0.5 space-x-1">
                     <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
-                        <h1 class="font-bold text-xl mb-2 text-gray-800">Encryption</h1>
+                        <h1 id="encryption${this.label}"
+                        class="font-bold text-xl mb-2 text-gray-800">Encryption</h1>
                     </div>
                     <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
-                        <h1 class="font-bold text-xl mb-2 text-gray-800">Public communication</h1>
+                        <h1 id="publicCommunication${this.label}"
+                        class="font-bold text-xl mb-2 text-gray-800">Public communication</h1>
                     </div>
                     <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
-                        <h1 class="font-bold text-xl mb-2 text-gray-800">Decryption</h1>
+                        <h1 id="decryption${this.label}"
+                        class="font-bold text-xl mb-2 text-gray-800">Decryption</h1>
                     </div>
                 </div>
                 <div class="col-span-2 px-0.5 py-1">
@@ -143,6 +148,11 @@ users[2] = {
 users[2].publicKey = curve.calcPointMultiplication(users[2].privateKey, curve.G);
 
 */
+for (const user of users) {
+    document.getElementById(`privatekey-${user.label}`).textContent += user.privateKey;
+    console.log(user.publicKey);
+    document.getElementById(`publickey-${user.label}`).textContent += user.publicKey.x; //TODO use correct public key
+}
 
 let inputField = document.getElementById("messageInput");
 /*inputField.addEventListener("input", (event) => {
@@ -213,3 +223,35 @@ function seperateLettersFromNumber (number, base) {
 }
 
 
+function encryptionVisualization(label) {
+    let visualization = `lmao` // create visualization step 1 here
+    document.getElementById(`encryption${label}`).textContent = visualization;
+
+    let next = document.createElement("INPUT");
+    next.setAttribute("type", "button");
+    next.setAttribute("value", "Next");
+    next.setAttribute("id", "nextButton1");
+    next.setAttribute("class", "border-2 md-rounded border-slate-700 px-1 py-0.5")
+    document.getElementById(`titleBox${label}`).appendChild(next);
+
+    next.addEventListener("click", publicCommunicationVisualization(label));
+}
+
+function publicCommunicationVisualization(label) {
+    let visualization = `pranked` // create visualization step 1 here
+    document.getElementById(`publicCommunication${label}`).textContent += visualization;
+
+    let next = document.createElement("INPUT");
+    next.setAttribute("type", "button");
+    next.setAttribute("value", "Next");
+    next.setAttribute("id", "nextButton1");
+    next.setAttribute("class", "border-2 md-rounded border-slate-700 px-1 py-0.5")
+    document.getElementById(`titleBox${label}`).appendChild(next);
+
+    let back = document.createElement("INPUT");
+    back.setAttribute("type", "button");
+    back.setAttribute("value", "Back");
+    back.setAttribute("id", "nextButton1");
+    back.setAttribute("class", "border-2 md-rounded border-slate-700 px-1 py-0.5")
+    document.getElementById(`titleBox${label}`).appendChild(back);
+}
