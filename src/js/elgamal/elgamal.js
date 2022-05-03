@@ -62,12 +62,8 @@ class User {
         outerDiv.classList.add("basis-1/3");
         outerDiv.innerHTML = `
             <p class="font-bold text-xl mb-2 text-blue-400">From you to person ${this.label}</p>
-<<<<<<< HEAD
             <p id="titleBox${this.label}"></p>
-            <div class="grid grid-cols-3 grid-rows-5 gap-1 border-4 border-black rounded-md">
-=======
             <div class="grid grid-cols-3 grid-rows-5 gap-1 border-2 border-black rounded-md">
->>>>>>> c8fa91d5453f8a06dfdb1d3fd845b9eea357466a
                 <div class="col-span-3 row-span-4 flex flex-row p-0.5 space-x-1">
                     <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
                         <h1 id="encryption${this.label}"
