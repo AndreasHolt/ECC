@@ -341,7 +341,8 @@ function highlightPoint (point, size) {
 }
 
 function pointDescription(point) {
-    let negation, subGroupPoint = point;
+    let negation = point // If unable to find negation use ifself
+    let subGroupPoint = point;
     let subGroup = [];
     let orderOfSubGroup = 0;
 
@@ -416,6 +417,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
             }
             
             pointAdditionFinite(indexOfClickedPoints[0], indexOfClickedPoints[1])
+            //drawLineSvg(clickedPoints[0], clickedPoints[1]);
 
         }
 
@@ -690,5 +692,16 @@ document.getElementById('pointMultiplication').addEventListener('click', (e) => 
     });
 }
 
-
+function drawLineSvg(point1, point2, color = "stroke-black") {
+    let svg = document.getElementById("highlightSVG");
+    var svgns = "http://www.w3.org/2000/svg";
+    var line = document.createElementNS(svgns, 'line');
+    //circle.style.pointerEvents = 'none' // TODO: Maybe remove later
+    line.setAttributeNS(null, 'x1', `${point1.getAttribute('cx')}`);
+    line.setAttributeNS(null, 'y1', `${point1.getAttribute('cy')}`);
+    line.setAttributeNS(null, 'x2', `${point2.getAttribute('cx')}`);
+    line.setAttributeNS(null, 'y2', `${point2.getAttribute('cy')}`);                                                            //(canvas.height / (curve.fieldOrder * 1.2)) <= 5 ? (canvas.height / (curve.fieldOrder * 1.2)) : 5)
+    line.setAttributeNS(null, 'class', `${color}`);
+    svg.appendChild(line);
+}
 

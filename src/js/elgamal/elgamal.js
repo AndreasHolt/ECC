@@ -16,29 +16,25 @@ class User {
         this.label = label; //e.g. "A"
         ///Encrypted text field///
         this.encryptedTextField = document.createElement("input");
-        this.encryptedTextField.classList.add("border-2");
-        this.encryptedTextField.classList.add("border-black");
-        this.encryptedTextField.classList.add("w-6/12");
+        this.encryptedTextField.classList.add("appearance-none", "block", "w-6/12", "bg-gray-200", "text-gray-700", "border", "border-gray-200", "rounded", "py-3", "px-4", "leading-tight", "focus:outline-none", "focus:bg-white", "focus:border-gray-500");
         this.encryptedTextField.type = "text";
         this.encryptedTextField.id = "encryptedText" + this.label;
         this.encryptedTextField.readOnly = true;
         this.encryptedTextField.placeholder = "Encrypted text";
+        this.encryptedTextField.disabled = true;
 
         ///Decrypted text field///
         this.decryptedTextField = document.createElement("input");
-        this.decryptedTextField.classList.add("border-2");
-        this.decryptedTextField.classList.add("border-black");
-        this.decryptedTextField.classList.add("w-full");
+        this.decryptedTextField.classList.add("appearance-none", "block", "w-full", "bg-gray-200", "text-gray-700", "border", "border-gray-200", "rounded", "py-3", "px-4", "leading-tight", "focus:outline-none", "focus:bg-white", "focus:border-gray-500");
         this.decryptedTextField.type = "text";
         this.decryptedTextField.id = "textDecrypted" + this.label;
         this.decryptedTextField.readOnly = true;
         this.decryptedTextField.placeholder = "Decrypted text";
+        this.decryptedTextField.disabled = true;
 
         ///Decrypt message button///
         this.sendMessageButton = document.createElement("button");
-        this.sendMessageButton.classList.add("border-2");
-        this.sendMessageButton.classList.add("rounded-md");
-        this.sendMessageButton.classList.add("border-slate-700");
+        this.sendMessageButton.classList.add("bg-white", "hover:bg-gray-100", "disabled:bg-gray-200", "text-gray-800", "font-semibold", "py-2", "px-4", "border", "border-gray-400", "rounded", "shadow", "inline-flex", "items-center", "mb-10");
         this.sendMessageButton.id = "sendMessage" + this.label;
         this.sendMessageButton.textContent = "Send message";
 
@@ -47,6 +43,7 @@ class User {
             let textOut = this.decryptedTextField;
             let decryptedMessage = this.decrypt(curve, encryptedMessage, humanUser);
             textOut.value = decryptedMessage;
+            encryptionVisualization(this.label);
         });
         /*document.getElementById("sendMessageA").addEventListener("click", () => {
             let encryptedMessage = BigInt(document.getElementById("textPreviewA").value);
@@ -65,16 +62,24 @@ class User {
         outerDiv.classList.add("basis-1/3");
         outerDiv.innerHTML = `
             <p class="font-bold text-xl mb-2 text-blue-400">From you to person ${this.label}</p>
+<<<<<<< HEAD
+            <p id="titleBox${this.label}"></p>
             <div class="grid grid-cols-3 grid-rows-5 gap-1 border-4 border-black rounded-md">
+=======
+            <div class="grid grid-cols-3 grid-rows-5 gap-1 border-2 border-black rounded-md">
+>>>>>>> c8fa91d5453f8a06dfdb1d3fd845b9eea357466a
                 <div class="col-span-3 row-span-4 flex flex-row p-0.5 space-x-1">
                     <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
-                        <h1 class="font-bold text-xl mb-2 text-gray-800">Encryption</h1>
+                        <h1 id="encryption${this.label}"
+                        class="font-bold text-xl mb-2 text-gray-800">Encryption</h1>
                     </div>
                     <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
-                        <h1 class="font-bold text-xl mb-2 text-gray-800">Public communication</h1>
+                        <h1 id="publicCommunication${this.label}"
+                        class="font-bold text-xl mb-2 text-gray-800">Public communication</h1>
                     </div>
                     <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
-                        <h1 class="font-bold text-xl mb-2 text-gray-800">Decryption</h1>
+                        <h1 id="decryption${this.label}"
+                        class="font-bold text-xl mb-2 text-gray-800">Decryption</h1>
                     </div>
                 </div>
                 <div class="col-span-2 px-0.5 py-1">
@@ -155,6 +160,11 @@ users[2] = {
 users[2].publicKey = curve.calcPointMultiplication(users[2].privateKey, curve.G);
 
 */
+for (const user of users) {
+    document.getElementById(`privatekey-${user.label}`).textContent += user.privateKey;
+    console.log(user.publicKey);
+    document.getElementById(`publickey-${user.label}`).textContent += user.publicKey.x; //TODO use correct public key
+}
 
 let inputField = document.getElementById("messageInput");
 /*inputField.addEventListener("input", (event) => {
@@ -239,3 +249,35 @@ function estLog2BigIntFloor(bigInt) {
 }
 
 
+function encryptionVisualization(label) {
+    let visualization = `lmao` // create visualization step 1 here
+    document.getElementById(`encryption${label}`).textContent = visualization;
+
+    let next = document.createElement("INPUT");
+    next.setAttribute("type", "button");
+    next.setAttribute("value", "Next");
+    next.setAttribute("id", "nextButton1");
+    next.setAttribute("class", "border-2 md-rounded border-slate-700 px-1 py-0.5")
+    document.getElementById(`titleBox${label}`).appendChild(next);
+
+    next.addEventListener("click", publicCommunicationVisualization(label));
+}
+
+function publicCommunicationVisualization(label) {
+    let visualization = `pranked` // create visualization step 1 here
+    document.getElementById(`publicCommunication${label}`).textContent += visualization;
+
+    let next = document.createElement("INPUT");
+    next.setAttribute("type", "button");
+    next.setAttribute("value", "Next");
+    next.setAttribute("id", "nextButton1");
+    next.setAttribute("class", "border-2 md-rounded border-slate-700 px-1 py-0.5")
+    document.getElementById(`titleBox${label}`).appendChild(next);
+
+    let back = document.createElement("INPUT");
+    back.setAttribute("type", "button");
+    back.setAttribute("value", "Back");
+    back.setAttribute("id", "nextButton1");
+    back.setAttribute("class", "border-2 md-rounded border-slate-700 px-1 py-0.5")
+    document.getElementById(`titleBox${label}`).appendChild(back);
+}
