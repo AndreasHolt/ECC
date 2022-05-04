@@ -160,7 +160,9 @@ function pointAdditionFinite(index1, index2) {
 
 
 
-        listPoints(point1, point2, newPoint) // NEEDS TO PASS THE INVERSE
+        let listedPoints = listPoints(point1, point2, newPoint) // NEEDS TO PASS THE INVERSE_OF_POINT
+     
+        pointAdditionSteps(listedPoints)
 
 
         //drawLine(0, 16, 0, 1, curve.fieldOrder);
@@ -495,6 +497,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 
         output.innerHTML = "";
 
+
         for(let i = 0; i < pointDetails.length; i++) {
             let p = document.createElement("p");
             output.appendChild(p);
@@ -760,7 +763,11 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
     } else {
         container.style.display = 'none ';
     }
+
+
 });
 
+function pointAdditionSteps(points) {
 
+}
 
