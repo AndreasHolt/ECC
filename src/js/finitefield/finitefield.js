@@ -112,8 +112,11 @@ document.querySelector("#form").addEventListener("submit", (event) => {
     }
     
     try {
-        if (!discriminant) {
+        if (discriminant === 0) {
             throw "Discriminant is 0, please choose another curve";
+        }
+        if (discriminant === null) {
+            throw "Discriminant is null";
         } 
     } catch (error) {
         alert(error);
