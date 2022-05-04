@@ -165,7 +165,7 @@ function calcPointAdditionPrime (p1, p2) {
         let R = {x: xR, y: yR};
         return R;
     } else {
-        let alfa = Mod((p1.y - p2.y)*inversePrime(Mod(p1.x-p2.x, this.mod), this.mod), this.mod);
+        let alfa = (p2.y - p1.y) * inversePrime(p2.x - p1.x, this.mod);
         let xR = Mod((-p1.x - p2.x + alfa*alfa), this.mod);
         let yR = Mod(-p1.y + alfa*(p1.x-xR), this.mod);
         let R = {x: xR, y: yR, alfa:alfa};
