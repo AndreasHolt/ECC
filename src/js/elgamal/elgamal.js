@@ -250,37 +250,45 @@ function estLog2BigIntFloor(bigInt) {
 
 
 function encryptionVisualization(label) {
+    console.log("poop")
     let visualization = `lmao` // create visualization step 1 here
     document.getElementById(`encryption${label}`).textContent = visualization;
 
     let next = document.createElement("INPUT");
     next.setAttribute("type", "button");
     next.setAttribute("value", "Next");
-    next.setAttribute("id", "nextButton1");
+    next.setAttribute("id", "nextButton");
     next.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1")
     document.getElementById(`titleBox${label}`).appendChild(next);
     
-    next.addEventListener("click", function(){
-        publicCommunicationVisualization(label)
+    next.addEventListener("click", function hey(){
+        publicCommunicationVisualization(label);
+        next.removeEventListener("click", hey);
     });
 }
 
 function publicCommunicationVisualization(label) {
-    console.log("ay");
+    console.log("hey");
     let visualization = `pranked` // create visualization step 1 here
-    document.getElementById(`publicCommunication${label}`).textContent += visualization;
-
-    let next = document.createElement("INPUT");
-    next.setAttribute("type", "button");
-    next.setAttribute("value", "Next");
-    next.setAttribute("id", "nextButton1");
-    next.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1")
-    document.getElementById(`titleBox${label}`).appendChild(next);
+    document.getElementById(`publicCommunication${label}`).textContent = visualization;
 
     let back = document.createElement("INPUT");
     back.setAttribute("type", "button");
     back.setAttribute("value", "Back");
-    back.setAttribute("id", "nextButton1");
+    back.setAttribute("id", "backButton");
     back.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1")
-    document.getElementById(`titleBox${label}`).appendChild(back);
+    document.getElementById(`titleBox${label}`).insertBefore(back, document.getElementById("nextButton"));
+
+    document.getElementById("nextButton").addEventListener("click", function chat() {
+        decryptionVisualization(label);
+        next.removeEventListener("click", chat);
+    });
+}
+
+function decryptionVisualization(label) {
+    console.log("ay");
+    let visualization = `idiot` // create visualization step 1 here
+    document.getElementById(`decryption${label}`).textContent = visualization;
+
+    document.getElementById("nextButton").remove();
 }
