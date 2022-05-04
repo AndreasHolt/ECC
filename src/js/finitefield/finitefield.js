@@ -47,8 +47,8 @@ document.querySelector("#form").addEventListener("submit", (event) => {
         el.remove();
     });
 
-    let a = event.target["a"].value;
-    let b = event.target["b"].value;
+    let a = Number(event.target["a"].value);
+    let b = Number(event.target["b"].value);
     let c = 0;
     let d = 0;
 
@@ -104,8 +104,8 @@ document.querySelector("#form").addEventListener("submit", (event) => {
     }
     
     if (event.target["curveList"].value.includes("GF")) {
-        c = event.target["c"].value;
-        d = event.target["d"].value;
+        c = Number(event.target["c"].value);
+        d = Number(event.target["d"].value);
         discriminant = calcDiscriminantGF2(a, b, c, d, modoli);
     } else {
         discriminant = calcDiscriminant(a, b, c, d);
@@ -255,7 +255,7 @@ function drawLine (x1, x2, y1, y2, size, color = "black") {
     ctx.lineTo((x2 * canvas.width / size)-3, (canvas.height - (y2 * canvas.height / size)) - 3);
     ctx.strokeStyle = color;
     ctx.stroke();
-    drawLineSvg1(x1, x2, y1, y2, size, color);
+    drawLineSvg1(x1, x2, y1, y2, size);
     /*if (progress < curve.fieldOrder) {
         setTimeout(() => {drawLine(point1, point3, progress + 0.01)}, 0.1);
         let newPoint = {"x":Mod(point1.x + (progress),curve.fieldOrder), "y":Mod(point1.y+(point3.alfa*progress),curve.fieldOrder)};
