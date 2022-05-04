@@ -268,7 +268,11 @@ function listPoints(point1, point2, point3) {
         MathJax.typeset()
     }
 
+    return {point1, point2, point3}
+
+
 }
+
 
 
 
