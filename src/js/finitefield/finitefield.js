@@ -2,6 +2,7 @@ import { multiplicativeXOR, additiveXOR, findInverseGF2, aXOR, mXOR } from "./gf
 import {numberOfBits2, Mod} from "./bits.js";
 import {listPoints, createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
 import {twoDecimalRound} from "../infinitefield/realsAddition"
+import {checkExplanationDisplay} from "../infinitefield/graphHelpers"
 
 const canvas = document.getElementById("curveGraph");
 let ctx;
@@ -771,12 +772,7 @@ function drawLineSvg(point1, point2, color = "stroke-black") {
 }
 
 
-function checkExplanationDisplay() { // TODO: Import this from the other folder, as it's used in infinite too, to avoid duplicates.
-    const container = document.getElementById('explanationContainer');
-    if (!(container.style.display === 'none')) {
-        MathJax.typeset();
-    }
-}
+
 
 function pointAdditionSteps(points) {
     const lambda = twoDecimalRound((points.point1.y - points.point2.y) / (points.point1.x - points.point2.x))
