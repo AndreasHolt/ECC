@@ -6,7 +6,6 @@ function inversePrime (x, mod) {        //Enhance later (Double and add /// sqau
     let result = 1;
     let exp = mod - 2;
     let temp = 1 << (numberOfBits2(exp) - 1);
-
     //for (let i = 0 ; i < mod - 3 ; ++i) {
     //    result = Mod(result * x, mod);
     //}
@@ -18,6 +17,5 @@ function inversePrime (x, mod) {        //Enhance later (Double and add /// sqau
         }
         temp = temp >> 1;
     }
-
     return result;
 }
