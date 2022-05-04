@@ -1,6 +1,8 @@
 import { multiplicativeXOR, additiveXOR, findInverseGF2, aXOR, mXOR } from "./gf2.js";
 import {numberOfBits2, Mod} from "./bits.js";
 import {listPoints, createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
+import {twoDecimalRound} from "../infinitefield/realsAddition"
+import {checkExplanationDisplay} from "../infinitefield/graphHelpers"
 
 const canvas = document.getElementById("curveGraph");
 let ctx;
@@ -12,6 +14,22 @@ if (canvas) {
 let curve;
 
 let newCalculatedPoints = [];
+
+document.getElementById('explanationExpand').addEventListener('click', () => {
+    console.log('clicked')
+    const container = document.getElementById('explanationContainer');
+    if (container.style.display === 'none' && document.getElementsByClassName('clickedPoint').length === 0) {
+        alert('Place points on the graph first!');
+    } else if (container.style.display === 'none') {
+        container.style.display = '';
+        MathJax.typeset();
+    } else {
+        container.style.display = 'none ';
+    }
+
+
+});
+
 
 
 init();
@@ -160,7 +178,9 @@ function pointAdditionFinite(index1, index2) {
 
 
 
-        listPoints(point1, point2, newPoint) // NEEDS TO PASS THE INVERSE
+        let listedPoints = listPoints(point1, point2, newPoint) // NEEDS TO PASS THE INVERSE_OF_POINT
+     
+        pointAdditionSteps(listedPoints)
 
 
         //drawLine(0, 16, 0, 1, curve.fieldOrder);
@@ -235,7 +255,7 @@ function drawLine (x1, x2, y1, y2, size, color = "black") {
     ctx.lineTo((x2 * canvas.width / size)-3, (canvas.height - (y2 * canvas.height / size)) - 3);
     ctx.strokeStyle = color;
     ctx.stroke();
-
+    drawLineSvg1(x1, x2, y1, y2, size, color);
     /*if (progress < curve.fieldOrder) {
         setTimeout(() => {drawLine(point1, point3, progress + 0.01)}, 0.1);
         let newPoint = {"x":Mod(point1.x + (progress),curve.fieldOrder), "y":Mod(point1.y+(point3.alfa*progress),curve.fieldOrder)};
@@ -495,6 +515,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 
         output.innerHTML = "";
 
+
         for(let i = 0; i < pointDetails.length; i++) {
             let p = document.createElement("p");
             output.appendChild(p);
@@ -737,8 +758,8 @@ document.getElementById('pointMultiplication').addEventListener('click', (e) => 
     });
 }
 
-function drawLineSvg(point1, point2, color = "stroke-black") {
-    let svg = document.getElementById("highlightSVG");
+function drawLineSvg(point1, point2, color = "black") {
+    let svg = document.getElementById("lineSVG");
     var svgns = "http://www.w3.org/2000/svg";
     var line = document.createElementNS(svgns, 'line');
     //circle.style.pointerEvents = 'none' // TODO: Maybe remove later
@@ -746,8 +767,48 @@ function drawLineSvg(point1, point2, color = "stroke-black") {
     line.setAttributeNS(null, 'y1', `${point1.getAttribute('cy')}`);
     line.setAttributeNS(null, 'x2', `${point2.getAttribute('cx')}`);
     line.setAttributeNS(null, 'y2', `${point2.getAttribute('cy')}`);                                                            //(canvas.height / (curve.fieldOrder * 1.2)) <= 5 ? (canvas.height / (curve.fieldOrder * 1.2)) : 5)
-    line.setAttributeNS(null, 'class', `${color}`);
+    line.setAttributeNS(null, 'class', `stroke-${color} .line`);
     svg.appendChild(line);
 }
 
+function drawLineSvg1(x1, x2, y1, y2, size, color = "black") {
+    let svg = document.getElementById("lineSVG");
+    var svgns = "http://www.w3.org/2000/svg";
+    var line = document.createElementNS(svgns, 'line');
+    //let lines = document.querySelectorAll(".line");
+//
+    //lines.forEach(line => {
+    //    line.remove();
+    //});
+
+
+    //circle.style.pointerEvents = 'none' // TODO: Maybe remove later
+    line.setAttributeNS(null, 'x1', `${x1 * (canvas.width / size)}`);
+    line.setAttributeNS(null, 'y1', `${canvas.height - y1 * (canvas.height / size)}`);
+    line.setAttributeNS(null, 'x2', `${x2 * (canvas.width / size)}`);
+    line.setAttributeNS(null, 'y2', `${canvas.height - y2 * (canvas.height / size)}`);                                                            //(canvas.height / (curve.fieldOrder * 1.2)) <= 5 ? (canvas.height / (curve.fieldOrder * 1.2)) : 5)
+    line.setAttributeNS(null, 'class', `stroke-${color} .line`);
+    svg.appendChild(line);
+}
+
+
+
+function pointAdditionSteps(points) {
+    const lambda = twoDecimalRound((points.point1.y - points.point2.y) / (points.point1.x - points.point2.x))
+
+    const stepRows = document.getElementsByClassName('steps');
+    stepRows[0].innerHTML = `If P and Q are distinct \\((x_P \\neq x_Q)\\), the line through them has slope: <br>
+                            \\(m = \\frac{y_P - y_Q}{x_P - x_Q} = \\frac{${points.point1.y} - ${points.point2.y}}{${points.point1.x} - ${points.point2.x}} = \\underline{${lambda}}\\)`;
+
+    stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a third point -\\(R = (x_R, y_R)\\), where: <br>
+                            \\(x_R = m^2 - x_P - x_Q = ${lambda}^2 - ${points.point1.x} - ${points.point2.x} = \\underline{${points.point3.x}}\\) <br>
+                            \\(y_R = y_P + m(x_R - x_P) = ${points.point1.y} + ${lambda}(${points.point3.x} - ${points.point1.x}) = \\underline{${points.point3.y}}\\) <br> Hence:  <br>
+                            \\(\\textbf{R = (${points.point3.x}, ${points.point3.y})}\\)`;
+
+                            //\\(\\textbf{-R = (${newX}, ${-newY})}\\)`;
+
+    // eslint-disable-next-line no-undef
+    checkExplanationDisplay();
+
+}
 
