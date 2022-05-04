@@ -1,6 +1,6 @@
 import { multiplicativeXOR, additiveXOR, findInverseGF2, aXOR, mXOR } from "./gf2.js";
 import {numberOfBits2, Mod} from "./bits.js";
-import {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2} from "./curves.js";
+import {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
 
 const canvas = document.getElementById("curveGraph");
 let ctx;
@@ -23,9 +23,16 @@ document.querySelector("#form").addEventListener("submit", (event) => {
     let modoli;
     let additionFunction;
     let createPointsFunction;
+    let discriminant;
+
     document.querySelectorAll("circle").forEach( (el) => {
         el.remove();
     });
+
+    let a = event.target["a"].value;
+    let b = event.target["b"].value;
+    let c = 0;
+    let d = 0;
 
     switch (event.target["curveList"].value) {
         case ("Prime 5"):
@@ -77,10 +84,24 @@ document.querySelector("#form").addEventListener("submit", (event) => {
             additionFunction = calcPointAdditionGF2;
             break;
     }
-    curve = createCurveABCD(2,1,1,1, Math.pow(prime, power), modoli, additionFunction);
-    //curve = createCurveAXY(Math.floor(Math.random()*Math.pow(prime, 
-    //power)), 1, 0, Math.pow(prime, power), modoli, additionFunction);
+    
+    if (event.target["curveList"].value.includes("GF")) {
+        c = event.target["c"].value;
+        d = event.target["d"].value;
+        discriminant = calcDiscriminantGF2(a, b, c, d, modoli);
+    } else {
+        discriminant = calcDiscriminant(a, b, c, d);
+    }
+    
+    try {
+        if (!discriminant) {
+            throw "Discriminant is 0, please choose another curve";
+        } 
+    } catch (error) {
+        alert(error);
+    }
 
+    curve = createCurveABCD(a, b, c, d, Math.pow(prime, power), modoli, additionFunction);
 
     
 
@@ -318,8 +339,13 @@ function highlightPointTimeout (point, time, size) {
     var circle = document.createElementNS(svgns, 'circle');
     let x = point.x * canvas.width / size;
     let y = canvas.height - (point.y * canvas.height / size);
-    circle.setAttributeNS(null, 'cx', x);
-    circle.setAttributeNS(null, 'cy', y);
+    if (point.x === Infinity) {
+        circle.setAttributeNS(null, 'cx', canvas.width);
+        circle.setAttributeNS(null, 'cy', 0);
+    } else {
+        circle.setAttributeNS(null, 'cx', x);
+        circle.setAttributeNS(null, 'cy', y);
+    }
     circle.setAttributeNS(null, 'r', 10);
     circle.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 1px;' );
     circle.style.zIndex = '50000';
@@ -341,16 +367,24 @@ function highlightPoint (point, size) {
 }
 
 function pointDescription(point) {
-    let negation = point // If unable to find negation use ifself
-    let subGroupPoint = point;
+    let negation = {x: point.x, y: point.y}; // If unable to find negation use ifself
+    let subGroupPoint = {x: point.x, y: point.y}; //virker ikke
     let subGroup = [];
     let orderOfSubGroup = 0;
+    if (point.x === Infinity) {
+        return {negation, subGroup, orderOfSubGroup: orderOfSubGroup - 2};
+    }
 
-    for (let i of curve.points) {
-        if (i.x === point.x && i.y !== point.y) {
-            negation = i;
+    if (curve.mod === curve.fieldOrder) {
+        negation.y = (curve.fieldOrder - point.y) % curve.fieldOrder;
+    } else {
+        for (let i of curve.points) {
+            if (i.x === point.x && i.y !== point.y) {
+                negation = i;
+            }
         }
     }
+    
 
     while (subGroupPoint.x !== negation.x || subGroupPoint.y !== negation.y) {
         subGroupPoint = curve.calcPointAddition(subGroupPoint, point);
@@ -375,8 +409,14 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     var svgns = "http://www.w3.org/2000/svg";
     var circle = document.createElementNS(svgns, 'circle');
     circle.style.pointerEvents = 'none' // TODO: Maybe remove later
-    circle.setAttributeNS(null, 'cx', point.x * canvas.width / size);
-    circle.setAttributeNS(null, 'cy', canvas.height - (point.y * canvas.height / size));
+    if (point.x === Infinity) {
+        circle.setAttributeNS(null, 'cx', canvas.width);
+        circle.setAttributeNS(null, 'cy', 0);
+    } else {
+        circle.setAttributeNS(null, 'cx', point.x * canvas.width / size);
+        circle.setAttributeNS(null, 'cy', canvas.height - (point.y * canvas.height / size));
+    }
+    
     circle.setAttributeNS(null, 'r', pointSize);                                                             //(canvas.height / (curve.fieldOrder * 1.2)) <= 5 ? (canvas.height / (curve.fieldOrder * 1.2)) : 5)
     circle.setAttributeNS(null, 'style', `fill: ${color}; stroke: ${color}; stroke-width: 1px;` );
     svg.appendChild(circle);
@@ -417,6 +457,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
             }
             
             pointAdditionFinite(indexOfClickedPoints[0], indexOfClickedPoints[1])
+            //drawLineSvg(clickedPoints[0], clickedPoints[1]);
 
         }
 
@@ -691,5 +732,16 @@ document.getElementById('pointMultiplication').addEventListener('click', (e) => 
     });
 }
 
-
+function drawLineSvg(point1, point2, color = "stroke-black") {
+    let svg = document.getElementById("highlightSVG");
+    var svgns = "http://www.w3.org/2000/svg";
+    var line = document.createElementNS(svgns, 'line');
+    //circle.style.pointerEvents = 'none' // TODO: Maybe remove later
+    line.setAttributeNS(null, 'x1', `${point1.getAttribute('cx')}`);
+    line.setAttributeNS(null, 'y1', `${point1.getAttribute('cy')}`);
+    line.setAttributeNS(null, 'x2', `${point2.getAttribute('cx')}`);
+    line.setAttributeNS(null, 'y2', `${point2.getAttribute('cy')}`);                                                            //(canvas.height / (curve.fieldOrder * 1.2)) <= 5 ? (canvas.height / (curve.fieldOrder * 1.2)) : 5)
+    line.setAttributeNS(null, 'class', `${color}`);
+    svg.appendChild(line);
+}
 
