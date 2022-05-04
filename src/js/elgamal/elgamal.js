@@ -1,12 +1,13 @@
 import { createCurveAXY, createCurveABCD, calcPointAdditionPrime, calcPointAdditionGF2 } from "../finitefield/curves.js";
 import { Mod } from "../finitefield/bits.js";
 
-let curve = createCurveABCD(118, 0, 0, 0, 257, 257, calcPointAdditionPrime); //256 points??
+let curve = createCurveABCD(118, 0, 0, 0, 7873, 7873, calcPointAdditionPrime); //256 points??
 curve.createPoints();
 curve.G = curve.points[143];//curve.points[Math.floor(Math.random()*curve.points.length)];
 // console.log(`G.x: ${curve.G.x}, G.y: ${curve.G.y}.`);
 
-let base = BigInt(256);
+let base = BigInt(curve.points.length);
+let charSize = BigInt(256);
 
 let userPrivateKeyHTML = document.getElementById("userPrivateKey");
 
@@ -101,7 +102,7 @@ class User {
         let pointResult = [];
         let numberResult = [];
         let numPoints = BigInt(curve.points.length);
-        let blockSize = estLog2BigIntFloor(numPoints)/estLog2BigIntFloor(base);    //log__base(points)
+        let blockSize = estLog2BigIntFloor(numPoints)/estLog2BigIntFloor(charSize);    //log__base(points)
         if (blockSize < 1) {
             throw("Not enough points on curve");
         }
@@ -110,9 +111,12 @@ class User {
             blocks = blocks + 1;
         }
         for (let i = 0; i < blocks; i++) {
-            let block = message.substring(BigInt(i)*blockSize, Math.min(Number((BigInt(i)+1n)*blockSize), message.length-1));
-            let charValuesArr;
-            block.array.forEach((element) => {charValuesArr.push(element.charCodeAt(0))});
+            let minVal = Math.min((i+1)*Number(blockSize), message.length);
+            let block = message.substring(i*Number(blockSize), minVal);
+            let charValuesArr = [];
+            for (let char of block) {
+                charValuesArr.push(char.charCodeAt(0));
+            }
             let blockValue = combineLettersToNumber(charValuesArr,base);
             let encryptedPoint = encryptBlock(curve, blockValue, this, reciever);
             pointResult.push(encryptedPoint);
