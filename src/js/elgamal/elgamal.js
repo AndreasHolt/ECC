@@ -62,12 +62,8 @@ class User {
         outerDiv.classList.add("basis-1/3");
         outerDiv.innerHTML = `
             <p class="font-bold text-xl mb-2 text-blue-400">From you to person ${this.label}</p>
-<<<<<<< HEAD
             <p id="titleBox${this.label}"></p>
             <div class="grid grid-cols-3 grid-rows-5 gap-1 border-4 border-black rounded-md">
-=======
-            <div class="grid grid-cols-3 grid-rows-5 gap-1 border-2 border-black rounded-md">
->>>>>>> c8fa91d5453f8a06dfdb1d3fd845b9eea357466a
                 <div class="col-span-3 row-span-4 flex flex-row p-0.5 space-x-1">
                     <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
                         <h1 id="encryption${this.label}"
@@ -231,13 +227,16 @@ function encryptionVisualization(label) {
     next.setAttribute("type", "button");
     next.setAttribute("value", "Next");
     next.setAttribute("id", "nextButton1");
-    next.setAttribute("class", "border-2 md-rounded border-slate-700 px-1 py-0.5")
+    next.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1")
     document.getElementById(`titleBox${label}`).appendChild(next);
-
-    next.addEventListener("click", publicCommunicationVisualization(label));
+    
+    next.addEventListener("click", function(){
+        publicCommunicationVisualization(label)
+    });
 }
 
 function publicCommunicationVisualization(label) {
+    console.log("ay");
     let visualization = `pranked` // create visualization step 1 here
     document.getElementById(`publicCommunication${label}`).textContent += visualization;
 
@@ -245,13 +244,13 @@ function publicCommunicationVisualization(label) {
     next.setAttribute("type", "button");
     next.setAttribute("value", "Next");
     next.setAttribute("id", "nextButton1");
-    next.setAttribute("class", "border-2 md-rounded border-slate-700 px-1 py-0.5")
+    next.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1")
     document.getElementById(`titleBox${label}`).appendChild(next);
 
     let back = document.createElement("INPUT");
     back.setAttribute("type", "button");
     back.setAttribute("value", "Back");
     back.setAttribute("id", "nextButton1");
-    back.setAttribute("class", "border-2 md-rounded border-slate-700 px-1 py-0.5")
+    back.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1")
     document.getElementById(`titleBox${label}`).appendChild(back);
 }
