@@ -750,4 +750,17 @@ function drawLineSvg(point1, point2, color = "stroke-black") {
     svg.appendChild(line);
 }
 
+document.getElementById('explanationExpand').addEventListener('click', () => {
+    const container = document.getElementById('explanationContainer');
+    if (container.style.display === 'none' && document.getElementsByClassName('clickedPoint').length === 0) {
+        alert('Place points on the graph first!');
+    } else if (container.style.display === 'none') {
+        container.style.display = '';
+        MathJax.typeset();
+    } else {
+        container.style.display = 'none ';
+    }
+});
+
+
 

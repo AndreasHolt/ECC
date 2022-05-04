@@ -260,30 +260,15 @@ function createPointsPrime () {
 }
 
 function listPoints(point1, point2, point3) {
-    console.log('listing points')
-
-
     const pointsListed = document.getElementById('pointsListed');
 
-    pointsListed.innerHTML = `\\(P = (${point1.x}, ${point1.y})\\) &nbsp \\(Q = (${point2.x}, ${point2.y}))\\) &nbsp \\(R = (${point3.x}, ${point3.y})\\)`;
+    pointsListed.innerHTML = `\\(P = (${point1.x}, ${point1.y})\\) &nbsp \\(Q = (${point2.x}, ${point2.y})\\) &nbsp \\(R = (${point3.x}, ${point3.y})\\)`;
     // eslint-disable-next-line no-undef
     if(!(document.getElementById("explanationContainer").style.display == "none")) {
         MathJax.typeset()
     }
 
 }
-
-document.getElementById('explanationExpand').addEventListener('click', () => {
-    const container = document.getElementById('explanationContainer');
-    if (container.style.display === 'none' && document.getElementsByClassName('clickedPoint').length === 0) {
-        alert('Place points on the graph first!');
-    } else if (container.style.display === 'none') {
-        container.style.display = '';
-        MathJax.typeset();
-    } else {
-        container.style.display = 'none ';
-    }
-});
 
 
 
