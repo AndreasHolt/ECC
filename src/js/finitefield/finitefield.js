@@ -1,6 +1,6 @@
 import { multiplicativeXOR, additiveXOR, findInverseGF2, aXOR, mXOR } from "./gf2.js";
 import {numberOfBits2, Mod} from "./bits.js";
-import {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
+import {listPoints, createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
 
 const canvas = document.getElementById("curveGraph");
 let ctx;
@@ -157,6 +157,11 @@ function pointAdditionFinite(index1, index2) {
         highlightPointTimeout(newPoint, 5, curve.fieldOrder);
         newCalculatedPoints.push(drawPointElement(point1, curve.fieldOrder, 5, "red", true));
         newCalculatedPoints.push(drawPointElement(point2, curve.fieldOrder, 5, "red", true));
+
+
+
+        listPoints(point1, point2, newPoint) // NEEDS TO PASS THE INVERSE
+
 
         //drawLine(0, 16, 0, 1, curve.fieldOrder);
         if (index1 !== index2) {
@@ -744,4 +749,5 @@ function drawLineSvg(point1, point2, color = "stroke-black") {
     line.setAttributeNS(null, 'class', `${color}`);
     svg.appendChild(line);
 }
+
 
