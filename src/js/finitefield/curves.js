@@ -260,6 +260,7 @@ function createPointsPrime () {
 }
 
 function listPoints(point1, point2, point3) {
+    console.log('teeest')
     const pointsListed = document.getElementById('pointsListed');
 
     pointsListed.innerHTML = `\\(P = (${point1.x}, ${point1.y})\\) &nbsp \\(Q = (${point2.x}, ${point2.y})\\) &nbsp \\(R = (${point3.x}, ${point3.y})\\)`;

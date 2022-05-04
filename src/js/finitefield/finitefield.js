@@ -1,6 +1,7 @@
 import { multiplicativeXOR, additiveXOR, findInverseGF2, aXOR, mXOR } from "./gf2.js";
 import {numberOfBits2, Mod} from "./bits.js";
 import {listPoints, createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
+import {twoDecimalRound} from "../infinitefield/realsAddition"
 
 const canvas = document.getElementById("curveGraph");
 let ctx;
@@ -12,6 +13,22 @@ if (canvas) {
 let curve;
 
 let newCalculatedPoints = [];
+
+document.getElementById('explanationExpand').addEventListener('click', () => {
+    console.log('clicked')
+    const container = document.getElementById('explanationContainer');
+    if (container.style.display === 'none' && document.getElementsByClassName('clickedPoint').length === 0) {
+        alert('Place points on the graph first!');
+    } else if (container.style.display === 'none') {
+        container.style.display = '';
+        MathJax.typeset();
+    } else {
+        container.style.display = 'none ';
+    }
+
+
+});
+
 
 
 init();
@@ -753,21 +770,30 @@ function drawLineSvg(point1, point2, color = "stroke-black") {
     svg.appendChild(line);
 }
 
-document.getElementById('explanationExpand').addEventListener('click', () => {
+
+function checkExplanationDisplay() { // TODO: Import this from the other folder, as it's used in infinite too, to avoid duplicates.
     const container = document.getElementById('explanationContainer');
-    if (container.style.display === 'none' && document.getElementsByClassName('clickedPoint').length === 0) {
-        alert('Place points on the graph first!');
-    } else if (container.style.display === 'none') {
-        container.style.display = '';
+    if (!(container.style.display === 'none')) {
         MathJax.typeset();
-    } else {
-        container.style.display = 'none ';
     }
-
-
-});
+}
 
 function pointAdditionSteps(points) {
+    const lambda = twoDecimalRound((points.point1.y - points.point2.y) / (points.point1.x - points.point2.x))
+
+    const stepRows = document.getElementsByClassName('steps');
+    stepRows[0].innerHTML = `If P and Q are distinct \\((x_P \\neq x_Q)\\), the line through them has slope: <br>
+                            \\(m = \\frac{y_P - y_Q}{x_P - x_Q} = \\frac{${points.point1.y} - ${points.point2.y}}{${points.point1.x} - ${points.point2.x}} = \\underline{${lambda}}\\)`;
+
+    stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a third point -\\(R = (x_R, y_R)\\), where: <br>
+                            \\(x_R = m^2 - x_P - x_Q = ${lambda}^2 - ${points.point1.x} - ${points.point2.x} = \\underline{${points.point3.x}}\\) <br>
+                            \\(y_R = y_P + m(x_R - x_P) = ${points.point1.y} + ${lambda}(${points.point3.x} - ${points.point1.x}) = \\underline{${points.point3.y}}\\) <br> Hence:  <br>
+                            \\(\\textbf{R = (${points.point3.x}, ${points.point3.y})}\\)`;
+
+                            //\\(\\textbf{-R = (${newX}, ${-newY})}\\)`;
+
+    // eslint-disable-next-line no-undef
+    checkExplanationDisplay();
 
 }
 
