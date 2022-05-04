@@ -143,6 +143,7 @@ function createCurve (fieldOrder, mod, additionFunction) {
 
 function calcPointAdditionPrime (p1, p2) {
     if(p1.x === Infinity) {
+
         return p2;
     }
     if (p2.x === Infinity) {
@@ -153,6 +154,9 @@ function calcPointAdditionPrime (p1, p2) {
         let xR = Mod((alfa*alfa - 2*p1.x), this.mod);
         let yR = Mod(this.fieldOrder - (p1.y + alfa*(xR - p1.x)), this.mod);
         let R = {x: xR, y: yR, alfa: alfa};
+
+
+
         return R;
     } else if (p1.x === p2.x) {
         let xR = Infinity;
@@ -167,6 +171,7 @@ function calcPointAdditionPrime (p1, p2) {
         return R;
     }
 }
+
 function calcPointAdditionGF2 (p1, p2) {
     if (p1.x === p2.x && p1.y === p2.y) {
         let alfa = multiplicativeXOR(                                                                                   //alfa = (3 * x^2 + a + c * y) / (2 * y + c * x + d)
@@ -251,6 +256,35 @@ function createPointsPrime () {
         }
     }
     this.points.push({x: Infinity, y: Infinity});
+
 }
 
-export {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2 };
+function listPoints(point1, point2, point3) {
+    console.log('listing points')
+
+
+    const pointsListed = document.getElementById('pointsListed');
+
+    pointsListed.innerHTML = `\\(P = (${point1.x}, ${point1.y})\\) &nbsp \\(Q = (${point2.x}, ${point2.y}))\\) &nbsp \\(R = (${point3.x}, ${point3.y})\\)`;
+    // eslint-disable-next-line no-undef
+    if(!(document.getElementById("explanationContainer").style.display == "none")) {
+        MathJax.typeset()
+    }
+
+}
+
+document.getElementById('explanationExpand').addEventListener('click', () => {
+    const container = document.getElementById('explanationContainer');
+    if (container.style.display === 'none' && document.getElementsByClassName('clickedPoint').length === 0) {
+        alert('Place points on the graph first!');
+    } else if (container.style.display === 'none') {
+        container.style.display = '';
+        MathJax.typeset();
+    } else {
+        container.style.display = 'none ';
+    }
+});
+
+
+
+export {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2, listPoints};
