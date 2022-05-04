@@ -143,9 +143,12 @@ function createCurve (fieldOrder, mod, additionFunction) {
 
 function calcPointAdditionPrime (p1, p2) {
     if(p1.x === Infinity) {
+
+        listPoints(p1, p2, null)
         return p2;
     }
     if (p2.x === Infinity) {
+        listPoints(p1, p2, null)
         return p1;
     }
     if (p1.x === p2.x && p1.y === p2.y) {
@@ -153,20 +156,27 @@ function calcPointAdditionPrime (p1, p2) {
         let xR = Mod((alfa*alfa - 2*p1.x), this.mod);
         let yR = Mod(this.fieldOrder - (p1.y + alfa*(xR - p1.x)), this.mod);
         let R = {x: xR, y: yR, alfa: alfa};
+
+
+        listPoints(p1, p2, R)
+
         return R;
     } else if (p1.x === p2.x) {
         let xR = Infinity;
         let yR = Infinity;
         let R = {x: xR, y: yR};
+        listPoints(p1, p2, R)
         return R;
     } else {
         let alfa = Mod((p1.y - p2.y)*inversePrime(Mod(p1.x-p2.x, this.mod), this.mod), this.mod);
         let xR = Mod((-p1.x - p2.x + alfa*alfa), this.mod);
         let yR = Mod(-p1.y + alfa*(p1.x-xR), this.mod);
         let R = {x: xR, y: yR, alfa:alfa};
+        listPoints(p1, p2, R)
         return R;
     }
 }
+
 function calcPointAdditionGF2 (p1, p2) {
     if (p1.x === p2.x && p1.y === p2.y) {
         let alfa = multiplicativeXOR(                                                                                   //alfa = (3 * x^2 + a + c * y) / (2 * y + c * x + d)
@@ -251,6 +261,34 @@ function createPointsPrime () {
         }
     }
     this.points.push({x: Infinity, y: Infinity});
+
 }
+
+function listPoints(point1, point2, point3) {
+
+
+    const pointsListed = document.getElementById('pointsListed');
+
+    pointsListed.innerHTML = `\\(P = (${point1.x}, ${point1.y})\\) &nbsp \\(Q = (${point2.x}, ${point2.y}))\\) &nbsp \\(R = (${point3.x}, ${point3.y})\\)`;
+    // eslint-disable-next-line no-undef
+    if(!(document.getElementById("explanationContainer").style.display == "none")) {
+        MathJax.typeset()
+    }
+
+}
+
+document.getElementById('explanationExpand').addEventListener('click', () => {
+    const container = document.getElementById('explanationContainer');
+    if (container.style.display === 'none' && document.getElementsByClassName('clickedPoint').length === 0) {
+        alert('Place points on the graph first!');
+    } else if (container.style.display === 'none') {
+        container.style.display = '';
+        MathJax.typeset();
+    } else {
+        container.style.display = 'none ';
+    }
+});
+
+
 
 export {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2 };

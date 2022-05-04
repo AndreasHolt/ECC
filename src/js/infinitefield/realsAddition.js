@@ -32,7 +32,6 @@ function listPoints(myGraph, placedPoints, calculatedX, calculatedY, operation) 
     }
     pointsListed.innerHTML = `\\(P = (${P})\\) &nbsp \\(-R = (${minusR})\\) &nbsp \\(R = (${R})\\)`;
     // eslint-disable-next-line no-undef
-    MathJax.typeset();
 
     return pObj;
 }
