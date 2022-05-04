@@ -144,11 +144,9 @@ function createCurve (fieldOrder, mod, additionFunction) {
 function calcPointAdditionPrime (p1, p2) {
     if(p1.x === Infinity) {
 
-        listPoints(p1, p2, null)
         return p2;
     }
     if (p2.x === Infinity) {
-        listPoints(p1, p2, null)
         return p1;
     }
     if (p1.x === p2.x && p1.y === p2.y) {
@@ -158,21 +156,18 @@ function calcPointAdditionPrime (p1, p2) {
         let R = {x: xR, y: yR, alfa: alfa};
 
 
-        listPoints(p1, p2, R)
 
         return R;
     } else if (p1.x === p2.x) {
         let xR = Infinity;
         let yR = Infinity;
         let R = {x: xR, y: yR};
-        listPoints(p1, p2, R)
         return R;
     } else {
         let alfa = Mod((p1.y - p2.y)*inversePrime(Mod(p1.x-p2.x, this.mod), this.mod), this.mod);
         let xR = Mod((-p1.x - p2.x + alfa*alfa), this.mod);
         let yR = Mod(-p1.y + alfa*(p1.x-xR), this.mod);
         let R = {x: xR, y: yR, alfa:alfa};
-        listPoints(p1, p2, R)
         return R;
     }
 }
@@ -265,6 +260,7 @@ function createPointsPrime () {
 }
 
 function listPoints(point1, point2, point3) {
+    console.log('listing points')
 
 
     const pointsListed = document.getElementById('pointsListed');
@@ -291,4 +287,4 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
 
 
 
-export {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2 };
+export {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2, listPoints};
