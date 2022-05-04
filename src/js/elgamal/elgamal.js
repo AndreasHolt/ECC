@@ -1,8 +1,10 @@
 import { createCurveAXY, createCurveABCD, calcPointAdditionPrime, calcPointAdditionGF2 } from "../finitefield/curves.js";
 import { Mod } from "../finitefield/bits.js";
 
-let curve = createCurveABCD(118, 0, 0, 0, 7873, 7873, calcPointAdditionPrime); //256 points??
+let curve = createCurveABCD(118, 0, 0, 0, 257, 257, calcPointAdditionPrime); //256 points??
+console.log("Starting");
 curve.createPoints();
+console.log("Done: "+ curve.points.length);
 curve.G = curve.points[143];//curve.points[Math.floor(Math.random()*curve.points.length)];
 // console.log(`G.x: ${curve.G.x}, G.y: ${curve.G.y}.`);
 
@@ -102,13 +104,13 @@ class User {
         let pointResult = [];
         let numberResult = [];
         let numPoints = BigInt(curve.points.length);
-        let blockSize = estLog2BigIntFloor(numPoints)/estLog2BigIntFloor(charSize);    //log__base(points)
+        let blockSize = estLog2BigIntFloor(numPoints)/estLog2BigIntFloor(charSize-1n);    //log__base(points)
         if (blockSize < 1) {
             throw("Not enough points on curve");
         }
         let blocks = BigInt(message.length) / blockSize;
         if (blockSize * blocks !== BigInt(message.length)) {
-            blocks = blocks + 1;
+            blocks = blocks + 1n;
         }
         for (let i = 0; i < blocks; i++) {
             let minVal = Math.min((i+1)*Number(blockSize), message.length);
@@ -117,16 +119,16 @@ class User {
             for (let char of block) {
                 charValuesArr.push(char.charCodeAt(0));
             }
-            let blockValue = combineLettersToNumber(charValuesArr,base);
+            let blockValue = combineLettersToNumber(charValuesArr,charSize);
             let encryptedPoint = encryptBlock(curve, blockValue, this, reciever);
             pointResult.push(encryptedPoint);
             numberResult.push(curve.pointToNumber(encryptedPoint));
         }
-        return combineLettersToNumber(numberResult, base);
+        return combineLettersToNumber(numberResult, charSize ** blockSize);
     }
     decrypt (curve, number, sender) {
         let result = "";
-        let valuesArr = seperateLettersFromNumber(number, base);
+        let valuesArr = seperateLettersFromNumber(number, charSize);
         for (let val of valuesArr) {
             result += decryptBlock(curve, curve.numberToPoint(val), sender, this);
         }
