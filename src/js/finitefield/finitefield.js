@@ -163,6 +163,10 @@ function pointAdditionFinite(index1, index2) {
     lines.forEach(line => {
         line.remove();
     })
+    newCalculatedPoints.forEach(point => {
+        point.remove()
+
+    });
 
  try {
         let point1 = curve.points[index1];
@@ -197,11 +201,6 @@ function pointAdditionFinite(index1, index2) {
         console.log("Error! find selv ud af det!");
         console.log(e);
     }
-    newCalculatedPoints.forEach(point => {
-        point.remove()
-
-    });
-
 }
 
 document.getElementById("additionForm").addEventListener("submit", (event) => {
