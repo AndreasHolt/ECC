@@ -128,9 +128,18 @@ class User {
     }
     decrypt (curve, number, sender) {
         let result = "";
-        let valuesArr = seperateLettersFromNumber(number, charSize);
-        for (let val of valuesArr) {
-            result += decryptBlock(curve, curve.numberToPoint(val), sender, this);
+        let numPoints = BigInt(curve.points.length);
+        let blockSize = estLog2BigIntFloor(numPoints)/estLog2BigIntFloor(charSize-1n);    //log__base(points)
+        if (blockSize < 1) {
+            throw("Not enough points on curve");
+        }
+        let blockArr = seperateLettersFromNumber(number, charSize ** blockSize);
+        for (let block of blockArr) {
+            let decruptValue = decryptBlock(curve, BigInt(curve.numberToPoint(block)), sender, this);
+            let arrIntVal = seperateLettersFromNumber(decruptValue, charSize);
+            result += String.fromCharCode(arrIntVal);
+            //arrIntVal.forEach((value) => {result += String.fromCharCode()})
+            //return String.fromCharCode();
         }
         return result;
     }
@@ -212,7 +221,7 @@ function encryptBlock (curve, number, sender, reciever) {
 function decryptBlock (curve, point, sender, reciever) {
     let pointAKG = curve.calcPointMultiplication(reciever.privateKey, sender.publicKey);
     let pointPM = curve.calcPointAddition(point, curve.inverseOfPoint(pointAKG));
-    return String.fromCharCode(curve.pointToNumber(pointPM));
+    return curve.pointToNumber(pointPM);
 }
 
 
