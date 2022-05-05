@@ -1,6 +1,6 @@
 import { multiplicativeXOR, additiveXOR, findInverseGF2, aXOR, mXOR } from "./gf2.js";
 import {numberOfBits2, Mod} from "./bits.js";
-import {listPoints, createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
+import {listPoints, Curve, AXYCurve, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
 import { addField, inversePrime, multiplyField } from "./gfp.js";
 import {twoDecimalRound} from "../infinitefield/realsAddition"
 import {checkExplanationDisplay} from "../infinitefield/graphHelpers"
@@ -27,6 +27,34 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
         container.style.display = 'none ';
     }
 
+
+    function isOnPage(element) { // TODO IMPORT INSTEAD
+        return (element === document.body) ? false : document.body.contains(element);
+    }
+
+    // IF button is disabled
+    if(document.getElementById('pointAddition').disabled) {
+        document.getElementById('multiplicationTableButton').addEventListener('click', () => {
+            // TODO remove event listener for the other if active?
+            
+            if(isOnPage(document.getElementById('multiplicative'))) {
+                document.getElementById('multiplicative').remove();
+                document.getElementById('multiplicationTableButton').innerHTML = "Show Additive Table"
+
+
+            } else {
+                let arrayValues = createTable(curve.fieldOrder, curve.mod, {mode:"multiplicative"})
+                createTableHTML(arrayValues, curve.fieldOrder, "multiplicative", "outputTableMultiplication", "color");
+                document.getElementById('multiplicationTableButton').innerHTML = "Hide Additive Table"
+            }
+
+        });
+
+    } /* else if(document.getElementById('pointMultiplication')){
+        document.getElementById('multiplicationTable').addEventListener('click', () => {
+
+        });
+    } */
 });
 
 init();
@@ -36,8 +64,6 @@ document.querySelector("#form").addEventListener("submit", (event) => {
     let prime;
     let power;
     let modoli;
-    let additionFunction;
-    let createPointsFunction;
     let discriminant;
 
     document.querySelectorAll("circle").forEach( (el) => {
@@ -54,49 +80,41 @@ document.querySelector("#form").addEventListener("submit", (event) => {
             prime = 5;
             power = 1;
             modoli = 5;
-            additionFunction = calcPointAdditionPrime;
             break;
         case ("Prime 17"):
             prime = 17;
             power = 1;
             modoli = 17;
-            additionFunction = calcPointAdditionPrime;
             break;
         case ("Prime 37"):
             prime = 37;
             power = 1;
             modoli = 37;
-            additionFunction = calcPointAdditionPrime;
             break;
         case ("Prime 131"):
             prime = 131;
             power = 1;
             modoli = 131;
-            additionFunction = calcPointAdditionPrime;
             break;
         case ("Prime 257"):
             prime = 257;
             power = 1;
             modoli = 257;
-            additionFunction = calcPointAdditionPrime;
             break;
         case ("GF2 4"):
             prime = 2;
             power = 4;
             modoli = 19;
-            additionFunction = calcPointAdditionGF2;
             break;
         case ("GF2 5"):
             prime = 2;
             power = 5;
             modoli = 37;
-            additionFunction = calcPointAdditionGF2;
             break;
         case ("GF2 8"):
             prime = 2;
             power = 8;
             modoli = 285;
-            additionFunction = calcPointAdditionGF2;
             break;
     }
     
@@ -119,7 +137,7 @@ document.querySelector("#form").addEventListener("submit", (event) => {
         alert(error);
     }
 
-    curve = createCurveABCD(a, b, c, d, Math.pow(prime, power), modoli, additionFunction);
+    curve = new Curve(a, b, c, d, Math.pow(prime, power), modoli);
 
     
 
@@ -163,6 +181,10 @@ function pointAdditionFinite(index1, index2) {
     lines.forEach(line => {
         line.remove();
     })
+    newCalculatedPoints.forEach(point => {
+        point.remove()
+
+    });
 
  try {
         let point1 = curve.points[index1];
@@ -197,11 +219,6 @@ function pointAdditionFinite(index1, index2) {
         console.log("Error! find selv ud af det!");
         console.log(e);
     }
-    newCalculatedPoints.forEach(point => {
-        point.remove()
-
-    });
-
 }
 
 document.getElementById("additionForm").addEventListener("submit", (event) => {
@@ -236,24 +253,25 @@ createTableButton.addEventListener("click", () => {
     let optionsList = [{mode:"multiplicative"},{mode:"additive"}];
     for (let options of optionsList) {
         let arrayValues = createTable(curve.fieldOrder, curve.mod, options);
-        createTableHTML(arrayValues, curve.fieldOrder, options.mode);
+        createTableHTML(arrayValues, curve.fieldOrder, options.mode, "outputTableColumn", "nocolor");
     }
 });
-
-document.getElementById("scalarForm").addEventListener("submit", (event) => {
-    event.preventDefault();
-    let index = Number(event.target["index"].value);
-    let point = curve.points[index];
-    let scale = Number(event.target["Scalar"].value);
-    drawPoint(point, curve.fieldOrder, 5, "blue");
-
-    if (point) {
-        let scaledPoint = curve.calcPointMultiplication(scale, point);
-        drawPoint(scaledPoint, curve.fieldOrder, 5, "red");
-        drawLineDirectGood(point, scaledPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
-    }
-});
-
+function addScalarForm() {
+    document.getElementById("scalarForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        let index = Number(event.target["index1"].value);
+        let point = curve.points[index];
+        let scale = Number(event.target["index2"].value);
+        drawPoint(point, curve.fieldOrder, 5, "blue");
+    
+        if (point) {
+            let scaledPoint = curve.calcPointMultiplication(scale, point);
+            drawPoint(scaledPoint, curve.fieldOrder, 5, "red");
+            drawLineDirectGood(point, scaledPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
+            drawPointMultiplication(index, scale);
+        }
+    });
+}
 function drawLine (x1, x2, y1, y2, size, color = "black") {
     ctx.beginPath();
     ctx.moveTo((x1 * canvas.width / size)-3, (canvas.height - (y1 * canvas.height / size)) -3);
@@ -393,6 +411,7 @@ function highlightPointTimeout (point, time, size) {
         svg.removeChild(circle);
     }, time);
 }
+
 function highlightPoint (point, size) {
     let svg = document.getElementById("highlightSVG");
     var svgns = "http://www.w3.org/2000/svg";
@@ -580,10 +599,19 @@ function pointText (point, eq = "") {
 
 
 
-function createTableHTML (tableArray, tableSize, htmlID) {
+function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
+    
     let oldTable = document.getElementById(htmlID);
     let newTable = document.createElement("table");
     newTable.id = htmlID;
+
+    let delta;
+
+    (colorBool === "color")?(delta = Number(document.getElementsByClassName('steps')[0].getAttribute('id'))):(console.log('test2'));
+    console.log('delta:', delta)
+    
+    let primeInverse = inversePrime(delta, curve.mod)
+    
 
     let headerRow = document.createElement("tr");
 
@@ -594,6 +622,9 @@ function createTableHTML (tableArray, tableSize, htmlID) {
         if (i !== -1) {
             header.textContent = i;
             header.classList.add("text-sm", "text-white", "font-medium", "px-2", "py-2", "whitespace-nowrap")
+            if(i === delta) {
+                header.classList.add("border-b", "bg-red-800", "border-gray-800")
+            }
 
         } else {
             header.classList.add("border-b", "bg-gray-800", "border-gray-800")
@@ -611,24 +642,43 @@ function createTableHTML (tableArray, tableSize, htmlID) {
             }
         }
         headerRow.classList.add("border-b", "bg-gray-800", "border-gray-900")
+        
+
 
         headerRow.appendChild(header);
     }
+
+    
+    
+
     newTable.appendChild(headerRow);
 
 
     //For each row
     for (let rowIndex = 0; rowIndex < tableSize; rowIndex++) {
         let row = document.createElement("tr");
+        
 
         let dataCell = document.createElement("td");
         dataCell.textContent = rowIndex;
 
         row.appendChild(dataCell);
 
-        row.firstChild.classList.add("border-b", "bg-gray-800", "border-gray-800", "text-sm", "text-white", "font-medium", "whitespace-nowrap", "text-center")
+
+        if(rowIndex === primeInverse) {
+            row.firstChild.classList.add("border-b", "bg-green-800", "border-gray-800", "text-sm", "text-white", "font-medium", "whitespace-nowrap", "text-center")
+        } else {
+            row.firstChild.classList.add("border-b", "bg-gray-800", "border-gray-800", "text-sm", "text-white", "font-medium", "whitespace-nowrap", "text-center")
+        }
+        
         for (let i = 0; i < tableSize; i++) {
             let dataCell = document.createElement("td");
+            if(i === delta && rowIndex <= primeInverse) {
+                console.log('lol', rowIndex)
+                dataCell.classList.add("bg-blue-800", "text-white")
+            } else if(rowIndex == primeInverse && i < delta) {
+                dataCell.classList.add("bg-blue-800", "text-white")
+            }
             dataCell.textContent = tableArray[i][rowIndex];
             dataCell.classList.add('mx-10', 'my-100')
             row.appendChild(dataCell);
@@ -639,8 +689,9 @@ function createTableHTML (tableArray, tableSize, htmlID) {
     if (oldTable) {
         oldTable.replaceWith(newTable);
     } else {
-        document.getElementById("outputTableColumn").appendChild(newTable);
+        document.getElementById(outputID).appendChild(newTable);
     }
+
 
 }
 
@@ -772,7 +823,7 @@ document.getElementById('pointMultiplication').addEventListener('click', (e) => 
     label2.innerHTML = "Scalar to multiply"
     form.removeAttribute('additionForm')
     form.setAttribute('id', 'scalarForm')
-    
+    addScalarForm();
 
 
 
@@ -822,6 +873,15 @@ function pointAdditionSteps(points) {
     //const lambda = twoDecimalRound(Mod((points.point1.y - points.point2.y) * inversePrime((points.point1.x - points.point2.x)), curve.mod))
     const lambda = points.point3.alfa
     const stepRows = document.getElementsByClassName('steps');
+    let delta = (!(points.point1 == points.point2))?(points.point1.x - points.point2.x):(2 * points.point1.y);
+    // -7 % 17 = 10... inverse til 10 = 12 (highlight). Derefter gang 12 med det man fik til venstre, og så mod 17
+    if(Number(delta) < 0) {
+        console.log('negative')
+        delta = Mod(delta, curve.mod);
+    }
+    
+    document.getElementsByClassName('steps')[0].setAttribute('id', delta)
+
 
     if(points.point1 === points.point2) {
         stepRows[0].innerHTML = `As \\(P = Q\\), the slope \\(m\\) is calculated by: <br>
@@ -839,7 +899,16 @@ function pointAdditionSteps(points) {
     } else {
         stepRows[0].innerHTML = `As \\(P \\neq Q\\), the slope \\(m\\) is calculated by: <br>
                                 \\(m = (y_P - y_Q) \\cdot (x_P - x_Q)^{-1} \\mod p = (${points.point1.y} - ${points.point2.y}) \\cdot (${points.point1.x} - ${points.point2.x})^{-1} = \\underline{${lambda}}\\) <br>
-                                Where \\((${points.point1.x} - ${points.point2.x})^{-1}\\) corresponds to calculating the inverse prime of the sum within the parentheses.`;
+                                Where \\((${points.point1.x} - ${points.point2.x})^{-1}\\) corresponds to calculating the inverse prime of the sum within the parentheses. <br>`;
+        if(points.point1.x - points.point2.x < 0) {
+            stepRows[0].innerHTML += `<br>Calculating the inverse prime: As \\(${points.point1.x} - ${points.point2.x} = ${points.point1.x - points.point2.x} \\) (a negative number), \\(${points.point1.x - points.point2.x} \\mod ${curve.mod} = ${delta}\\) is calculated. <br>`;
+        }  
+
+        stepRows[0].innerHTML += `Then, in the multiplicative table the inverse prime can be found by iterating rows \\(0 - ${curve.mod - 1}\\) from column \\(${delta}\\) until the entry with value \\(1\\) is found, then the inverse prime is the row to the entry, i.e. \\(${inversePrime(delta, curve.mod)}\\). <br>`;
+
+        stepRows[0].innerHTML += `<button id="multiplicationTableButton" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow block items-center">
+                                    Show Additive Table
+                                </button>`
 
     
         stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a third point -\\(R = (x_R, y_R)\\), where: <br>
@@ -852,7 +921,27 @@ function pointAdditionSteps(points) {
     
         // eslint-disable-next-line no-undef
     }
+
+    
+
+
     checkExplanationDisplay();
 
 }
 
+
+function drawPointMultiplication(index, scalar) {
+    console.log("yesorno?");
+    const lines = document.querySelectorAll(".line");
+    let newPoint;
+    lines.forEach(line => line.remove());
+    drawPointElement(curve.points[index], curve.fieldOrder, 5, "red", true);
+    for(let i = 2 ; i < scalar ; i++) {
+        newPoint = curve.calcPointMultiplication(i, curve.points[index]);
+        console.log(newPoint);
+        drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
+    }
+
+    newPoint = curve.calcPointMultiplication(scalar, curve.points[index]);
+    drawLineDirectGood(curve.points[index], newPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
+}
