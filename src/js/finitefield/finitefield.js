@@ -44,8 +44,8 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
 
             } else {
                 let arrayValues = createTable(curve.fieldOrder, curve.mod, {mode:"additive"})
-            createTableHTML(arrayValues, curve.fieldOrder, "additive", "outputTableAddition");
-            document.getElementById('additionTable').innerHTML = "Remove Additive Table"
+            createTableHTML(arrayValues, curve.fieldOrder, "additive", "outputTableAddition", "color");
+            document.getElementById('additionTable').innerHTML = "Hide Additive Table"
             }
 
         });
@@ -264,7 +264,7 @@ createTableButton.addEventListener("click", () => {
     let optionsList = [{mode:"multiplicative"},{mode:"additive"}];
     for (let options of optionsList) {
         let arrayValues = createTable(curve.fieldOrder, curve.mod, options);
-        createTableHTML(arrayValues, curve.fieldOrder, options.mode, "outputTableColumn");
+        createTableHTML(arrayValues, curve.fieldOrder, options.mode, "outputTableColumn", "nocolor");
     }
 });
 
@@ -608,10 +608,14 @@ function pointText (point, eq = "") {
 
 
 
-function createTableHTML (tableArray, tableSize, htmlID, outputID) {
+function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
     let oldTable = document.getElementById(htmlID);
     let newTable = document.createElement("table");
     newTable.id = htmlID;
+
+    let pointXY;
+
+    (colorBool === "color")?(console.log('test1')):(console.log('test2'));
 
     let headerRow = document.createElement("tr");
 
@@ -850,6 +854,15 @@ function pointAdditionSteps(points) {
     //const lambda = twoDecimalRound(Mod((points.point1.y - points.point2.y) * inversePrime((points.point1.x - points.point2.x)), curve.mod))
     const lambda = points.point3.alfa
     const stepRows = document.getElementsByClassName('steps');
+    let delta = (!(points.point1 == points.point2))?(points.point1.x - points.point2.x):(2 * points.point1.y);
+    // -7 % 17 = 10... inverse til 10 = 12 (highlight). Derefter gang 12 med det man fik til venstre, og så mod 17
+    if(Number(delta) < 0) {
+        console.log('negative')
+        delta = Mod(delta, curve.mod);
+    }
+    
+    document.getElementById('explanationExpand').setAttribute('id', delta)
+
 
     if(points.point1 === points.point2) {
         stepRows[0].innerHTML = `As \\(P = Q\\), the slope \\(m\\) is calculated by: <br>
@@ -867,7 +880,13 @@ function pointAdditionSteps(points) {
     } else {
         stepRows[0].innerHTML = `As \\(P \\neq Q\\), the slope \\(m\\) is calculated by: <br>
                                 \\(m = (y_P - y_Q) \\cdot (x_P - x_Q)^{-1} \\mod p = (${points.point1.y} - ${points.point2.y}) \\cdot (${points.point1.x} - ${points.point2.x})^{-1} = \\underline{${lambda}}\\) <br>
-                                Where \\((${points.point1.x} - ${points.point2.x})^{-1}\\) corresponds to calculating the inverse prime of the sum within the parentheses.`;
+                                Where \\((${points.point1.x} - ${points.point2.x})^{-1}\\) corresponds to calculating the inverse prime of the sum within the parentheses. <br>`;
+        if(points.point1.x - points.point2.x < 0) {
+            stepRows[0].innerHTML += `<br>Calculating the inverse prime: As \\(${points.point1.x} - ${points.point2.x} = ${points.point1.x - points.point2.x} \\) (a negative number), \\(${points.point1.x - points.point2.x} \\mod ${curve.mod} = ${delta}\\) is calculated. <br>`;
+        }
+
+        stepRows[0].innerHTML += `Then, in the multiplicative table the inverse prime can be found by iterating rows \\(0 - ${curve.mod - 1}\\) from column \\(${delta}\\) until the entry with value \\(1\\) is found, then the inverse prime is the row to the entry, i.e. \\(${points.point3.alfa}\\). <br>`;
+
         stepRows[0].innerHTML += `<button id="additionTable" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow block items-center">
                                     Show Additive Table
                                 </button>`
