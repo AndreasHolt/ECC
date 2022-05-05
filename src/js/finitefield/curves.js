@@ -3,39 +3,137 @@ import {numberOfBits2, Mod} from "./bits.js";
 import {inversePrime } from "./gfp.js";
 
 
-function createCurveAXY (a, x, y, fieldOrder, mod, additionFunction) {
-    if (fieldOrder === mod) {
-        throw("This method works only for GF2");
-    }
-    let curve = createCurve(fieldOrder, mod, additionFunction);
-    curve.a = a;
-    curve.b = additiveXOR(multiplicativeXOR(a,x, mod), additiveXOR(additiveXOR(multiplicativeXOR(y, y, mod), y), multiplicativeXOR(x, multiplicativeXOR(x,x, mod),mod)));
-    curve.c = 0;
-    curve.d = 1;
-    curve.G = {x,y};
-    if (curve.fieldOrder === curve.mod) {
-        curve.D = calcDiscriminant(curve.a,curve.b,curve.c,curve.d);
-    } else {
-        curve.D = calcDiscriminantGF2(curve.a,curve.b,curve.c,curve.d,curve.mod);
+class Curve {
+    constructor (a,b,c,d,fieldOrder, mod) {
+        this.a = a;
+        this.b = b;
+        this.c = c;
+        this.d = d;
+        this.points = [];
+        this.fieldOrder = fieldOrder;
+        this.mod = mod;
+        if (this.fieldOrder === this.mod) {
+            this.D = calcDiscriminant(this.a,this.b,this.c,this.d);
+            this.calcPointAddition = calcPointAdditionPrime;
+            this.calcPoints = createPointsPrime;
+        } else {
+            this.D = calcDiscriminantGF2(this.a,this.b,this.c,this.d,this.mod);
+            this.calcPointAddition = calcPointAdditionGF2;
+            this.calcPoints = createPointsGF2;
+        }
     }
 
-    return curve
+    createPoints () {
+        this.calcPoints();
+        /*
+        let curveID = `a${this.a}b${this.b}c${this.c}d${this.d}field${this.fieldOrder}mod${this.mod}`;
+        const fileUrl = new URL(`./public/curves/${curveID}.json`, import.meta.url).href
+        fs.readFile(fileUrl, 'utf8', (err, data) => {
+            if (err) {
+              console.error(err);
+              return;
+            }
+            console.log(data);
+        });*/
+        
+        /*fetch(fileUrl)
+        .then(response => {
+            //if (response.status === "404")
+            return response.text();
+        }) .then((data) => {
+            console.log(data);
+        }).catch((reason) => {
+            console.log(reason);
+            if (reason === "404") {//????
+                if (this.fieldOrder === this.mod) {
+                    createPointsPrime();
+                } else {
+                    createPointsGF2();
+                }
+
+            }
+        });*/
+
+        /*if (this.fieldOrder === this.mod) {
+            createPointsPrime();
+        } else {
+            createPointsGF2();
+        }*/
+    }
+
+    calcPointMultiplication (k, P) {
+        let Q = P;
+        let i = 1 << (numberOfBits2(k) - 2);
+
+        //101 |1|01 => 2*0 + P, 1|0|1 => 2P, 10|1| => 2(2P) + P = 5P 
+        while (i !== 0 ) {
+            Q = this.calcPointDouble(Q);
+            if ((i & k) === i) {
+                Q = this.calcPointAddition(P, Q);     //Enten skal vi finde indexet på Q eller så skal vi have punktet som input i de andre funktioner
+            }
+            i >>= 1;
+        }
+
+        return Q;
+    }
+
+    calcPointDouble (p) {
+        return this.calcPointAddition(p, p);
+    }
+    calcSubGroup (p) {
+        let n = 2;
+        let q = this.calcPointAddition(p, p);
+
+        while (!(q.x === p.x && q.y === p.y) && !(q.x === 0 && q.y === 0)) {
+            q = this.calcPointAddition(p, q);
+            n++;
+        }
+        return n;
+    }
+    inverseOfPoint (p) {
+        let oppositeY = Mod(this.fieldOrder-p.y, this.fieldOrder);
+        return {x:p.x, y:oppositeY};
+    }
+    numberToPoint (num) {
+        if (this.points.length >= 256) {
+            if (num < 0 || num >= this.points.lengt) {
+                throw("message must be a single utf-8 character");
+            } else {
+                return this.points[num];
+            }
+        } else {
+            throw("Not enough points on curve.");
+        }
+        let point = {};
+        if (m < 0 || m > Math.pow(2,fieldOrder)) {
+            throw("Invalid message.");
+        } else {
+            point.x = 1;
+        }
+        return point;
+    }
+    pointToNumber (p) {
+        let index = BigInt(this.points.findIndex((obj) => {
+            return (obj.x === p.x && obj.y === p.y);
+        }));
+        if (index === -1) {
+            throw("Point not in array.");
+        } else {
+            return index;
+        }
+    }
 }
 
-function createCurveABCD (a, b, c, d, fieldOrder, mod, additionFunction) {
-    
-    let curve = createCurve(fieldOrder, mod, additionFunction);
-    curve.a = a;
-    curve.b = b;
-    curve.c = c;
-    curve.d = d;
-    if (curve.fieldOrder === curve.mod) {
-        curve.D = calcDiscriminant(curve.a,curve.b,curve.c,curve.d);
-    } else {
-        curve.D = calcDiscriminantGF2(curve.a,curve.b,curve.c,curve.d,curve.mod);
+class AXYCurve extends Curve {
+    constructor (a, x, y, fieldOrder, mod) {
+        if (fieldOrder === mod) {
+            throw("This method works only for GF2");
+        }
+        let b = additiveXOR(multiplicativeXOR(a,x, mod), additiveXOR(additiveXOR(multiplicativeXOR(y, y, mod), y), multiplicativeXOR(x, multiplicativeXOR(x,x, mod),mod)));
+        super(a, b, 0, 1, fieldOrder, mod);
+        this.G = {x,y};
     }
-    return curve;
-};
+}
 
 function calcDiscriminant (a,b,c,d) {
     let b2 = c*c+4*a;
@@ -47,98 +145,15 @@ function calcDiscriminant (a,b,c,d) {
 }
 function calcDiscriminantGF2 (a,b,c,d, mod) {
     let b2 = aXOR(mXOR(mod, c, c), mXOR(mod, 4, a));
-    //additiveXOR(multiplicativeXOR(2,a, mod), multiplicativeXOR(c,d,mod));
     let b4 = aXOR(mXOR(mod, 2, a), mXOR(mod, c, d));
-    //additiveXOR(multiplicativeXOR(d,d,mod), multiplicativeXOR(4,b,mod));
     let b6 = aXOR(mXOR(mod, d, d), mXOR(mod, 4, b));
     let b8 = aXOR(mXOR(mod, c,c,b), mXOR(mod, c,d,a), mXOR(mod, a, a));
-    /*additiveXOR(
-        additiveXOR(
-            multiplicativeXOR(multiplicativeXOR(c,c,mod), b, mod),
-            multiplicativeXOR(multiplicativeXOR(c,d,mod), a, mod),
-        ),
-        multiplicativeXOR(a, a, mod)
-    );*/
     //-(b2*b2*b8)-8*b4*b4*b4-27*b6*b6+9*b2*b4*b6; 
     let D = aXOR(mXOR(mod, b2, b2, b8), mXOR(mod, 8, b4, b4, b4), mXOR(mod, 27, b6, b6), mXOR(mod, 9, b2, b4, b6));
     return D;
 }
 
-function createCurve (fieldOrder, mod, additionFunction) {
-    let curve = {
-        points: [],
-        fieldOrder: fieldOrder,
-        mod: mod,
-        calcPointAddition: additionFunction,
-        calcPointMultiplication: function(k, P) {              //Scalar times a point     //https://scialert.net/fulltext/?doi=itj.2013.1780.1787
-            let Q = P;
-            let i = 1 << (numberOfBits2(k) - 1);
-            i >>= 1;
-            //101 |1|01 => 2*0 + P, 1|0|1 => 2P, 10|1| => 2(2P) + P = 5P 
-            while (i !== 0 ) {
-                Q = this.calcPointDouble(Q);
-                if ((i & k) === i) {
-                    Q = this.calcPointAddition(P, Q);     //Enten skal vi finde indexet på Q eller så skal vi have punktet som input i de andre funktioner
-                }
-                i >>= 1;
-            }
-            return Q;
-        },
-        calcPointDouble: function(point) {
-            return this.calcPointAddition(point, point);
-        },
-        calcSubGroup: function(point) {
-            let n = 2;
-            let q = this.calcPointAddition(point, point);
 
-            while (!(q.x === point.x && q.y === point.y) && !(q.x === 0 && q.y === 0)) {
-                q = this.calcPointAddition(point, q);
-                n++;
-            }
-            return n;
-        },
-        inverseOfPoint: function (p) {
-            let oppositeY = Mod(this.fieldOrder-p.y, this.fieldOrder);
-            return {x:p.x, y:oppositeY};
-        },
-        numberToPoint: function (num) {
-            if (this.points.length >= 256) {
-                if (num < 0 || num >= this.points.lengt) {
-                    throw("message must be a single utf-8 character");
-                } else {
-                    return this.points[num];
-                }
-            } else {
-                throw("Not enough points on curve.")
-            }
-            let point = {};
-            if (m < 0 || m > Math.pow(2,fieldOrder)) {
-                throw("Invalid message.");
-            } else {
-                point.x = 1;
-            }
-            return point;
-        },
-        pointToNumber: function (p) {
-            let index = curve.points.findIndex((obj) => {
-                return (obj.x === p.x && obj.y === p.y);
-            });
-            if (index === -1) {
-                throw("Point not in array.");
-            } else {
-                return index;
-            }
-        }
-    };
-
-    if (fieldOrder === mod) {
-        curve.createPoints = createPointsPrime;
-    } else {
-        curve.createPoints = createPointsGF2;
-    }
-
-    return curve;
-}
 
 
 function calcPointAdditionPrime (p1, p2) {
@@ -155,9 +170,6 @@ function calcPointAdditionPrime (p1, p2) {
         let xR = Mod((alfa*alfa - 2*p1.x), this.mod);
         let yR = Mod(this.fieldOrder - (p1.y + alfa*(xR - p1.x)), this.mod);
         let R = {x: xR, y: yR, alfa: alfa};
-
-
-
         return R;
     } else if (p1.x === p2.x) {
         let xR = Infinity;
@@ -229,16 +241,6 @@ function createPointsGF2 () {
     this.points.push({x: Infinity, y: Infinity});
 }
 
-//function inversePrime (x, mod) {        //Enhance later (Double and add /// sqaure and multiply)
-//    let result = x;
-//
-//    for (let i = 0 ; i < mod - 3 ; ++i) {
-//        result = Mod(result * x, mod);
-//    }
-//
-//    return result;
-//}
-
 function createPointsPrime () {
     for (let x = 0 ; x < this.fieldOrder ; x++) {
         let rightSide = Mod((x*x*x + this.a*x + this.b), this.fieldOrder);
@@ -278,4 +280,4 @@ function listPoints(point1, point2, point3) {
 
 
 
-export {createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2, listPoints};
+export {Curve, AXYCurve, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2, listPoints};
