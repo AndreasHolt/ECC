@@ -66,14 +66,14 @@
                       coefficient \(a\)</label>
                   <input
                       class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                      type="number" id="a" name="a" min="0" placeholder="Ex: 4" value="5">
+                      type="number" id="a" name="a" min="0" max="4" placeholder="Ex: 4" value="1">
               </div>
               <div class="w-full md:w-1/2 px-3 justify-center">
                   <label class="block tracking-wide text-gray-700 text-x font-bold mb-2" for="b">Value for
                       coefficient \(b\)</label>
                   <input
                       class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                      type="number" id="b" name="b" min="0" placeholder="Ex: 15" value="15">
+                      type="number" id="b" name="b" min="0"  max="4" placeholder="Ex: 15" value="1">
               </div>
 
               <div id="weierstrass" style="display: none;" >
@@ -244,7 +244,8 @@
         <div class="flex flex-row mt-5 mx-0 px-10 py-5 place-items-center justify-start">
             <h1 class="font-bold text-xl text-gray-800 mr-5">1.</h1>
             <p class="steps"></p>
-        </div>
+          </div>
+        <div id="outputTableAddition" class="block place-items-center"></div>
         <div class="flex flex-row mt-5 mx-0 px-10 py-5 place-items-center justify-start">
             <h1 class="font-bold text-xl text-gray-800 mr-5">2.</h1>
             <p class="steps"></p>
@@ -268,15 +269,32 @@
   function curveParameters() {
     const curveList = document.getElementById("curveList");
 
+    let r = new RegExp(/\d+/g);
+    let max;
+
     if (curveList.value.includes("GF")) {
       let weierstrassCurve = "Pick curve parameters: \(y^2 + cxy + dy = x^3 + ax + b\)";
       document.getElementById("parameters").innerText = weierstrassCurve;
       document.getElementById("weierstrass").style.display = "block";
+
+      const power = curveList.value.split(" ")[1];
+      max = Math.pow(curveList.value.match(r)[0], power) - 1;
+
+      document.getElementById("a").setAttribute("max", `${max}`);
+      document.getElementById("b").setAttribute("max", `${max}`);
+      document.getElementById("c").setAttribute("max", `${max}`);
+      document.getElementById("d").setAttribute("max", `${max}`);
     } else {
       document.getElementById("weierstrass").style.display = "none";
 
       let generalCurve = "Pick curve parameters: \(y^2 = x^3 + ax + b\)";
       document.getElementById("parameters").innerText = generalCurve
+
+      max = curveList.value.match(r)[0] - 1;
+
+      document.getElementById("a").setAttribute("max", `${max}`);
+      document.getElementById("b").setAttribute("max", `${max}`);
+
     }
 }
 </script>

@@ -1,7 +1,7 @@
 import { multiplicativeXOR, additiveXOR, findInverseGF2, aXOR, mXOR } from "./gf2.js";
 import {numberOfBits2, Mod} from "./bits.js";
 import {listPoints, createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
-import { addField, multiplyField } from "./gfp.js";
+import { addField, inversePrime, multiplyField } from "./gfp.js";
 import {twoDecimalRound} from "../infinitefield/realsAddition"
 import {checkExplanationDisplay} from "../infinitefield/graphHelpers"
 
@@ -27,6 +27,34 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
         container.style.display = 'none ';
     }
 
+
+    function isOnPage(element) { // TODO IMPORT INSTEAD
+        return (element === document.body) ? false : document.body.contains(element);
+    }
+
+    // IF button is disabled
+    if(document.getElementById('pointAddition').disabled) {
+        document.getElementById('additionTable').addEventListener('click', () => {
+            // TODO remove event listener for the other if active?
+            
+            if(isOnPage(document.getElementById('additive'))) {
+                document.getElementById('additive').remove();
+                document.getElementById('additionTable').innerHTML = "Show Additive Table"
+
+
+            } else {
+                let arrayValues = createTable(curve.fieldOrder, curve.mod, {mode:"additive"})
+            createTableHTML(arrayValues, curve.fieldOrder, "additive", "outputTableAddition", "color");
+            document.getElementById('additionTable').innerHTML = "Hide Additive Table"
+            }
+
+        });
+
+    } else if(document.getElementById('pointMultiplication')){
+        document.getElementById('multiplicationTable').addEventListener('click', () => {
+
+        });
+    }
 });
 
 init();
@@ -148,6 +176,15 @@ document.querySelector("#form").addEventListener("submit", (event) => {
 });
 
 function pointAdditionFinite(index1, index2) {
+    let lines = document.querySelectorAll(".line");
+
+    lines.forEach(line => {
+        line.remove();
+    })
+    newCalculatedPoints.forEach(point => {
+        point.remove()
+
+    });
 
  try {
         let point1 = curve.points[index1];
@@ -182,11 +219,6 @@ function pointAdditionFinite(index1, index2) {
         console.log("Error! find selv ud af det!");
         console.log(e);
     }
-    newCalculatedPoints.forEach(point => {
-        point.remove()
-
-    });
-
 }
 
 document.getElementById("additionForm").addEventListener("submit", (event) => {
@@ -221,7 +253,7 @@ createTableButton.addEventListener("click", () => {
     let optionsList = [{mode:"multiplicative"},{mode:"additive"}];
     for (let options of optionsList) {
         let arrayValues = createTable(curve.fieldOrder, curve.mod, options);
-        createTableHTML(arrayValues, curve.fieldOrder, options.mode);
+        createTableHTML(arrayValues, curve.fieldOrder, options.mode, "outputTableColumn", "nocolor");
     }
 });
 
@@ -565,10 +597,14 @@ function pointText (point, eq = "") {
 
 
 
-function createTableHTML (tableArray, tableSize, htmlID) {
+function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
     let oldTable = document.getElementById(htmlID);
     let newTable = document.createElement("table");
     newTable.id = htmlID;
+
+    let pointXY;
+
+    (colorBool === "color")?(console.log('test1')):(console.log('test2'));
 
     let headerRow = document.createElement("tr");
 
@@ -624,7 +660,7 @@ function createTableHTML (tableArray, tableSize, htmlID) {
     if (oldTable) {
         oldTable.replaceWith(newTable);
     } else {
-        document.getElementById("outputTableColumn").appendChild(newTable);
+        document.getElementById(outputID).appendChild(newTable);
     }
 
 }
@@ -804,19 +840,61 @@ function drawLineSvg1(x1, x2, y1, y2, size, color = "black") {
 function pointAdditionSteps(points) {
 
 
-    const lambda = twoDecimalRound(Mod((points.point1.y - points.point2.y) * Math.pow((points.point1.x - points.point2.x), -1), curve.mod))
+    //const lambda = twoDecimalRound(Mod((points.point1.y - points.point2.y) * inversePrime((points.point1.x - points.point2.x)), curve.mod))
+    const lambda = points.point3.alfa
     const stepRows = document.getElementsByClassName('steps');
-    stepRows[0].innerHTML = `If P and Q are distinct \\((x_P \\neq x_Q)\\), the line through them has slope: <br>
-                            \\(m = (y_P - y_Q) \\cdot (x_P - x_Q)^{-1} \\mod p = \\frac{${points.point1.y} - ${points.point2.y}}{${points.point1.x} - ${points.point2.x}} = \\underline{${lambda}}\\)`;
+    let delta = (!(points.point1 == points.point2))?(points.point1.x - points.point2.x):(2 * points.point1.y);
+    // -7 % 17 = 10... inverse til 10 = 12 (highlight). Derefter gang 12 med det man fik til venstre, og så mod 17
+    if(Number(delta) < 0) {
+        console.log('negative')
+        delta = Mod(delta, curve.mod);
+    }
+    
+    document.getElementsByClassName('pointDetails')[0].setAttribute('id', delta)
 
-    stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a third point -\\(R = (x_R, y_R)\\), where: <br>
-                            \\(x_R = m^2 - x_P - x_Q = ${lambda}^2 - ${points.point1.x} - ${points.point2.x} = \\underline{${points.point3.x}}\\) <br>
-                            \\(y_R = y_P + m(x_R - x_P) = ${points.point1.y} + ${lambda}(${points.point3.x} - ${points.point1.x}) = \\underline{${points.point3.y}}\\) <br> Hence:  <br>
-                            \\(\\textbf{R = (${points.point3.x}, ${points.point3.y})}\\)`;
 
-                            //\\(\\textbf{-R = (${newX}, ${-newY})}\\)`;
+    if(points.point1 === points.point2) {
+        stepRows[0].innerHTML = `As \\(P = Q\\), the slope \\(m\\) is calculated by: <br>
+                                \\(m = (3x^2_p) \\cdot (2y_p)^{-1} \\cdot (x_P - x_Q)^{-1} \\mod p = \\frac{${points.point1.y} - ${points.point2.y}}{${points.point1.x} - ${points.point2.x}} = \\underline{${lambda}}\\)`;
+    
+        stepRows[1].innerHTML = `The equations for point addition are similar to the equations in the infinite field, except we need to add \\(mod p)\\) at the end of the expression. \\(P + Q = R\\) is calculated by: <br>
+                                \\(x_R = (m^2 - x_P - x_Q) \\mod p = (${lambda}^2 - ${points.point1.x} - ${points.point2.x} = \\underline{${points.point3.x})\\) <br>
+                                \\(y_R = y_P + m(x_R - x_P) = ${points.point1.y} + ${lambda}(${points.point3.x} - ${points.point1.x}) = \\underline{${points.point3.y}}\\) <br> Hence:  <br>
+                                \\(\\textbf{R = (${points.point3.x}, ${points.point3.y})}\\)`;
+    
+                                //\\(\\textbf{-R = (${newX}, ${-newY})}\\)`;
+    
+        // eslint-disable-next-line no-undef
 
-    // eslint-disable-next-line no-undef
+    } else {
+        stepRows[0].innerHTML = `As \\(P \\neq Q\\), the slope \\(m\\) is calculated by: <br>
+                                \\(m = (y_P - y_Q) \\cdot (x_P - x_Q)^{-1} \\mod p = (${points.point1.y} - ${points.point2.y}) \\cdot (${points.point1.x} - ${points.point2.x})^{-1} = \\underline{${lambda}}\\) <br>
+                                Where \\((${points.point1.x} - ${points.point2.x})^{-1}\\) corresponds to calculating the inverse prime of the sum within the parentheses. <br>`;
+        if(points.point1.x - points.point2.x < 0) {
+            stepRows[0].innerHTML += `<br>Calculating the inverse prime: As \\(${points.point1.x} - ${points.point2.x} = ${points.point1.x - points.point2.x} \\) (a negative number), \\(${points.point1.x - points.point2.x} \\mod ${curve.mod} = ${delta}\\) is calculated. <br>`;
+        }  
+
+        stepRows[0].innerHTML += `Then, in the multiplicative table the inverse prime can be found by iterating rows \\(0 - ${curve.mod - 1}\\) from column \\(${delta}\\) until the entry with value \\(1\\) is found, then the inverse prime is the row to the entry, i.e. \\(${points.point3.alfa}\\). <br>`;
+
+        stepRows[0].innerHTML += `<button id="additionTable" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow block items-center">
+                                    Show Additive Table
+                                </button>`
+
+    
+        stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a third point -\\(R = (x_R, y_R)\\), where: <br>
+                                \\(x_R = (m^2 - x_P - x_Q) \\mod p = (${lambda}^2 - ${points.point1.x} - ${points.point2.x}) \\mod ${curve.mod} = \\underline{${points.point3.x}}\\) <br>
+                                \\(y_R = (-y_P + m(x_P - x_R)) \\mod p = (${-points.point1.y} + ${lambda} \\cdot (${-points.point1.x} - ${points.point3.x})) \\mod ${curve.mod} = \\underline{${points.point3.y}}\\) <br> Hence:  <br>
+                                \\(\\textbf{R = (${points.point3.x}, ${points.point3.y})}\\)`;
+
+    
+                                //\\(\\textbf{-R = (${newX}, ${-newY})}\\)`;
+    
+        // eslint-disable-next-line no-undef
+    }
+
+    
+
+
     checkExplanationDisplay();
 
 }
