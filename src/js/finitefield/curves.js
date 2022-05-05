@@ -63,8 +63,8 @@ class Curve {
 
     calcPointMultiplication (k, P) {
         let Q = P;
-        let i = numberOfBits2(k);
-        i >>= 1;
+        let i = 1 << (numberOfBits2(k) - 2);
+
         //101 |1|01 => 2*0 + P, 1|0|1 => 2P, 10|1| => 2(2P) + P = 5P 
         while (i !== 0 ) {
             Q = this.calcPointDouble(Q);
@@ -177,7 +177,7 @@ function calcPointAdditionPrime (p1, p2) {
         let R = {x: xR, y: yR};
         return R;
     } else {
-        let alfa = (p2.y - p1.y) * inversePrime(p2.x - p1.x, this.mod);
+        let alfa = Mod((p2.y - p1.y) * inversePrime(p2.x - p1.x, this.mod), this.mod);
         let xR = Mod((-p1.x - p2.x + alfa*alfa), this.mod);
         let yR = Mod(-p1.y + alfa*(p1.x-xR), this.mod);
         let R = {x: xR, y: yR, alfa:alfa};
