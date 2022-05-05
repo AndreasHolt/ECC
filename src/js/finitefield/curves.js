@@ -1,5 +1,6 @@
 import { aXOR, mXOR, multiplicativeXOR, additiveXOR, findInverseGF2 } from "./gf2.js";
 import {numberOfBits2, Mod} from "./bits.js";
+import {inversePrime } from "./gfp.js";
 
 
 function createCurveAXY (a, x, y, fieldOrder, mod, additionFunction) {
@@ -165,7 +166,7 @@ function calcPointAdditionPrime (p1, p2) {
         let R = {x: xR, y: yR};
         return R;
     } else {
-        let alfa = Mod((p1.y - p2.y)*inversePrime(Mod(p1.x-p2.x, this.mod), this.mod), this.mod);
+        let alfa = (p2.y - p1.y) * inversePrime(p2.x - p1.x, this.mod);
         let xR = Mod((-p1.x - p2.x + alfa*alfa), this.mod);
         let yR = Mod(-p1.y + alfa*(p1.x-xR), this.mod);
         let R = {x: xR, y: yR, alfa:alfa};
@@ -229,15 +230,15 @@ function createPointsGF2 () {
     this.points.push({x: Infinity, y: Infinity});
 }
 
-function inversePrime (x, mod) {        //Enhance later (Double and add /// sqaure and multiply)
-    let result = x;
-
-    for (let i = 0 ; i < mod - 3 ; ++i) {
-        result = Mod(result * x, mod);
-    }
-
-    return result;
-}
+//function inversePrime (x, mod) {        //Enhance later (Double and add /// sqaure and multiply)
+//    let result = x;
+//
+//    for (let i = 0 ; i < mod - 3 ; ++i) {
+//        result = Mod(result * x, mod);
+//    }
+//
+//    return result;
+//}
 
 function createPointsPrime () {
     for (let x = 0 ; x < this.fieldOrder ; x++) {
