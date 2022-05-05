@@ -34,27 +34,27 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
 
     // IF button is disabled
     if(document.getElementById('pointAddition').disabled) {
-        document.getElementById('additionTable').addEventListener('click', () => {
+        document.getElementById('multiplicationTableButton').addEventListener('click', () => {
             // TODO remove event listener for the other if active?
             
-            if(isOnPage(document.getElementById('additive'))) {
-                document.getElementById('additive').remove();
-                document.getElementById('additionTable').innerHTML = "Show Additive Table"
+            if(isOnPage(document.getElementById('multiplicative'))) {
+                document.getElementById('multiplicative').remove();
+                document.getElementById('multiplicationTableButton').innerHTML = "Show Additive Table"
 
 
             } else {
-                let arrayValues = createTable(curve.fieldOrder, curve.mod, {mode:"additive"})
-            createTableHTML(arrayValues, curve.fieldOrder, "additive", "outputTableAddition", "color");
-            document.getElementById('additionTable').innerHTML = "Hide Additive Table"
+                let arrayValues = createTable(curve.fieldOrder, curve.mod, {mode:"multiplicative"})
+                createTableHTML(arrayValues, curve.fieldOrder, "multiplicative", "outputTableMultiplication", "color");
+                document.getElementById('multiplicationTableButton').innerHTML = "Hide Additive Table"
             }
 
         });
 
-    } else if(document.getElementById('pointMultiplication')){
+    } /* else if(document.getElementById('pointMultiplication')){
         document.getElementById('multiplicationTable').addEventListener('click', () => {
 
         });
-    }
+    } */
 });
 
 init();
@@ -604,7 +604,7 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
 
     let pointXY;
 
-    (colorBool === "color")?(console.log('test1')):(console.log('test2'));
+    (colorBool === "color")?(""):(console.log('test2'));
 
     let headerRow = document.createElement("tr");
 
@@ -850,7 +850,7 @@ function pointAdditionSteps(points) {
         delta = Mod(delta, curve.mod);
     }
     
-    document.getElementsByClassName('pointDetails')[0].setAttribute('id', delta)
+    document.getElementsByClassName('steps')[0].setAttribute('id', delta)
 
 
     if(points.point1 === points.point2) {
@@ -876,7 +876,7 @@ function pointAdditionSteps(points) {
 
         stepRows[0].innerHTML += `Then, in the multiplicative table the inverse prime can be found by iterating rows \\(0 - ${curve.mod - 1}\\) from column \\(${delta}\\) until the entry with value \\(1\\) is found, then the inverse prime is the row to the entry, i.e. \\(${points.point3.alfa}\\). <br>`;
 
-        stepRows[0].innerHTML += `<button id="additionTable" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow block items-center">
+        stepRows[0].innerHTML += `<button id="multiplicationTableButton" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow block items-center">
                                     Show Additive Table
                                 </button>`
 
