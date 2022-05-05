@@ -16,7 +16,6 @@ let curve;
 let newCalculatedPoints = [];
 
 document.getElementById('explanationExpand').addEventListener('click', () => {
-    console.log('clicked')
     const container = document.getElementById('explanationContainer');
     if (container.style.display === 'none' && document.getElementsByClassName('clickedPoint').length === 0) {
         alert('Place points on the graph first!');
@@ -27,10 +26,7 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
         container.style.display = 'none ';
     }
 
-
 });
-
-
 
 init();
 
@@ -689,9 +685,9 @@ function showTable(arrayValues) {
     console.log(arrayValues);
 }
 
-function clmul32(x1, x2, mod) {         //https://www.youtube.com/watch?v=v4HKU_VBbqM
+function clmul32(x1, x2, mod) {         // https://www.youtube.com/watch?v=v4HKU_VBbqM
     let result = 0;
-    //x2 |= 0;                            //Kun nødvendig hvis der er chance for at input er double
+    //x2 |= 0;                            // Kun nødvendig hvis der er chance for at input er double
 
     while (x1 !== 0) {
         result ^= x2 * (x1 & -x1);
@@ -771,15 +767,13 @@ function drawLineSvg(point1, point2, color = "stroke-black") {
     svg.appendChild(line);
 }
 
-
-
-
 function pointAdditionSteps(points) {
-    const lambda = twoDecimalRound((points.point1.y - points.point2.y) / (points.point1.x - points.point2.x))
 
+
+    const lambda = twoDecimalRound(Mod((points.point1.y - points.point2.y) * Math.pow((points.point1.x - points.point2.x), -1), curve.mod))
     const stepRows = document.getElementsByClassName('steps');
     stepRows[0].innerHTML = `If P and Q are distinct \\((x_P \\neq x_Q)\\), the line through them has slope: <br>
-                            \\(m = \\frac{y_P - y_Q}{x_P - x_Q} = \\frac{${points.point1.y} - ${points.point2.y}}{${points.point1.x} - ${points.point2.x}} = \\underline{${lambda}}\\)`;
+                            \\(m = (y_P - y_Q) \\cdot (x_P - x_Q)^{-1} \\mod p = \\frac{${points.point1.y} - ${points.point2.y}}{${points.point1.x} - ${points.point2.x}} = \\underline{${lambda}}\\)`;
 
     stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a third point -\\(R = (x_R, y_R)\\), where: <br>
                             \\(x_R = m^2 - x_P - x_Q = ${lambda}^2 - ${points.point1.x} - ${points.point2.x} = \\underline{${points.point3.x}}\\) <br>

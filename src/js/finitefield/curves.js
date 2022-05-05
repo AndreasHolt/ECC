@@ -142,6 +142,7 @@ function createCurve (fieldOrder, mod, additionFunction) {
 
 
 function calcPointAdditionPrime (p1, p2) {
+    console.log(this.mod)
     if(p1.x === Infinity) {
 
         return p2;
