@@ -185,7 +185,7 @@ function pointAdditionFinite(index1, index2) {
 
         //drawLine(0, 16, 0, 1, curve.fieldOrder);
         if (index1 !== index2) {
-            //drawLineDirect(point1, point2, 16);
+            //drawLineDirect(point1, point2, newPoint, 100);
         }
         drawLineDirectGood(point1, newPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
     } catch (e) {
@@ -262,11 +262,11 @@ function drawLine (x1, x2, y1, y2, size, color = "black") {
         drawPoint(newPoint, curve.fieldOrder, 1, "green");
     }*/
 }
-function drawLineDirect (point1, point2, delay) {
+function drawLineDirect (point1, point2, newPoint, delay) {
     let alfa = (point2.y - point1.y)/(point2.x - point1.x);
-    drawLineDirect_AUX(alfa, 0, 0.2, point1, delay);
+    drawLineDirect_AUX(alfa, 0, 0.2, point1, newPoint, delay);
 }
-function drawLineDirect_AUX (alfa, progress, speed, previousPoint, delay) {
+function drawLineDirect_AUX (alfa, progress, speed, previousPoint, target, delay) {
     if (progress < curve.fieldOrder) {
         //console.log("Alfa: " + alfa);
         let newPoint = {"x":Mod(previousPoint.x + speed, curve.fieldOrder), "y":Mod(previousPoint.y+(alfa*speed), curve.fieldOrder)};
@@ -274,23 +274,32 @@ function drawLineDirect_AUX (alfa, progress, speed, previousPoint, delay) {
         let xMod = Math.abs(xDifference) > 0.00002;
         let yDifference = newPoint.y - (previousPoint.y + (alfa*speed));
         let yMod = Math.abs(yDifference) > 0.00002;
-        if (xMod || yMod) {
-            if (xMod && yMod) {
-                drawLine(previousPoint.x, previousPoint.x + (speed), previousPoint.y, previousPoint.y + (alfa*speed), curve.fieldOrder,"green");
-                drawLine(newPoint.x - (speed), newPoint.x, newPoint.y - (alfa*speed), curve.fieldOrder,"green");
-            } else if (xMod) {
-                drawLine(previousPoint.x, previousPoint.x + (speed), previousPoint.y, newPoint.y, curve.fieldOrder,"green");
-                drawLine(newPoint.x - (speed), newPoint.x, previousPoint.y, newPoint.y, curve.fieldOrder,"green");
-            } else {
-                drawLine(previousPoint.x, newPoint.x, previousPoint.y, previousPoint.y + (alfa*speed), curve.fieldOrder,"green");
-                drawLine(previousPoint.x, newPoint.x, newPoint.y - (alfa*speed), newPoint.y, curve.fieldOrder,"green");
-            }
-        } else {
-            drawLine(previousPoint.x, newPoint.x, previousPoint.y, newPoint.y, curve.fieldOrder,"green");
-        }
+        
         //drawLine(previousPoint.x, newPoint.x, previousPoint.y, newPoint.y, curve.fieldOrder,"green");
         //drawPoint(newPoint, curve.fieldOrder, 1, "green");
-        setTimeout(() => {drawLineDirect_AUX(alfa, progress, speed, newPoint, delay)}, delay);
+
+        if ((previousPoint.x - target.x) / (newPoint.x - target.x) < 0 || (xMod && (previousPoint.x - target.x - curve.fieldOrder) / (newPoint.x - target.x) < 0)) {
+            drawLine(previousPoint.x, target.x, previousPoint.y, target.y, curve.fieldOrder,"black");
+            drawLine(target.x, target.x, Mod(target.y - curve.fieldOrder, curve.mod), target.y, curve.fieldOrder,"green");
+            return;
+        } else {
+            if (xMod || yMod) {
+                if (xMod && yMod) {
+                    drawLine(previousPoint.x, previousPoint.x + (speed), previousPoint.y, previousPoint.y + (alfa*speed), curve.fieldOrder,"green");
+                    drawLine(newPoint.x - (speed), newPoint.x, newPoint.y - (alfa*speed), curve.fieldOrder,"black");
+                } else if (xMod) {
+                    drawLine(previousPoint.x, previousPoint.x + (speed), previousPoint.y, newPoint.y, curve.fieldOrder,"black");
+                    drawLine(newPoint.x - (speed), newPoint.x, previousPoint.y, newPoint.y, curve.fieldOrder,"black");
+                } else {
+                    drawLine(previousPoint.x, newPoint.x, previousPoint.y, previousPoint.y + (alfa*speed), curve.fieldOrder,"black");
+                    drawLine(previousPoint.x, newPoint.x, newPoint.y - (alfa*speed), newPoint.y, curve.fieldOrder,"black");
+                }
+            } else {
+                drawLine(previousPoint.x, newPoint.x, previousPoint.y, newPoint.y, curve.fieldOrder,"black");
+            }
+            setTimeout(() => {drawLineDirect_AUX(alfa, progress, speed, newPoint, target, delay)}, delay);
+        }
+        return;
     }
 }
 
