@@ -1,6 +1,6 @@
 import { multiplicativeXOR, additiveXOR, findInverseGF2, aXOR, mXOR } from "./gf2.js";
 import {numberOfBits2, Mod} from "./bits.js";
-import {listPoints, createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
+import {listPoints, Curve, AXYCurve, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
 import { addField, inversePrime, multiplyField } from "./gfp.js";
 import {twoDecimalRound} from "../infinitefield/realsAddition"
 import {checkExplanationDisplay} from "../infinitefield/graphHelpers"

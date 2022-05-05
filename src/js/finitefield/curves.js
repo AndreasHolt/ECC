@@ -15,18 +15,16 @@ class Curve {
         if (this.fieldOrder === this.mod) {
             this.D = calcDiscriminant(this.a,this.b,this.c,this.d);
             this.calcPointAddition = calcPointAdditionPrime;
+            this.calcPoints = createPointsPrime;
         } else {
             this.D = calcDiscriminantGF2(this.a,this.b,this.c,this.d,this.mod);
             this.calcPointAddition = calcPointAdditionGF2;
+            this.calcPoints = createPointsGF2;
         }
     }
 
     createPoints () {
-        if (this.fieldOrder === this.mod) {
-            createPointsPrime();
-        } else {
-            createPointsGF2();
-        }
+        this.calcPoints();
         /*
         let curveID = `a${this.a}b${this.b}c${this.c}d${this.d}field${this.fieldOrder}mod${this.mod}`;
         const fileUrl = new URL(`./public/curves/${curveID}.json`, import.meta.url).href
@@ -104,7 +102,7 @@ class Curve {
                 return this.points[num];
             }
         } else {
-            throw("Not enough points on curve.")
+            throw("Not enough points on curve.");
         }
         let point = {};
         if (m < 0 || m > Math.pow(2,fieldOrder)) {
@@ -115,7 +113,7 @@ class Curve {
         return point;
     }
     pointToNumber (p) {
-        let index = BigInt(curve.points.findIndex((obj) => {
+        let index = BigInt(this.points.findIndex((obj) => {
             return (obj.x === p.x && obj.y === p.y);
         }));
         if (index === -1) {
