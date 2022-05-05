@@ -1,7 +1,7 @@
 import { multiplicativeXOR, additiveXOR, findInverseGF2, aXOR, mXOR } from "./gf2.js";
 import {numberOfBits2, Mod} from "./bits.js";
 import {listPoints, createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
-import { addField, multiplyField } from "./gfp.js";
+import { addField, inversePrime, multiplyField } from "./gfp.js";
 import {twoDecimalRound} from "../infinitefield/realsAddition"
 import {checkExplanationDisplay} from "../infinitefield/graphHelpers"
 
@@ -819,19 +819,39 @@ function drawLineSvg1(x1, x2, y1, y2, size, color = "black") {
 function pointAdditionSteps(points) {
 
 
-    const lambda = twoDecimalRound(Mod((points.point1.y - points.point2.y) * Math.pow((points.point1.x - points.point2.x), -1), curve.mod))
+    //const lambda = twoDecimalRound(Mod((points.point1.y - points.point2.y) * inversePrime((points.point1.x - points.point2.x)), curve.mod))
+    const lambda = points.point3.alfa
     const stepRows = document.getElementsByClassName('steps');
-    stepRows[0].innerHTML = `If P and Q are distinct \\((x_P \\neq x_Q)\\), the line through them has slope: <br>
-                            \\(m = (y_P - y_Q) \\cdot (x_P - x_Q)^{-1} \\mod p = \\frac{${points.point1.y} - ${points.point2.y}}{${points.point1.x} - ${points.point2.x}} = \\underline{${lambda}}\\)`;
 
-    stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a third point -\\(R = (x_R, y_R)\\), where: <br>
-                            \\(x_R = m^2 - x_P - x_Q = ${lambda}^2 - ${points.point1.x} - ${points.point2.x} = \\underline{${points.point3.x}}\\) <br>
-                            \\(y_R = y_P + m(x_R - x_P) = ${points.point1.y} + ${lambda}(${points.point3.x} - ${points.point1.x}) = \\underline{${points.point3.y}}\\) <br> Hence:  <br>
-                            \\(\\textbf{R = (${points.point3.x}, ${points.point3.y})}\\)`;
+    if(points.point1 === points.point2) {
+        stepRows[0].innerHTML = `As \\(P = Q\\), the slope \\(m\\) is calculated by: <br>
+                                \\(m = (3x^2_p) \\cdot (2y_p)^{-1} \\cdot (x_P - x_Q)^{-1} \\mod p = \\frac{${points.point1.y} - ${points.point2.y}}{${points.point1.x} - ${points.point2.x}} = \\underline{${lambda}}\\)`;
+    
+        stepRows[1].innerHTML = `The equations for point addition are similar to the equations in the infinite field, except we need to add \\(mod p)\\) at the end of the expression. \\(P + Q = R\\) is calculated by: <br>
+                                \\(x_R = (m^2 - x_P - x_Q) \\mod p = (${lambda}^2 - ${points.point1.x} - ${points.point2.x} = \\underline{${points.point3.x})\\) <br>
+                                \\(y_R = y_P + m(x_R - x_P) = ${points.point1.y} + ${lambda}(${points.point3.x} - ${points.point1.x}) = \\underline{${points.point3.y}}\\) <br> Hence:  <br>
+                                \\(\\textbf{R = (${points.point3.x}, ${points.point3.y})}\\)`;
+    
+                                //\\(\\textbf{-R = (${newX}, ${-newY})}\\)`;
+    
+        // eslint-disable-next-line no-undef
 
-                            //\\(\\textbf{-R = (${newX}, ${-newY})}\\)`;
+    } else {
+        stepRows[0].innerHTML = `As \\(P \\neq Q\\), the slope \\(m\\) is calculated by: <br>
+                                \\(m = (y_P - y_Q) \\cdot (x_P - x_Q)^{-1} \\mod p = (${points.point1.y} - ${points.point2.y}) \\cdot (${points.point1.x} - ${points.point2.x})^{-1} = \\underline{${lambda}}\\) <br>
+                                Where \\((${points.point1.x} - ${points.point2.x})^{-1}\\) corresponds to calculating the inverse prime of the sum within the parentheses.`;
 
-    // eslint-disable-next-line no-undef
+    
+        stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a third point -\\(R = (x_R, y_R)\\), where: <br>
+                                \\(x_R = (m^2 - x_P - x_Q) \\mod p = (${lambda}^2 - ${points.point1.x} - ${points.point2.x}) \\mod ${curve.mod} = \\underline{${points.point3.x}}\\) <br>
+                                \\(y_R = (-y_P + m(x_P - x_R)) \\mod p = (${-points.point1.y} + ${lambda} \\cdot (${-points.point1.x} - ${points.point3.x})) \\mod ${curve.mod} = \\underline{${points.point3.y}}\\) <br> Hence:  <br>
+                                \\(\\textbf{R = (${points.point3.x}, ${points.point3.y})}\\)`;
+
+    
+                                //\\(\\textbf{-R = (${newX}, ${-newY})}\\)`;
+    
+        // eslint-disable-next-line no-undef
+    }
     checkExplanationDisplay();
 
 }
