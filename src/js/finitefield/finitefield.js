@@ -604,7 +604,10 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
 
     let pointXY;
 
-    (colorBool === "color")?(""):(console.log('test2'));
+    (colorBool === "color")?(pointXY = document.getElementsByClassName('steps')[0].getAttribute('id')):(console.log('test2'));
+    console.log(pointXY)
+    
+    
 
     let headerRow = document.createElement("tr");
 
