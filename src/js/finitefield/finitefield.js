@@ -43,8 +43,8 @@ document.querySelector("#form").addEventListener("submit", (event) => {
         el.remove();
     });
 
-    let a = event.target["a"].value;
-    let b = event.target["b"].value;
+    let a = Number(event.target["a"].value);
+    let b = Number(event.target["b"].value);
     let c = 0;
     let d = 0;
 
@@ -100,16 +100,19 @@ document.querySelector("#form").addEventListener("submit", (event) => {
     }
     
     if (event.target["curveList"].value.includes("GF")) {
-        c = event.target["c"].value;
-        d = event.target["d"].value;
+        c = Number(event.target["c"].value);
+        d = Number(event.target["d"].value);
         discriminant = calcDiscriminantGF2(a, b, c, d, modoli);
     } else {
         discriminant = calcDiscriminant(a, b, c, d);
     }
     
     try {
-        if (!discriminant) {
+        if (discriminant === 0) {
             throw "Discriminant is 0, please choose another curve";
+        }
+        if (discriminant === null) {
+            throw "Discriminant is null";
         } 
     } catch (error) {
         alert(error);
@@ -251,7 +254,7 @@ function drawLine (x1, x2, y1, y2, size, color = "black") {
     ctx.lineTo((x2 * canvas.width / size)-3, (canvas.height - (y2 * canvas.height / size)) - 3);
     ctx.strokeStyle = color;
     ctx.stroke();
-
+    drawLineSvg1(x1, x2, y1, y2, size);
     /*if (progress < curve.fieldOrder) {
         setTimeout(() => {drawLine(point1, point3, progress + 0.01)}, 0.1);
         let newPoint = {"x":Mod(point1.x + (progress),curve.fieldOrder), "y":Mod(point1.y+(point3.alfa*progress),curve.fieldOrder)};
@@ -754,8 +757,8 @@ document.getElementById('pointMultiplication').addEventListener('click', (e) => 
     });
 }
 
-function drawLineSvg(point1, point2, color = "stroke-black") {
-    let svg = document.getElementById("highlightSVG");
+function drawLineSvg(point1, point2, color = "black") {
+    let svg = document.getElementById("lineSVG");
     var svgns = "http://www.w3.org/2000/svg";
     var line = document.createElementNS(svgns, 'line');
     //circle.style.pointerEvents = 'none' // TODO: Maybe remove later
@@ -763,9 +766,31 @@ function drawLineSvg(point1, point2, color = "stroke-black") {
     line.setAttributeNS(null, 'y1', `${point1.getAttribute('cy')}`);
     line.setAttributeNS(null, 'x2', `${point2.getAttribute('cx')}`);
     line.setAttributeNS(null, 'y2', `${point2.getAttribute('cy')}`);                                                            //(canvas.height / (curve.fieldOrder * 1.2)) <= 5 ? (canvas.height / (curve.fieldOrder * 1.2)) : 5)
-    line.setAttributeNS(null, 'class', `${color}`);
+    line.setAttributeNS(null, 'class', `stroke-${color} .line`);
     svg.appendChild(line);
 }
+
+function drawLineSvg1(x1, x2, y1, y2, size, color = "black") {
+    let svg = document.getElementById("lineSVG");
+    var svgns = "http://www.w3.org/2000/svg";
+    var line = document.createElementNS(svgns, 'line');
+    //let lines = document.querySelectorAll(".line");
+//
+    //lines.forEach(line => {
+    //    line.remove();
+    //});
+
+
+    //circle.style.pointerEvents = 'none' // TODO: Maybe remove later
+    line.setAttributeNS(null, 'x1', `${x1 * (canvas.width / size)}`);
+    line.setAttributeNS(null, 'y1', `${canvas.height - y1 * (canvas.height / size)}`);
+    line.setAttributeNS(null, 'x2', `${x2 * (canvas.width / size)}`);
+    line.setAttributeNS(null, 'y2', `${canvas.height - y2 * (canvas.height / size)}`);                                                            //(canvas.height / (curve.fieldOrder * 1.2)) <= 5 ? (canvas.height / (curve.fieldOrder * 1.2)) : 5)
+    line.setAttributeNS(null, 'class', `stroke-${color} .line`);
+    svg.appendChild(line);
+}
+
+
 
 function pointAdditionSteps(points) {
 
