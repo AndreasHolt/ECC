@@ -860,7 +860,7 @@ function pointAdditionSteps(points) {
         delta = Mod(delta, curve.mod);
     }
     
-    document.getElementById('explanationExpand').setAttribute('id', delta)
+    document.getElementsByClassName('pointDetails')[0].setAttribute('id', delta)
 
 
     if(points.point1 === points.point2) {
@@ -882,7 +882,7 @@ function pointAdditionSteps(points) {
                                 Where \\((${points.point1.x} - ${points.point2.x})^{-1}\\) corresponds to calculating the inverse prime of the sum within the parentheses. <br>`;
         if(points.point1.x - points.point2.x < 0) {
             stepRows[0].innerHTML += `<br>Calculating the inverse prime: As \\(${points.point1.x} - ${points.point2.x} = ${points.point1.x - points.point2.x} \\) (a negative number), \\(${points.point1.x - points.point2.x} \\mod ${curve.mod} = ${delta}\\) is calculated. <br>`;
-        }
+        }  
 
         stepRows[0].innerHTML += `Then, in the multiplicative table the inverse prime can be found by iterating rows \\(0 - ${curve.mod - 1}\\) from column \\(${delta}\\) until the entry with value \\(1\\) is found, then the inverse prime is the row to the entry, i.e. \\(${points.point3.alfa}\\). <br>`;
 
