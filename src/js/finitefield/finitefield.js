@@ -256,21 +256,22 @@ createTableButton.addEventListener("click", () => {
         createTableHTML(arrayValues, curve.fieldOrder, options.mode, "outputTableColumn", "nocolor");
     }
 });
-
-document.getElementById("scalarForm").addEventListener("submit", (event) => {
-    event.preventDefault();
-    let index = Number(event.target["index"].value);
-    let point = curve.points[index];
-    let scale = Number(event.target["Scalar"].value);
-    drawPoint(point, curve.fieldOrder, 5, "blue");
-
-    if (point) {
-        let scaledPoint = curve.calcPointMultiplication(scale, point);
-        drawPoint(scaledPoint, curve.fieldOrder, 5, "red");
-        drawLineDirectGood(point, scaledPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
-    }
-});
-
+function addScalarForm() {
+    document.getElementById("scalarForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        let index = Number(event.target["index1"].value);
+        let point = curve.points[index];
+        let scale = Number(event.target["index2"].value);
+        drawPoint(point, curve.fieldOrder, 5, "blue");
+    
+        if (point) {
+            let scaledPoint = curve.calcPointMultiplication(scale, point);
+            drawPoint(scaledPoint, curve.fieldOrder, 5, "red");
+            drawLineDirectGood(point, scaledPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
+            drawPointMultiplication(index, scale);
+        }
+    });
+}
 function drawLine (x1, x2, y1, y2, size, color = "black") {
     ctx.beginPath();
     ctx.moveTo((x1 * canvas.width / size)-3, (canvas.height - (y1 * canvas.height / size)) -3);
@@ -410,6 +411,7 @@ function highlightPointTimeout (point, time, size) {
         svg.removeChild(circle);
     }, time);
 }
+
 function highlightPoint (point, size) {
     let svg = document.getElementById("highlightSVG");
     var svgns = "http://www.w3.org/2000/svg";
@@ -821,7 +823,7 @@ document.getElementById('pointMultiplication').addEventListener('click', (e) => 
     label2.innerHTML = "Scalar to multiply"
     form.removeAttribute('additionForm')
     form.setAttribute('id', 'scalarForm')
-    
+    addScalarForm();
 
 
 
@@ -927,3 +929,19 @@ function pointAdditionSteps(points) {
 
 }
 
+
+function drawPointMultiplication(index, scalar) {
+    console.log("yesorno?");
+    const lines = document.querySelectorAll(".line");
+    let newPoint;
+    lines.forEach(line => line.remove());
+    drawPointElement(curve.points[index], curve.fieldOrder, 5, "red", true);
+    for(let i = 2 ; i < scalar ; i++) {
+        newPoint = curve.calcPointMultiplication(i, curve.points[index]);
+        console.log(newPoint);
+        drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
+    }
+
+    newPoint = curve.calcPointMultiplication(scalar, curve.points[index]);
+    drawLineDirectGood(curve.points[index], newPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
+}
