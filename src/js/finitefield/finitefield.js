@@ -1,6 +1,7 @@
 import { multiplicativeXOR, additiveXOR, findInverseGF2, aXOR, mXOR } from "./gf2.js";
 import {numberOfBits2, Mod} from "./bits.js";
 import {listPoints, createCurveABCD, createCurveAXY, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
+import { addField, multiplyField } from "./gfp.js";
 import {twoDecimalRound} from "../infinitefield/realsAddition"
 import {checkExplanationDisplay} from "../infinitefield/graphHelpers"
 
@@ -632,11 +633,20 @@ function createTableHTML (tableArray, tableSize, htmlID) {
 
 function createTable (sizeOfTable, mod, options) {
     let arrayValues = [];
-    if (options.mode === "additive") {
-        arrayValues = calculateElements(sizeOfTable, mod, additiveXOR);
-
-    } else if (options.mode === "multiplicative") {
-        arrayValues = calculateElements(sizeOfTable, mod, multiplicativeXOR);
+    if (sizeOfTable !== mod) {
+        if (options.mode === "additive") {
+            arrayValues = calculateElements(sizeOfTable, mod, additiveXOR);
+    
+        } else if (options.mode === "multiplicative") {
+            arrayValues = calculateElements(sizeOfTable, mod, multiplicativeXOR);
+        }
+    } else {
+        if (options.mode === "additive") {
+            arrayValues = calculateElements(sizeOfTable, mod, addField);
+    
+        } else if (options.mode === "multiplicative") {
+            arrayValues = calculateElements(sizeOfTable, mod, multiplyField);
+        }
     }
 
     return arrayValues;
