@@ -135,7 +135,8 @@ class User {
         }
         let blockArr = seperateLettersFromNumber(number, charSize ** blockSize);
         for (let block of blockArr) {
-            let decruptValue = decryptBlock(curve, BigInt(curve.numberToPoint(block)), sender, this);
+            let point = curve.numberToPoint(block);
+            let decruptValue = decryptBlock(curve, point, sender, this);
             let arrIntVal = seperateLettersFromNumber(decruptValue, charSize);
             result += String.fromCharCode(arrIntVal);
             //arrIntVal.forEach((value) => {result += String.fromCharCode()})
