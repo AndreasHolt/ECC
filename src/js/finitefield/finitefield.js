@@ -158,6 +158,11 @@ document.querySelector("#form").addEventListener("submit", (event) => {
 });
 
 function pointAdditionFinite(index1, index2) {
+    let lines = document.querySelectorAll(".line");
+
+    lines.forEach(line => {
+        line.remove();
+    })
 
  try {
         let point1 = curve.points[index1];
