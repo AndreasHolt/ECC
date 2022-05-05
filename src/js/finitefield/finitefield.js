@@ -27,6 +27,34 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
         container.style.display = 'none ';
     }
 
+
+    function isOnPage(element) { // TODO IMPORT INSTEAD
+        return (element === document.body) ? false : document.body.contains(element);
+    }
+
+    // IF button is disabled
+    if(document.getElementById('pointAddition').disabled) {
+        document.getElementById('additionTable').addEventListener('click', () => {
+            // TODO remove event listener for the other if active?
+            
+            if(isOnPage(document.getElementById('additive'))) {
+                document.getElementById('additive').remove();
+                document.getElementById('additionTable').innerHTML = "Show Additive Table"
+
+
+            } else {
+                let arrayValues = createTable(curve.fieldOrder, curve.mod, {mode:"additive"})
+            createTableHTML(arrayValues, curve.fieldOrder, "additive", "outputTableAddition");
+            document.getElementById('additionTable').innerHTML = "Remove Additive Table"
+            }
+
+        });
+
+    } else if(document.getElementById('pointMultiplication')){
+        document.getElementById('multiplicationTable').addEventListener('click', () => {
+
+        });
+    }
 });
 
 init();
@@ -235,7 +263,7 @@ createTableButton.addEventListener("click", () => {
     let optionsList = [{mode:"multiplicative"},{mode:"additive"}];
     for (let options of optionsList) {
         let arrayValues = createTable(curve.fieldOrder, curve.mod, options);
-        createTableHTML(arrayValues, curve.fieldOrder, options.mode);
+        createTableHTML(arrayValues, curve.fieldOrder, options.mode, "outputTableColumn");
     }
 });
 
@@ -579,7 +607,7 @@ function pointText (point, eq = "") {
 
 
 
-function createTableHTML (tableArray, tableSize, htmlID) {
+function createTableHTML (tableArray, tableSize, htmlID, outputID) {
     let oldTable = document.getElementById(htmlID);
     let newTable = document.createElement("table");
     newTable.id = htmlID;
@@ -638,7 +666,7 @@ function createTableHTML (tableArray, tableSize, htmlID) {
     if (oldTable) {
         oldTable.replaceWith(newTable);
     } else {
-        document.getElementById("outputTableColumn").appendChild(newTable);
+        document.getElementById(outputID).appendChild(newTable);
     }
 
 }
@@ -839,6 +867,9 @@ function pointAdditionSteps(points) {
         stepRows[0].innerHTML = `As \\(P \\neq Q\\), the slope \\(m\\) is calculated by: <br>
                                 \\(m = (y_P - y_Q) \\cdot (x_P - x_Q)^{-1} \\mod p = (${points.point1.y} - ${points.point2.y}) \\cdot (${points.point1.x} - ${points.point2.x})^{-1} = \\underline{${lambda}}\\) <br>
                                 Where \\((${points.point1.x} - ${points.point2.x})^{-1}\\) corresponds to calculating the inverse prime of the sum within the parentheses.`;
+        stepRows[0].innerHTML += `<button id="additionTable" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow block items-center">
+                                    Show Additive Table
+                                </button>`
 
     
         stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a third point -\\(R = (x_R, y_R)\\), where: <br>
@@ -851,6 +882,10 @@ function pointAdditionSteps(points) {
     
         // eslint-disable-next-line no-undef
     }
+
+    
+
+
     checkExplanationDisplay();
 
 }
