@@ -36,8 +36,6 @@ document.querySelector("#form").addEventListener("submit", (event) => {
     let prime;
     let power;
     let modoli;
-    let additionFunction;
-    let createPointsFunction;
     let discriminant;
 
     document.querySelectorAll("circle").forEach( (el) => {
@@ -54,49 +52,41 @@ document.querySelector("#form").addEventListener("submit", (event) => {
             prime = 5;
             power = 1;
             modoli = 5;
-            additionFunction = calcPointAdditionPrime;
             break;
         case ("Prime 17"):
             prime = 17;
             power = 1;
             modoli = 17;
-            additionFunction = calcPointAdditionPrime;
             break;
         case ("Prime 37"):
             prime = 37;
             power = 1;
             modoli = 37;
-            additionFunction = calcPointAdditionPrime;
             break;
         case ("Prime 131"):
             prime = 131;
             power = 1;
             modoli = 131;
-            additionFunction = calcPointAdditionPrime;
             break;
         case ("Prime 257"):
             prime = 257;
             power = 1;
             modoli = 257;
-            additionFunction = calcPointAdditionPrime;
             break;
         case ("GF2 4"):
             prime = 2;
             power = 4;
             modoli = 19;
-            additionFunction = calcPointAdditionGF2;
             break;
         case ("GF2 5"):
             prime = 2;
             power = 5;
             modoli = 37;
-            additionFunction = calcPointAdditionGF2;
             break;
         case ("GF2 8"):
             prime = 2;
             power = 8;
             modoli = 285;
-            additionFunction = calcPointAdditionGF2;
             break;
     }
     
@@ -119,7 +109,7 @@ document.querySelector("#form").addEventListener("submit", (event) => {
         alert(error);
     }
 
-    curve = createCurveABCD(a, b, c, d, Math.pow(prime, power), modoli, additionFunction);
+    curve = new Curve(a, b, c, d, Math.pow(prime, power), modoli);
 
     
 

@@ -1,7 +1,7 @@
-import { createCurveAXY, createCurveABCD, calcPointAdditionPrime, calcPointAdditionGF2 } from "../finitefield/curves.js";
+import { Curve, AXYCurve } from "../finitefield/curves.js";
 import { Mod } from "../finitefield/bits.js";
 
-let curve = createCurveABCD(118, 0, 0, 0, 257, 257, calcPointAdditionPrime); //256 points??
+let curve = new Curve(118, 0, 0, 0, 257, 257); //256 points??
 console.log("Starting");
 curve.createPoints();
 console.log("Done: "+ curve.points.length);
