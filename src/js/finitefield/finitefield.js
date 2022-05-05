@@ -598,15 +598,17 @@ function pointText (point, eq = "") {
 
 
 function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
+    
     let oldTable = document.getElementById(htmlID);
     let newTable = document.createElement("table");
     newTable.id = htmlID;
 
-    let pointXY;
+    let delta;
 
-    (colorBool === "color")?(pointXY = document.getElementsByClassName('steps')[0].getAttribute('id')):(console.log('test2'));
-    console.log(pointXY)
+    (colorBool === "color")?(delta = Number(document.getElementsByClassName('steps')[0].getAttribute('id'))):(console.log('test2'));
+    console.log('delta:', delta)
     
+    let primeInverse = inversePrime(delta, curve.mod)
     
 
     let headerRow = document.createElement("tr");
@@ -618,6 +620,9 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
         if (i !== -1) {
             header.textContent = i;
             header.classList.add("text-sm", "text-white", "font-medium", "px-2", "py-2", "whitespace-nowrap")
+            if(i === delta) {
+                header.classList.add("border-b", "bg-red-800", "border-gray-800")
+            }
 
         } else {
             header.classList.add("border-b", "bg-gray-800", "border-gray-800")
@@ -635,24 +640,43 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
             }
         }
         headerRow.classList.add("border-b", "bg-gray-800", "border-gray-900")
+        
+
 
         headerRow.appendChild(header);
     }
+
+    
+    
+
     newTable.appendChild(headerRow);
 
 
     //For each row
     for (let rowIndex = 0; rowIndex < tableSize; rowIndex++) {
         let row = document.createElement("tr");
+        
 
         let dataCell = document.createElement("td");
         dataCell.textContent = rowIndex;
 
         row.appendChild(dataCell);
 
-        row.firstChild.classList.add("border-b", "bg-gray-800", "border-gray-800", "text-sm", "text-white", "font-medium", "whitespace-nowrap", "text-center")
+
+        if(rowIndex === primeInverse) {
+            row.firstChild.classList.add("border-b", "bg-green-800", "border-gray-800", "text-sm", "text-white", "font-medium", "whitespace-nowrap", "text-center")
+        } else {
+            row.firstChild.classList.add("border-b", "bg-gray-800", "border-gray-800", "text-sm", "text-white", "font-medium", "whitespace-nowrap", "text-center")
+        }
+        
         for (let i = 0; i < tableSize; i++) {
             let dataCell = document.createElement("td");
+            if(i === delta && rowIndex <= primeInverse) {
+                console.log('lol', rowIndex)
+                dataCell.classList.add("bg-blue-800", "text-white")
+            } else if(rowIndex == primeInverse && i < delta) {
+                dataCell.classList.add("bg-blue-800", "text-white")
+            }
             dataCell.textContent = tableArray[i][rowIndex];
             dataCell.classList.add('mx-10', 'my-100')
             row.appendChild(dataCell);
@@ -665,6 +689,7 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
     } else {
         document.getElementById(outputID).appendChild(newTable);
     }
+
 
 }
 
@@ -877,7 +902,7 @@ function pointAdditionSteps(points) {
             stepRows[0].innerHTML += `<br>Calculating the inverse prime: As \\(${points.point1.x} - ${points.point2.x} = ${points.point1.x - points.point2.x} \\) (a negative number), \\(${points.point1.x - points.point2.x} \\mod ${curve.mod} = ${delta}\\) is calculated. <br>`;
         }  
 
-        stepRows[0].innerHTML += `Then, in the multiplicative table the inverse prime can be found by iterating rows \\(0 - ${curve.mod - 1}\\) from column \\(${delta}\\) until the entry with value \\(1\\) is found, then the inverse prime is the row to the entry, i.e. \\(${points.point3.alfa}\\). <br>`;
+        stepRows[0].innerHTML += `Then, in the multiplicative table the inverse prime can be found by iterating rows \\(0 - ${curve.mod - 1}\\) from column \\(${delta}\\) until the entry with value \\(1\\) is found, then the inverse prime is the row to the entry, i.e. \\(${inversePrime(delta, curve.mod)}\\). <br>`;
 
         stepRows[0].innerHTML += `<button id="multiplicationTableButton" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow block items-center">
                                     Show Additive Table
