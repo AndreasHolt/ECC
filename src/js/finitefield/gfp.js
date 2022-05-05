@@ -1,5 +1,5 @@
 import {Mod, numberOfBits2 } from "./bits.js";
-export {inversePrime };
+export {inversePrime, addField, multiplyField };
 
 
 function inversePrime (x, mod) {        //Enhance later (Double and add /// sqaure and multiply)
@@ -19,3 +19,12 @@ function inversePrime (x, mod) {        //Enhance later (Double and add /// sqau
     }
     return result;
 }
+
+function addField (val1, val2, mod) {
+    return Mod(val1 + val2, mod);
+}
+
+function multiplyField (val1, val2, mod) {
+    return Mod(val1 * val2, mod);
+}
+
