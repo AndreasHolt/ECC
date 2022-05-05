@@ -72,7 +72,7 @@ function createCurve (fieldOrder, mod, additionFunction) {
         calcPointAddition: additionFunction,
         calcPointMultiplication: function(k, P) {              //Scalar times a point     //https://scialert.net/fulltext/?doi=itj.2013.1780.1787
             let Q = P;
-            let i = numberOfBits2(k);
+            let i = 1 << (numberOfBits2(k) - 1);
             i >>= 1;
             //101 |1|01 => 2*0 + P, 1|0|1 => 2P, 10|1| => 2(2P) + P = 5P 
             while (i !== 0 ) {
@@ -82,7 +82,6 @@ function createCurve (fieldOrder, mod, additionFunction) {
                 }
                 i >>= 1;
             }
-    
             return Q;
         },
         calcPointDouble: function(point) {
@@ -166,7 +165,7 @@ function calcPointAdditionPrime (p1, p2) {
         let R = {x: xR, y: yR};
         return R;
     } else {
-        let alfa = (p2.y - p1.y) * inversePrime(p2.x - p1.x, this.mod);
+        let alfa = Mod((p2.y - p1.y) * inversePrime(p2.x - p1.x, this.mod), this.mod);
         let xR = Mod((-p1.x - p2.x + alfa*alfa), this.mod);
         let yR = Mod(-p1.y + alfa*(p1.x-xR), this.mod);
         let R = {x: xR, y: yR, alfa:alfa};
