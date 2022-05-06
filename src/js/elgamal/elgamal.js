@@ -46,6 +46,24 @@ class User {
             let textOut = this.decryptedTextField;
             let decryptedMessage = this.decrypt(curve, encryptedMessage, humanUser);
             textOut.value = decryptedMessage;
+
+            let back = document.createElement("INPUT");
+            back.setAttribute("type", "button");
+            back.setAttribute("value", "Back");
+            back.setAttribute("id", `backButton${this.label}`);
+            back.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1")
+            document.getElementById(`titleBox${this.label}`).appendChild(back);
+
+            let next = document.createElement("INPUT"); //Next button goes to 2nd part of visualization
+            next.setAttribute("type", "button");
+            next.setAttribute("value", "Next");
+            next.setAttribute("id", `nextButton${this.label}`);
+            next.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1")
+            document.getElementById(`titleBox${this.label}`).appendChild(next);
+
+            document.getElementById(`encryption${this.label}`).hidden = true;
+            document.getElementById(`encryptionVisualization${this.label}`).hidden = false;
+
             encryptionVisualization(this.label);
         });
         /*document.getElementById("sendMessageA").addEventListener("click", () => {
@@ -62,7 +80,7 @@ class User {
     }
     insertMessageRecieveHTML () {
         let outerDiv = document.createElement("div");
-        outerDiv.classList.add("basis-1/3");
+        outerDiv.classList.add(`basis-1/3`);
         outerDiv.innerHTML = `
             <p class="font-bold text-xl mb-2 text-blue-400">From you to person ${this.label}</p>
             <p id="titleBox${this.label}"></p>
@@ -71,14 +89,20 @@ class User {
                     <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
                         <h1 id="encryption${this.label}"
                         class="font-bold text-xl mb-2 text-gray-800">Encryption</h1>
+                        <h1 id="encryptionVisualization${this.label}" hidden="True"
+                        class="font-bold text-xl mb-2 text-gray-800">lmao</h1>
                     </div>
                     <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
                         <h1 id="publicCommunication${this.label}"
                         class="font-bold text-xl mb-2 text-gray-800">Public communication</h1>
+                        <h1 id="pCVisualization${this.label}" hidden="True"
+                        class="font-bold text-xl mb-2 text-gray-800">pranked</h1>
                     </div>
                     <div class="basis-1/3 flex border-2 border-black rounded-md items-center p-0.5">
                         <h1 id="decryption${this.label}"
                         class="font-bold text-xl mb-2 text-gray-800">Decryption</h1>
+                        <h1 id="decryptionVisualization${this.label}" hidden="True"
+                        class="font-bold text-xl mb-2 text-gray-800">idiot</h1>
                     </div>
                 </div>
                 <div class="col-span-2 px-0.5 py-1">
@@ -158,10 +182,10 @@ userPrivateKeyHTML.textContent = users[0].privateKey;
 let humanUser = new User("Human");
 users[0] = new User("A");
 users[0].insertMessageRecieveHTML();
-users[1] = new User("B");
+/* users[1] = new User("B");
 users[1].insertMessageRecieveHTML();
 users[2] = new User("C");
-users[2].insertMessageRecieveHTML();
+users[2].insertMessageRecieveHTML(); */
 /*users[1] = {
     privateKey: 32,//Math.floor(Math.random() * 100),
 };
@@ -260,47 +284,76 @@ function estLog2BigIntFloor(bigInt) {
     return BigInt(bigInt.toString(2).length-1);
 }
 
+function back1(e) {
+    let label = e.target.id[e.target.id.length-1];
+    document.getElementById(`encryption${label}`).hidden = false;
+    document.getElementById(`encryptionVisualization${label}`).hidden = true;
+    document.getElementById(`nextButton${label}`).remove();
+    document.getElementById(`backButton${label}`).remove();
+}
+
+function back2(e) {
+    let label = e.target.id[e.target.id.length-1];
+    document.getElementById(`publicCommunication${label}`).hidden = false;
+    document.getElementById(`pCVisualization${label}`).hidden = true;
+    document.getElementById(`nextButton${label}`).removeEventListener("click", next2);
+    document.getElementById(`backButton${label}`).removeEventListener("click", back2);
+
+    encryptionVisualization(label);
+}
+
+function next1(e) {
+    let label = e.target.id[e.target.id.length-1];
+    document.getElementById(`publicCommunication${label}`).hidden = true;
+    document.getElementById(`pCVisualization${label}`).hidden = false;
+    document.getElementById(`nextButton${label}`).removeEventListener("click", next1);
+    document.getElementById(`backButton${label}`).removeEventListener("click", back1);
+
+    publicCommunicationVisualization(label);
+}
+
+function next2(e) {
+    let label = e.target.id[e.target.id.length-1];
+
+    document.getElementById(`decryption${label}`).hidden = true;
+    document.getElementById(`decryptionVisualization${label}`).hidden = false;
+    document.getElementById(`nextButton${label}`).removeEventListener("click", next2);
+    document.getElementById(`backButton${label}`).removeEventListener("click", back2);
+    e.target.style.visibility = "hidden";
+
+    decryptionVisualization(label);
+}
+
+function back3(e) {
+    let label = e.target.id[e.target.id.length-1];
+    document.getElementById(`decryption${label}`).hidden = false;
+    document.getElementById(`decryptionVisualization${label}`).hidden = true;
+    document.getElementById(`nextButton${label}`).style.visibility = "visible";
+    document.getElementById(`backButton${label}`).removeEventListener("click", back3);
+
+    publicCommunicationVisualization(label);
+}
+
 
 function encryptionVisualization(label) {
-    console.log("poop")
-    let visualization = `lmao` // create visualization step 1 here
-    document.getElementById(`encryption${label}`).textContent = visualization;
 
-    let next = document.createElement("INPUT");
-    next.setAttribute("type", "button");
-    next.setAttribute("value", "Next");
-    next.setAttribute("id", "nextButton");
-    next.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1")
-    document.getElementById(`titleBox${label}`).appendChild(next);
-    
-    next.addEventListener("click", function hey(){
-        publicCommunicationVisualization(label);
-        next.removeEventListener("click", hey);
-    });
+    // visualization animation from point A to point B with message as point name
+
+    document.getElementById(`backButton${label}`).addEventListener("click", back1);
+    document.getElementById(`nextButton${label}`).addEventListener("click", next1);
 }
 
 function publicCommunicationVisualization(label) {
-    console.log("hey");
-    let visualization = `pranked` // create visualization step 1 here
-    document.getElementById(`publicCommunication${label}`).textContent = visualization;
 
-    let back = document.createElement("INPUT");
-    back.setAttribute("type", "button");
-    back.setAttribute("value", "Back");
-    back.setAttribute("id", "backButton");
-    back.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1")
-    document.getElementById(`titleBox${label}`).insertBefore(back, document.getElementById("nextButton"));
+    //visualization animation for part 2 here
 
-    document.getElementById("nextButton").addEventListener("click", function chat() {
-        decryptionVisualization(label);
-        next.removeEventListener("click", chat);
-    });
+    document.getElementById(`nextButton${label}`).addEventListener("click", next2);
+    document.getElementById(`backButton${label}`).addEventListener("click", back2);
 }
 
 function decryptionVisualization(label) {
-    console.log("ay");
-    let visualization = `idiot` // create visualization step 1 here
-    document.getElementById(`decryption${label}`).textContent = visualization;
 
-    document.getElementById("nextButton").remove();
+     //visualization animation for part 3 here
+
+    document.getElementById(`backButton${label}`).addEventListener("click", back3);
 }
