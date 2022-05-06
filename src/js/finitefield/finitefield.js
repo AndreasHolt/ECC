@@ -197,7 +197,9 @@ function pointAdditionFinite(index1, index2) {
         }
 
         let newPoint = curve.calcPointAddition(point1, point2);
-        newCalculatedPoints.push(drawPointElement(newPoint, curve.fieldOrder, 5, "orange", true));
+        //newCalculatedPoints.push(
+            drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
+            //);
 
         highlightPointTimeout(newPoint, 5, curve.fieldOrder);
         newCalculatedPoints.push(drawPointElement(point1, curve.fieldOrder, 5, "red", true));
@@ -273,12 +275,12 @@ function addScalarForm() {
     });
 }
 function drawLine (x1, x2, y1, y2, size, color = "black") {
-    ctx.beginPath();
+    /*ctx.beginPath();
     ctx.moveTo((x1 * canvas.width / size)-3, (canvas.height - (y1 * canvas.height / size)) -3);
     ctx.lineTo((x2 * canvas.width / size)-3, (canvas.height - (y2 * canvas.height / size)) - 3);
     ctx.strokeStyle = color;
-    ctx.stroke();
-    drawLineSvg1(x1, x2, y1, y2, size);
+    ctx.stroke();*/
+    drawLineSvg1(x1, x2, y1, y2, size, color);
     /*if (progress < curve.fieldOrder) {
         setTimeout(() => {drawLine(point1, point3, progress + 0.01)}, 0.1);
         let newPoint = {"x":Mod(point1.x + (progress),curve.fieldOrder), "y":Mod(point1.y+(point3.alfa*progress),curve.fieldOrder)};
@@ -332,11 +334,15 @@ function drawLineDirectGood (point, point3, options) {
     let tempPoint = {x: point1.x, y: point1.y};
     let i = 0;
 
+    //newCalculatedPoints.push(drawPointElement(point3, curve.fieldOrder, 5, "yellow", true));
+
     if (options.prime == false && point3.x != 0) {
         point3.y = additiveXOR(point3.y, point3.x);
     } else if (options.prime == true) {
         point3.y = Mod(curve.fieldOrder - point3.y, curve.fieldOrder);
     }
+
+    document.querySelectorAll("line .line").forEach(line => line.remove());
 
     newCalculatedPoints.push(drawPointElement(point3, curve.fieldOrder, 5, "fuchsia", true));
 
@@ -368,6 +374,7 @@ function drawLineDirectGood (point, point3, options) {
     drawLine(point1.x, tempPoint.x, point1.y, tempPoint.y, curve.fieldOrder);
 
     if (tempPoint.x === point3.x && tempPoint.y === point3.y) {
+        console.log("is true");
         drawLine(tempPoint.x, point3.x, tempPoint.y, Mod(curve.fieldOrder - point3.y, curve.fieldOrder), curve.fieldOrder, "green");
     }
 }
@@ -860,8 +867,10 @@ function drawLineSvg1(x1, x2, y1, y2, size, color = "black") {
     line.setAttributeNS(null, 'x1', `${x1 * (canvas.width / size)}`);
     line.setAttributeNS(null, 'y1', `${canvas.height - y1 * (canvas.height / size)}`);
     line.setAttributeNS(null, 'x2', `${x2 * (canvas.width / size)}`);
-    line.setAttributeNS(null, 'y2', `${canvas.height - y2 * (canvas.height / size)}`);                                                            //(canvas.height / (curve.fieldOrder * 1.2)) <= 5 ? (canvas.height / (curve.fieldOrder * 1.2)) : 5)
-    line.setAttributeNS(null, 'class', `stroke-${color} .line`);
+    line.setAttributeNS(null, 'y2', `${canvas.height - y2 * (canvas.height / size)}`); 
+    let styleStr = "stroke:" + color;                                                          //(canvas.height / (curve.fieldOrder * 1.2)) <= 5 ? (canvas.height / (curve.fieldOrder * 1.2)) : 5)
+    line.setAttributeNS(null, 'style', styleStr);
+    line.setAttributeNS(null, 'class', "line");
     svg.appendChild(line);
 }
 
