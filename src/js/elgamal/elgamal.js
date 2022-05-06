@@ -128,7 +128,7 @@ class User {
         let pointResult = [];
         let numberResult = [];
         let numPoints = BigInt(curve.points.length);
-        let blockSize = estLog2BigIntFloor(numPoints)/estLog2BigIntFloor(charSize-1n);    //log__base(points)
+        let blockSize = estLog2BigIntFloor(numPoints)/estLog2BigIntFloor(charSize);    //log__base(points)
         if (blockSize < 1) {
             throw("Not enough points on curve");
         }
@@ -281,7 +281,7 @@ function estLog2BigIntCeil(bigInt) {
 }
 
 function estLog2BigIntFloor(bigInt) {
-    return BigInt(bigInt.toString(2).length);
+    return BigInt(bigInt.toString(2).length-1);
 }
 
 function back1(e) {
