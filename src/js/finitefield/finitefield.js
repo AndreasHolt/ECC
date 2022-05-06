@@ -39,13 +39,13 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
             
             if(isOnPage(document.getElementById('multiplicative'))) {
                 document.getElementById('multiplicative').remove();
-                document.getElementById('multiplicationTableButton').innerHTML = "Show Additive Table"
+                document.getElementById('multiplicationTableButton').innerHTML = "Show Multiplicative Table"
 
 
             } else {
                 let arrayValues = createTable(curve.fieldOrder, curve.mod, {mode:"multiplicative"})
                 createTableHTML(arrayValues, curve.fieldOrder, "multiplicative", "outputTableMultiplication", "color");
-                document.getElementById('multiplicationTableButton').innerHTML = "Hide Additive Table"
+                document.getElementById('multiplicationTableButton').innerHTML = "Hide Multiplicative Table"
             }
 
         });
@@ -248,6 +248,8 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
 
     }
 });*/
+
+
 let createTableButton = document.getElementById("createTablesButton");
 createTableButton.addEventListener("click", () => {
     let optionsList = [{mode:"multiplicative"},{mode:"additive"}];
@@ -256,6 +258,7 @@ createTableButton.addEventListener("click", () => {
         createTableHTML(arrayValues, curve.fieldOrder, options.mode, "outputTableColumn", "nocolor");
     }
 });
+
 function addScalarForm() {
     document.getElementById("scalarForm").addEventListener("submit", (event) => {
         event.preventDefault();
@@ -522,6 +525,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 
         circle.setAttributeNS(null, 'style', 'fill: red; stroke: red; stroke-width: 1px;' );
     });
+
     circle.addEventListener("mouseover", () => {
         let pointDetailArray = pointDescription(point);
 
@@ -605,6 +609,9 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
     let newTable = document.createElement("table");
     newTable.id = htmlID;
 
+
+    newTable.classList.add('border-blue-500')
+
     let delta;
 
     (colorBool === "color")?(delta = Number(document.getElementsByClassName('steps')[0].getAttribute('id'))):(console.log('test2'));
@@ -615,6 +622,7 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
 
     let headerRow = document.createElement("tr");
 
+
     for (let i = -1; i < tableSize; i++) {
         let header = document.createElement("th");
 
@@ -623,7 +631,7 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
             header.textContent = i;
             header.classList.add("text-sm", "text-white", "font-medium", "px-2", "py-2", "whitespace-nowrap")
             if(i === delta) {
-                header.classList.add("border-b", "bg-red-800", "border-gray-800")
+                header.classList.add("border-b", "bg-red-600", "border-gray-800")
             }
 
         } else {
@@ -666,18 +674,23 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
 
 
         if(rowIndex === primeInverse) {
-            row.firstChild.classList.add("border-b", "bg-green-800", "border-gray-800", "text-sm", "text-white", "font-medium", "whitespace-nowrap", "text-center")
+            row.firstChild.classList.add("border-b", "bg-green-600", "border-gray-800", "text-sm", "text-white", "font-medium", "whitespace-nowrap", "text-center")
         } else {
             row.firstChild.classList.add("border-b", "bg-gray-800", "border-gray-800", "text-sm", "text-white", "font-medium", "whitespace-nowrap", "text-center")
         }
         
         for (let i = 0; i < tableSize; i++) {
             let dataCell = document.createElement("td");
+            dataCell.classList.add("text-center")
             if(i === delta && rowIndex <= primeInverse) {
                 console.log('lol', rowIndex)
-                dataCell.classList.add("bg-blue-800", "text-white")
+                dataCell.classList.add("bg-blue-400", "text-white")
             } else if(rowIndex == primeInverse && i < delta) {
-                dataCell.classList.add("bg-blue-800", "text-white")
+                dataCell.classList.add("bg-blue-400", "text-white")
+            } else if(i % 2 === 0 && rowIndex % 2 === 0) {
+                dataCell.classList.add("bg-gray-100")
+            } else if(i % 2 !== 0 && rowIndex % 2 === 1) {
+                dataCell.classList.add("bg-gray-100")
             }
             dataCell.textContent = tableArray[i][rowIndex];
             dataCell.classList.add('mx-10', 'my-100')
@@ -743,22 +756,6 @@ function calculateElements(size, mod, combinationFunction) {
 
 
 
-function gcd (val1, val2) {
-
-}
-
-function calcIreduciblePoly (size) {
-
-
-}
-
-
-function isPrime(val){
-
-}
-
-
-
 function showTable(arrayValues) {
     console.log(arrayValues);
 }
@@ -774,8 +771,6 @@ function clmul32(x1, x2, mod) {         // https://www.youtube.com/watch?v=v4HKU
 
     return result;                      //
 }
-
-
 
 function init() {
     let operationHeader = document.getElementById('operationHeader')
@@ -904,10 +899,10 @@ function pointAdditionSteps(points) {
             stepRows[0].innerHTML += `<br>Calculating the inverse prime: As \\(${points.point1.x} - ${points.point2.x} = ${points.point1.x - points.point2.x} \\) (a negative number), \\(${points.point1.x - points.point2.x} \\mod ${curve.mod} = ${delta}\\) is calculated. <br>`;
         }  
 
-        stepRows[0].innerHTML += `Then, in the multiplicative table the inverse prime can be found by iterating rows \\(0 - ${curve.mod - 1}\\) from column \\(${delta}\\) until the entry with value \\(1\\) is found, then the inverse prime is the row to the entry, i.e. \\(${inversePrime(delta, curve.mod)}\\). <br>`;
+        stepRows[0].innerHTML += `In the multiplicative table the inverse prime can be found by iterating rows \\(0 - ${curve.mod - 1}\\) from column \\(${delta}\\) until the entry with value \\(1\\) is found, then the inverse prime is the row to the entry, i.e. \\(${inversePrime(delta, curve.mod)}\\). <br>`;
 
         stepRows[0].innerHTML += `<button id="multiplicationTableButton" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow block items-center">
-                                    Show Additive Table
+                                    Show Multiplicative Table
                                 </button>`
 
     

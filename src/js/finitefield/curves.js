@@ -159,11 +159,12 @@ function calcDiscriminantGF2 (a,b,c,d, mod) {
 function calcPointAdditionPrime (p1, p2) {
     console.log(this.mod)
     if(p1.x === Infinity) {
-
         return p2;
+
     }
     if (p2.x === Infinity) {
         return p1;
+
     }
     if (p1.x === p2.x && p1.y === p2.y) {
         let alfa = Mod((3*(p1.x*p1.x) + this.a)*inversePrime(Mod(2*p1.y, this.mod), this.mod), this.mod);
@@ -171,16 +172,19 @@ function calcPointAdditionPrime (p1, p2) {
         let yR = Mod(this.fieldOrder - (p1.y + alfa*(xR - p1.x)), this.mod);
         let R = {x: xR, y: yR, alfa: alfa};
         return R;
+
     } else if (p1.x === p2.x) {
         let xR = Infinity;
         let yR = Infinity;
         let R = {x: xR, y: yR};
         return R;
+
     } else {
         let alfa = Mod((p2.y - p1.y) * inversePrime(p2.x - p1.x, this.mod), this.mod);
         let xR = Mod((-p1.x - p2.x + alfa*alfa), this.mod);
         let yR = Mod(-p1.y + alfa*(p1.x-xR), this.mod);
         let R = {x: xR, y: yR, alfa:alfa};
+
         return R;
     }
 }
@@ -263,7 +267,6 @@ function createPointsPrime () {
 }
 
 function listPoints(point1, point2, point3) {
-    console.log('teeest')
     const pointsListed = document.getElementById('pointsListed');
 
     pointsListed.innerHTML = `\\(P = (${point1.x}, ${point1.y})\\) &nbsp \\(Q = (${point2.x}, ${point2.y})\\) &nbsp \\(R = (${point3.x}, ${point3.y})\\)`;
