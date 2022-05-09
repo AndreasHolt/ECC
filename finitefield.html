@@ -73,7 +73,7 @@
           </select>
 
           <p class="font-bold text-xl mt-5 text-gray-800 mb-2" 
-             id="parameters">2. Pick curve parameters</p>
+             id="parameters">2. Pick curve parameters: \((y^2 = x^3 + ax + b) \mod 5\)</p>
   
   
           <div class="flex flex-wrap -mx-3 mb-6 justify-center">
@@ -277,10 +277,17 @@
 
     let r = new RegExp(/\d+/g);
     let max;
+    let mod = curveList.value.match(r)[0]
+
+    let a = document.getElementById('a').value
+    let b = document.getElementById('b').value
+
+
+    
 
     if (curveList.value.includes("GF")) {
-      let weierstrassCurve = "Pick curve parameters: \(y^2 + cxy + dy = x^3 + ax + b\)";
-      document.getElementById("parameters").innerText = weierstrassCurve;
+      let weierstrassCurve = `2. Pick curve parameters: \\(\(y^2 + cxy + dy = x^3 + ax + b)\\)`;
+      document.getElementById("parameters").innerHTML = weierstrassCurve;
       document.getElementById("weierstrass").style.display = "block";
 
       const power = curveList.value.split(" ")[1];
@@ -290,16 +297,20 @@
       document.getElementById("b").setAttribute("max", `${max}`);
       document.getElementById("c").setAttribute("max", `${max}`);
       document.getElementById("d").setAttribute("max", `${max}`);
+      MathJax.typeset();
     } else {
       document.getElementById("weierstrass").style.display = "none";
 
-      let generalCurve = "Pick curve parameters: \(y^2 = x^3 + ax + b\)";
-      document.getElementById("parameters").innerText = generalCurve
+      let generalCurve = `2. Pick curve parameters: \\((y^2 = x^3 + ax + b) \\mod ${mod} \\)`;
+      document.getElementById("parameters").innerHTML = generalCurve
 
       max = curveList.value.match(r)[0] - 1;
 
       document.getElementById("a").setAttribute("max", `${max}`);
       document.getElementById("b").setAttribute("max", `${max}`);
+
+      MathJax.typeset();
+
 
     }
 }
