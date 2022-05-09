@@ -1,7 +1,7 @@
 import { Curve, AXYCurve } from "../finitefield/curves.js";
 import { Mod } from "../finitefield/bits.js";
 
-let curve = new Curve(118, 0, 0, 0, 257, 257); //256 points??
+let curve = new Curve(118, 0, 0, 0, 68437, 68437); //256 points??
 console.log("Starting");
 curve.createPoints();
 console.log("Done: "+ curve.points.length);
@@ -10,6 +10,7 @@ curve.G = curve.points[143];//curve.points[Math.floor(Math.random()*curve.points
 
 let base = BigInt(curve.points.length);
 let charSize = BigInt(256);
+let encoding = [' ', 'a']
 
 let userPrivateKeyHTML = document.getElementById("userPrivateKey");
 
@@ -128,7 +129,7 @@ class User {
         let pointResult = [];
         let numberResult = [];
         let numPoints = BigInt(curve.points.length);
-        let blockSize = estLog2BigIntFloor(numPoints)/estLog2BigIntFloor(charSize);    //log__base(points)
+        let blockSize = estLog2BigIntFloor(numPoints)/estLog2BigIntFloor(charSize);    //log__charSize(points)
         if (blockSize < 1) {
             throw("Not enough points on curve");
         }
@@ -137,32 +138,35 @@ class User {
             blocks = blocks + 1n;
         }
         for (let i = 0; i < blocks; i++) {
-            let minVal = Math.min((i+1)*Number(blockSize), message.length);
-            let block = message.substring(i*Number(blockSize), minVal);
+            let lastIndexOfMessageInBlock = Math.min((i+1)*Number(blockSize), message.length);
+            let block = message.substring(i*Number(blockSize), lastIndexOfMessageInBlock);
             let charValuesArr = [];
             for (let char of block) {
                 charValuesArr.push(char.charCodeAt(0));
             }
-            let blockValue = combineLettersToNumber(charValuesArr,charSize);
+            let blockValue = combineLettersToNumber(charValuesArr, charSize);    //char3 * 256^2 + char2 * 256^1 + char1 * 256^0
             let encryptedPoint = encryptBlock(curve, blockValue, this, reciever);
             pointResult.push(encryptedPoint);
             numberResult.push(curve.pointToNumber(encryptedPoint));
         }
-        return combineLettersToNumber(numberResult, charSize ** blockSize);
+        return combineLettersToNumber(numberResult, base);     //block3 * 256 ^ blocksize ^ 2 + block2 * 256 ^ blocksize ^ 1 + block1 * 256 ^ blocksize ^ 0
     }
     decrypt (curve, number, sender) {
         let result = "";
         let numPoints = BigInt(curve.points.length);
-        let blockSize = estLog2BigIntFloor(numPoints)/estLog2BigIntFloor(charSize-1n);    //log__base(points)
+        let blockSize = estLog2BigIntFloor(numPoints)/estLog2BigIntFloor(charSize);    //log__base(points)
         if (blockSize < 1) {
             throw("Not enough points on curve");
         }
-        let blockArr = seperateLettersFromNumber(number, charSize ** blockSize);
+        let blockArr = seperateLettersFromNumber(number, base);
         for (let block of blockArr) {
             let point = curve.numberToPoint(block);
             let decruptValue = decryptBlock(curve, point, sender, this);
             let arrIntVal = seperateLettersFromNumber(decruptValue, charSize);
-            result += String.fromCharCode(arrIntVal);
+            arrIntVal.forEach((elem)=> {
+                result += String.fromCharCode(Number(elem));
+            });
+            //result += String.fromCharCode(Number(...arrIntVal));
             //arrIntVal.forEach((value) => {result += String.fromCharCode()})
             //return String.fromCharCode();
         }
@@ -170,7 +174,30 @@ class User {
     }
 }
 
-
+function createUTF8EncodingTable () {
+    //Index from 32 to 127
+    let table = document.createElement("table");
+    let rowKey = document.createElement("tr");
+    let rowValue = document.createElement("tr");
+    for (let i = 32; i <= 127; i++) {
+        if ((i-32) % 19 === 0) {
+            if (rowKey && rowValue && (i !== 32)) {
+                table.appendChild(rowKey);
+                table.appendChild(rowValue);
+            }
+            rowKey = document.createElement("tr");
+            rowValue = document.createElement("tr");
+        }
+        let dataCellKey = document.createElement("td");
+        dataCellKey.textContent = curve.numberToPoint(i).toString();
+        rowKey.appendChild(dataCellKey);
+        let dataCellValue = document.createElement("td");
+        dataCellValue.textContent = String.fromCharCode(i);
+        rowValue.appendChild(dataCellValue);
+    }
+    return table;
+}
+document.getElementById("imbeddingTable").replaceWith(createUTF8EncodingTable());   
 
 
 /*users[0] = {    /// The person using the website.
@@ -236,9 +263,9 @@ document.getElementById("newKeyButton").addEventListener("click", () => {
 function encryptBlock (curve, number, sender, reciever) {
     let pointMessage = curve.numberToPoint(number);
     let akG = curve.calcPointMultiplication(sender.privateKey, reciever.publicKey);
-    let point = curve.calcPointAddition(pointMessage, akG);
+    let encryptedPoint = curve.calcPointAddition(pointMessage, akG);
 
-    return point;
+    return encryptedPoint;
 }
 
 
@@ -254,7 +281,10 @@ function combineLettersToNumber (numbers, base) {
     let sum = BigInt(0);
     for(let i = BigInt(0); i < numbers.length; i++) {
         let value = BigInt(numbers[i]);
-        sum += value * (base ** i);//Math.pow(base, i);
+        if (numbers[i] >= base) {
+            throw("The value can not be larger than the base");
+        }
+        sum += value * (base ** i); // === value * Math.pow(base, i);
     }
     return sum;
 }

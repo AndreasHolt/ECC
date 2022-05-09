@@ -24,9 +24,24 @@ class Curve {
     }
 
     createPoints () {
-        this.calcPoints();
-        /*
         let curveID = `a${this.a}b${this.b}c${this.c}d${this.d}field${this.fieldOrder}mod${this.mod}`;
+        let jsonPoints = localStorage.getItem(curveID);
+        if (jsonPoints) {
+            this.points = JSON.parse(jsonPoints);
+            for (let p of this.points) {
+                //Object.assign(new Point, p);
+                Object.setPrototypeOf(p, Point.prototype);
+            }
+        } else {
+            this.calcPoints();
+            localStorage.setItem(curveID, JSON.stringify(this.points));
+        }
+        if (this.points[10] instanceof Point) {
+            console.log("Is point");
+        } else {
+            console.log("It is not point");
+        }
+        /*
         const fileUrl = new URL(`./public/curves/${curveID}.json`, import.meta.url).href
         fs.readFile(fileUrl, 'utf8', (err, data) => {
             if (err) {
@@ -62,8 +77,15 @@ class Curve {
     }
 
     calcPointMultiplication (k, P) {
+        console.log("k: " + k + ", P: " + P.toString());
         let Q = P;
         let i = 1 << (numberOfBits2(k) - 2);
+
+        if (k === 1) {
+            return Q;
+        } else if (k === 2){
+            return this.calcPointDouble(Q);
+        }
 
         //101 |1|01 => 2*0 + P, 1|0|1 => 2P, 10|1| => 2(2P) + P = 5P 
         while (i !== 0 ) {
@@ -121,6 +143,16 @@ class Curve {
         } else {
             return index;
         }
+    }
+}
+
+class Point {
+    constructor (x,y) {
+        this.x = x;
+        this.y = y;
+    }
+    toString () {
+        return `{${this.x}, ${this.y}}`;
     }
 }
 
@@ -232,7 +264,7 @@ function createPointsGF2 () {
             let leftSide = aXOR(mXOR(this.mod, y, y), mXOR(this.mod, cx, y), mXOR(this.mod, this.d, y));
             if (leftSide === rightSide)
             {
-                this.points.push({x: x, y: y});
+                this.points.push(new Point(x,y));
                 if (additiveXOR(x, y) === this.b) {
                     // console.log(`x: ${x}, y: ${y}, is xor = ${this.b}.`);
                 }
@@ -242,7 +274,7 @@ function createPointsGF2 () {
             }
         }
     }
-    this.points.push({x: Infinity, y: Infinity});
+    this.points.push(new Point(Infinity,Infinity));
 }
 
 function createPointsPrime () {
@@ -250,19 +282,19 @@ function createPointsPrime () {
         let rightSide = Mod((x*x*x + this.a*x + this.b), this.fieldOrder);
         for (let y = 0 ; y < this.fieldOrder ; y++) {
             if (Mod((y*y), this.fieldOrder) === rightSide) {
-                this.points.push({x: x, y: y});
+                this.points.push(new Point(x,y));
                 let oppositeY = Mod(this.fieldOrder-y, this.fieldOrder);    //Skal der ikke laves mod her?
                 if (oppositeY === this.fieldOrder) {
                     break;
                 }
                 if(Mod((oppositeY*oppositeY), this.fieldOrder) === rightSide) {
-                    this.points.push({x: x, y: oppositeY});
+                    this.points.push(new Point(x, oppositeY));
                     break;
                 }
             }
         }
     }
-    this.points.push({x: Infinity, y: Infinity});
+    this.points.push(new Point(Infinity, Infinity));
 
 }
 
