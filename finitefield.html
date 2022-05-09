@@ -9,6 +9,22 @@
     <script 
         src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        table tr:first-child td {
+          position: sticky;
+          top: 0;
+          z-index: 2;
+        }
+        table tr td:first-child {
+          position: sticky;
+          left: 0;
+          z-index: 1;
+        }
+        table tr:first-child td:first-child {
+          left: 0;
+          z-index: 3
+        }
+    </style>
 </head>
 <body>
 <ul class="flex">
@@ -57,7 +73,7 @@
           </select>
 
           <p class="font-bold text-xl mt-5 text-gray-800 mb-2" 
-             id="parameters">2. Pick curve parameters</p>
+             id="parameters">2. Pick curve parameters: \((y^2 = x^3 + ax + b) \mod 5\)</p>
   
   
           <div class="flex flex-wrap -mx-3 mb-6 justify-center">
@@ -245,7 +261,7 @@
             <h1 class="font-bold text-xl text-gray-800 mr-5">1.</h1>
             <p class="steps"></p>
           </div>
-        <div id="outputTableMultiplication" class="ml-10 block place-items-center"></div>
+        <div id="outputTableMultiplication" class="ml-10 block place-items-center overflow-auto inline-block" style="max-height: 85vh;"></div>
         <div class="flex flex-row mt-5 mx-0 px-10 py-5 place-items-center justify-start">
             <h1 class="font-bold text-xl text-gray-800 mr-5">2.</h1>
             <p class="steps"></p>
@@ -254,16 +270,6 @@
 
 </div>
 
-
-<div id="outputTableColumn" class="flex flex-row place-items-center 
-         justify-center mt-1">
-  <button
-    id="createTablesButton"
-    class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center">
-    Create tables
-  </button>
-
-</div>
 <script defer type="module" src="./src/js/finitefield/finitefield.js"></script>
 <script>
   function curveParameters() {
@@ -271,29 +277,40 @@
 
     let r = new RegExp(/\d+/g);
     let max;
+    let mod = curveList.value.match(r)[0]
+
+    let a = document.getElementById('a').value
+    let b = document.getElementById('b').value
+
+
+    
 
     if (curveList.value.includes("GF")) {
-      let weierstrassCurve = "Pick curve parameters: \(y^2 + cxy + dy = x^3 + ax + b\)";
-      document.getElementById("parameters").innerText = weierstrassCurve;
+      let weierstrassCurve = `2. Pick curve parameters: \\(\(y^2 + cxy + dy = x^3 + ax + b)\\)`;
+      document.getElementById("parameters").innerHTML = weierstrassCurve;
       document.getElementById("weierstrass").style.display = "block";
 
       const power = curveList.value.split(" ")[1];
-      max = Math.pow(curveList.value.match(r)[0], power) - 1;
+      max = Math.pow(curveList.value.match(r)[0], power) - 1;5
 
       document.getElementById("a").setAttribute("max", `${max}`);
       document.getElementById("b").setAttribute("max", `${max}`);
       document.getElementById("c").setAttribute("max", `${max}`);
       document.getElementById("d").setAttribute("max", `${max}`);
+      MathJax.typeset();
     } else {
       document.getElementById("weierstrass").style.display = "none";
 
-      let generalCurve = "Pick curve parameters: \(y^2 = x^3 + ax + b\)";
-      document.getElementById("parameters").innerText = generalCurve
+      let generalCurve = `2. Pick curve parameters: \\((y^2 = x^3 + ax + b) \\mod ${mod} \\)`;
+      document.getElementById("parameters").innerHTML = generalCurve
 
       max = curveList.value.match(r)[0] - 1;
 
       document.getElementById("a").setAttribute("max", `${max}`);
       document.getElementById("b").setAttribute("max", `${max}`);
+
+      MathJax.typeset();
+
 
     }
 }

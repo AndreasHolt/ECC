@@ -1,5 +1,9 @@
 import { twoDecimalRound } from './realsAddition';
 
+function isOnPage(element) {
+    return (element === document.body) ? false : document.body.contains(element);
+}
+
 function checkExplanationDisplay() {
     const container = document.getElementById('explanationContainer');
     if (!(container.style.display === 'none')) {
@@ -296,5 +300,5 @@ function removeBinaryParagraphs() {
 export {
     movePoint, moveSection, mouseToGraph, convertToXY, graphToCoords, coordsToGraph,
     getPointPlacement, addCalculatedPoint, logicPointAddition, drawLine, addPointOnClick,
-    getXY, addPointByInput, removeBinaryParagraphs, checkExplanationDisplay,
+    getXY, addPointByInput, removeBinaryParagraphs, checkExplanationDisplay, isOnPage
 };

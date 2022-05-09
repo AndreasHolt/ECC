@@ -3,18 +3,29 @@ import {numberOfBits2, Mod} from "./bits.js";
 import {listPoints, Curve, AXYCurve, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
 import { addField, inversePrime, multiplyField } from "./gfp.js";
 import {twoDecimalRound} from "../infinitefield/realsAddition"
-import {checkExplanationDisplay} from "../infinitefield/graphHelpers"
+import {checkExplanationDisplay, isOnPage} from "../infinitefield/graphHelpers"
 
 const canvas = document.getElementById("curveGraph");
 let ctx;
 if (canvas) {
     ctx = canvas.getContext("2d");
 }
-//let table = document.querySelector("#table");
 
 let curve;
 
 let newCalculatedPoints = [];
+function toggleTable(bool) { 
+    if(isOnPage(document.getElementById('multiplicative'))) {
+        document.getElementById('multiplicative').remove();
+        document.getElementById('multiplicationTableButton').innerHTML = "Show Multiplicative Table"
+
+
+    } else if(bool === 1){ // If 1 is passed as the value of the argument, then a table should also be created.
+        let arrayValues = createTable(curve.fieldOrder, curve.mod, {mode:"multiplicative"})
+        createTableHTML(arrayValues, curve.fieldOrder, "multiplicative", "outputTableMultiplication", "color");
+        document.getElementById('multiplicationTableButton').innerHTML = "Hide Multiplicative Table"
+    }
+}
 
 document.getElementById('explanationExpand').addEventListener('click', () => {
     const container = document.getElementById('explanationContainer');
@@ -27,39 +38,20 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
         container.style.display = 'none ';
     }
 
-
-    function isOnPage(element) { // TODO IMPORT INSTEAD
-        return (element === document.body) ? false : document.body.contains(element);
-    }
-
-    // IF button is disabled
     if(document.getElementById('pointAddition').disabled) {
         document.getElementById('multiplicationTableButton').addEventListener('click', () => {
             // TODO remove event listener for the other if active?
-            
-            if(isOnPage(document.getElementById('multiplicative'))) {
-                document.getElementById('multiplicative').remove();
-                document.getElementById('multiplicationTableButton').innerHTML = "Show Multiplicative Table"
-
-
-            } else {
-                let arrayValues = createTable(curve.fieldOrder, curve.mod, {mode:"multiplicative"})
-                createTableHTML(arrayValues, curve.fieldOrder, "multiplicative", "outputTableMultiplication", "color");
-                document.getElementById('multiplicationTableButton').innerHTML = "Hide Multiplicative Table"
-            }
+            toggleTable(1);
 
         });
 
-    } /* else if(document.getElementById('pointMultiplication')){
-        document.getElementById('multiplicationTable').addEventListener('click', () => {
-
-        });
-    } */
+    }
 });
 
 init();
 
 document.querySelector("#form").addEventListener("submit", (event) => {
+    deleteDrawing();
     event.preventDefault();
     let prime;
     let power;
@@ -173,18 +165,70 @@ document.querySelector("#form").addEventListener("submit", (event) => {
     createPoints(curve, sizeOfTable, modoli);
     curve.drawDots(sizeOfTable);
 */
+
+    document.getElementById('parameters').innerHTML = `2. Pick curve parameters: \\((y^2 = x^3 + ${a}x + ${b}) \\mod ${curve.mod} \\)`
+    MathJax.typeset();
 });
 
-function pointAdditionFinite(index1, index2) {
+function clearClickedPoints() {
+
+    let circles = document.querySelectorAll('circle')
+    console.log(document.querySelectorAll('circle'))
+
+
+        circles.forEach(circle => {
+            if(!circle.classList.contains('clickedPoint')) {
+                circle.setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
+            } else if(circle.hasAttribute('pointerEvents')) {
+                circle.remove();
+            }
+
+    });
+}
+
+function clearLines() {
     let lines = document.querySelectorAll(".line");
 
     lines.forEach(line => {
         line.remove();
     })
+}
+
+function deleteDrawing(bool) {
+    clearLines();
+    
+    if(isOnPage(document.getElementById('calculatedPoint'))) {
+        document.getElementById('calculatedPoint').remove()
+        
+    }
+    
+    
+
     newCalculatedPoints.forEach(point => {
         point.remove()
 
     });
+
+    // If 1 is passed as the argument, the clicked points are also removed
+    if(bool === 1) {
+        console.log('hi')
+        let clickedPoints = document.querySelectorAll('.clickedPoint')
+
+        for(let i = 0; i < clickedPoints.length; i++) {
+            clickedPoints[i].setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
+
+        }
+        clickedPoints.forEach(point => point.classList.remove('clickedPoint'))
+
+    }
+}
+
+    
+
+
+function pointAdditionFinite(index1, index2) {
+    deleteDrawing(0);
+    toggleTable(0)
 
  try {
         let point1 = curve.points[index1];
@@ -198,7 +242,9 @@ function pointAdditionFinite(index1, index2) {
 
         let newPoint = curve.calcPointAddition(point1, point2);
         //newCalculatedPoints.push(
-            drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
+            let yellowPoint = drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
+            yellowPoint.style.pointerEvents = "none"
+            yellowPoint.setAttribute('id', 'calculatedPoint')
             //);
 
         highlightPointTimeout(newPoint, 5, curve.fieldOrder);
@@ -228,6 +274,8 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
     let index1 = Number(event.target["index1"].value);
     let index2 = Number(event.target["index2"].value);
     pointAdditionFinite(index1, index2);
+
+
 });
 
 
@@ -251,18 +299,9 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
     }
 });*/
 
-
-let createTableButton = document.getElementById("createTablesButton");
-createTableButton.addEventListener("click", () => {
-    let optionsList = [{mode:"multiplicative"},{mode:"additive"}];
-    for (let options of optionsList) {
-        let arrayValues = createTable(curve.fieldOrder, curve.mod, options);
-        createTableHTML(arrayValues, curve.fieldOrder, options.mode, "outputTableColumn", "nocolor");
-    }
-});
-
 function addScalarForm() {
     document.getElementById("scalarForm").addEventListener("submit", (event) => {
+        deleteDrawing(0);
         event.preventDefault();
         let index = Number(event.target["index1"].value);
         let point = curve.points[index];
@@ -348,6 +387,7 @@ function drawLineDirectGood (point, point3, options) {
     document.querySelectorAll("line .line").forEach(line => line.remove());
 
     newCalculatedPoints.push(drawPointElement(point3, curve.fieldOrder, 5, "fuchsia", true));
+    newCalculatedPoints[newCalculatedPoints.length - 1].style.pointerEvents = "none"
 
     while(((tempPoint.x != point3.x) || (tempPoint.y != point3.y)) && i < 100) {
         tempPoint.x += 1;
@@ -414,7 +454,7 @@ function highlightPointTimeout (point, time, size) {
         circle.setAttributeNS(null, 'cy', y);
     }
     circle.setAttributeNS(null, 'r', 10);
-    circle.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 1px;' );
+    circle.setAttributeNS(null, 'style', 'fill: none; stroke: rgb(59 130 246); stroke-width: 1.5px;' );
     circle.style.zIndex = '50000';
     svg.appendChild(circle);
     setTimeout(() => {
@@ -477,6 +517,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     var svgns = "http://www.w3.org/2000/svg";
     var circle = document.createElementNS(svgns, 'circle');
     circle.style.pointerEvents = 'none' // TODO: Maybe remove later
+
     if (point.x === Infinity) {
         circle.setAttributeNS(null, 'cx', canvas.width);
         circle.setAttributeNS(null, 'cy', 0);
@@ -490,30 +531,37 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     svg.appendChild(circle);
 
     circle.addEventListener("click", () => {
-        ctx.clearRect(0, 0, 600, 600);
-        let clickedPoints = document.getElementsByClassName('clickedPoint')
         let circles = document.querySelectorAll('circle')
 
-
-        circles.forEach(circle => {
-            if(!circle.classList.contains('clickedPoint')) {
-                circle.setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
-            } else if(circle.hasAttribute('pointerEvents')) {
-                circle.remove();
-            }
-
-        });
+        ctx.clearRect(0, 0, 600, 600);
+        let clickedPoints = document.getElementsByClassName('clickedPoint')
+        
+        clearClickedPoints();
         
         let indexOfClickedPoints = [];
 
-
-        if(clickedPoints.length ===  2) {
+        if(document.getElementById('pointAddition').disabled && clickedPoints.length ===  2) {
             for(let i = clickedPoints.length - 1; i >= 0; i--) {
                 clickedPoints[i].setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
                 clickedPoints[i].classList.remove('clickedPoint')
             }
+            
+
+        } else if(document.getElementById('pointMultiplication').disabled && clickedPoints.length >= 0) {
+            for(let i = clickedPoints.length - 1; i >= 0; i--) {
+                clickedPoints[i].setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
+                clickedPoints[i].classList.remove('clickedPoint')
+
+            }
+
+            clearLines();
+
+            document.getElementById('index1').value = Number(document.getElementById('index').innerHTML)
+
+
 
         }
+
         circle.classList.add('clickedPoint')
 
         if(clickedPoints.length === 2) {
@@ -532,6 +580,9 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 
         circle.setAttributeNS(null, 'style', 'fill: red; stroke: red; stroke-width: 1px;' );
     });
+
+    // Event listener for mouse hover over points on the finite field.
+    // Displays description of points hovered etc.
 
     circle.addEventListener("mouseover", () => {
         let pointDetailArray = pointDescription(point);
@@ -555,7 +606,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
             return true;
         });
 
-        let pointDetails = [`<span class="detailKey">Index:</span> ${index}`, `<span class="detailKey">Point:</span> (${point.x}, ${point.y})`, `<span class="detailKey">Inverse:</span> (${pointDetailArray.negation.x}, ${pointDetailArray.negation.y})`, `<span class="detailKey">Subgroup: </span> ${pointDetailArray.orderOfSubGroup + 2}`,`<span class="detailKey">Generated sub group: </span> ${orderOfSubGroupString}`];
+        let pointDetails = [`<span class="detailKey">Index:</span> <span id="index">${index}</span>`, `<span class="detailKey">Point:</span> (${point.x}, ${point.y})`, `<span class="detailKey">Inverse:</span> (${pointDetailArray.negation.x}, ${pointDetailArray.negation.y})`, `<span class="detailKey">Subgroup: </span> ${pointDetailArray.orderOfSubGroup + 2}`,`<span class="detailKey">Generated sub group: </span> ${orderOfSubGroupString}`];
 
         output.innerHTML = "";
 
@@ -573,7 +624,6 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 
         }
 
-        //svg.appendChild(pointText(point, temp));
     });
     
     circle.addEventListener("mouseover", () => {
@@ -597,9 +647,10 @@ function pointText (point, eq = "") {
 
     if (eq) {
         textNode = document.createTextNode(eq + `(${point.x}, ${point.y})`);
-        //textElement.setAttribute('id', eq);
+
     } else {
         textNode = document.createTextNode(`(${point.x}, ${point.y})`);
+
     }
 
     textElement.appendChild(textNode);
@@ -617,7 +668,7 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
     newTable.id = htmlID;
 
 
-    newTable.classList.add('border-blue-500')
+    newTable.classList.add('border-blue-500', 'max-w-7xl')
 
     let delta;
 
@@ -631,21 +682,23 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
 
 
     for (let i = -1; i < tableSize; i++) {
-        let header = document.createElement("th");
-
+        let header = document.createElement("td");
 
         if (i !== -1) {
             header.textContent = i;
             header.classList.add("text-sm", "text-white", "font-medium", "px-2", "py-2", "whitespace-nowrap")
             if(i === delta) {
                 header.classList.add("border-b", "bg-red-600", "border-gray-800")
+            } else {
+                header.classList.add("border-b", "bg-gray-800", "border-gray-800")
             }
+
 
         } else {
             header.classList.add("border-b", "bg-gray-800", "border-gray-800")
 
             header.classList.add("text-sm", "text-white", "font-medium", "px-6", "py-6", "whitespace-nowrap")
-            newTable.classList.add("inline-block", "relative", "w-64", "basis-1/2", "table-fixed")
+            newTable.classList.add("inline-block", "relative", "basis-1/2", "table-fixed")
 
             if (htmlID === "multiplicative") {
                 header.textContent = "*";
@@ -656,9 +709,6 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
 
             }
         }
-        headerRow.classList.add("border-b", "bg-gray-800", "border-gray-900")
-        
-
 
         headerRow.appendChild(header);
     }
@@ -686,6 +736,7 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
             row.firstChild.classList.add("border-b", "bg-gray-800", "border-gray-800", "text-sm", "text-white", "font-medium", "whitespace-nowrap", "text-center")
         }
         
+        // For each column
         for (let i = 0; i < tableSize; i++) {
             let dataCell = document.createElement("td");
             dataCell.classList.add("text-center")
@@ -706,12 +757,12 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
         newTable.appendChild(row);
     }
 
+
     if (oldTable) {
         oldTable.replaceWith(newTable);
     } else {
         document.getElementById(outputID).appendChild(newTable);
     }
-
 
 }
 
@@ -749,24 +800,6 @@ function calculateElements(size, mod, combinationFunction) {
     return arrayValues;
 }
 
-//SLOW
-/*function numberOfBits (val) {
-    if (val === 0) {
-        return 1;
-    }
-    let i = 0;
-    while (val >> i != 0) {
-        i++;
-    }
-    return i;
-}*/
-
-
-
-function showTable(arrayValues) {
-    console.log(arrayValues);
-}
-
 function clmul32(x1, x2, mod) {         // https://www.youtube.com/watch?v=v4HKU_VBbqM
     let result = 0;
     //x2 |= 0;                            // Kun nødvendig hvis der er chance for at input er double
@@ -788,30 +821,31 @@ function init() {
 const operations = document.querySelectorAll('#pointAddition, #pointMultiplication');
 
 document.getElementById('pointAddition').addEventListener('click', (e) => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        Array.from(operations).forEach((buttons) => {
-            if (buttons.disabled === true) {
-                // eslint-disable-next-line no-param-reassign
-                buttons.disabled = false;
+    deleteDrawing(1);
+    
+    Array.from(operations).forEach((buttons) => {
+        if (buttons.disabled === true) {
+            if(document.getElementById('pointAddition').disabled) {
+                console.log('Doing point addition')
+            } else {
+                document.getElementById('Doing point multiplication')
             }
-        });
+            buttons.disabled = false;
+        }
+    });
 
-    operationHeader.innerHTML = "Point addition";
-    label1.innerHTML = "Index of 1st point:"
-    label2.innerHTML = "Index of 2nd point:"
-    form.removeAttribute('scalarForm')
-    form.setAttribute('id', 'additionForm')
-
-
-
-
+        operationHeader.innerHTML = "Point addition";
+        label1.innerHTML = "Index of 1st point:"
+        label2.innerHTML = "Index of 2nd point:"
+        form.removeAttribute('scalarForm')
+        form.setAttribute('id', 'additionForm')
         e.target.disabled = true;
+
     });
 
 document.getElementById('pointMultiplication').addEventListener('click', (e) => {
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    deleteDrawing(1);
 
         Array.from(operations).forEach((buttons) => {
             if (buttons.disabled === true) {
@@ -820,17 +854,14 @@ document.getElementById('pointMultiplication').addEventListener('click', (e) => 
             }
         });
 
-    operationHeader.innerHTML = "Point multiplication";
-    label1.innerHTML = "Index of point:"
-    label2.innerHTML = "Scalar to multiply"
-    form.removeAttribute('additionForm')
-    form.setAttribute('id', 'scalarForm')
-    addScalarForm();
-
-
-
-
+        operationHeader.innerHTML = "Point multiplication";
+        label1.innerHTML = "Index of point:"
+        label2.innerHTML = "Scalar to multiply"
+        form.removeAttribute('additionForm')
+        form.setAttribute('id', 'scalarForm')
+        addScalarForm(1);
         e.target.disabled = true;
+
     });
 }
 
@@ -838,7 +869,7 @@ function drawLineSvg(point1, point2, color = "black") {
     let svg = document.getElementById("lineSVG");
     var svgns = "http://www.w3.org/2000/svg";
     var line = document.createElementNS(svgns, 'line');
-    //circle.style.pointerEvents = 'none' // TODO: Maybe remove later
+
     line.setAttributeNS(null, 'x1', `${point1.getAttribute('cx')}`);
     line.setAttributeNS(null, 'y1', `${point1.getAttribute('cy')}`);
     line.setAttributeNS(null, 'x2', `${point2.getAttribute('cx')}`);
@@ -858,7 +889,6 @@ function drawLineSvg1(x1, x2, y1, y2, size, color = "black") {
     //});
 
 
-    //circle.style.pointerEvents = 'none' // TODO: Maybe remove later
     line.setAttributeNS(null, 'x1', `${x1 * (canvas.width / size)}`);
     line.setAttributeNS(null, 'y1', `${canvas.height - y1 * (canvas.height / size)}`);
     line.setAttributeNS(null, 'x2', `${x2 * (canvas.width / size)}`);
@@ -874,11 +904,9 @@ function drawLineSvg1(x1, x2, y1, y2, size, color = "black") {
 function pointAdditionSteps(points) {
 
 
-    //const lambda = twoDecimalRound(Mod((points.point1.y - points.point2.y) * inversePrime((points.point1.x - points.point2.x)), curve.mod))
     const lambda = points.point3.alfa
     const stepRows = document.getElementsByClassName('steps');
     let delta = (!(points.point1 == points.point2))?(points.point1.x - points.point2.x):(2 * points.point1.y);
-    // -7 % 17 = 10... inverse til 10 = 12 (highlight). Derefter gang 12 med det man fik til venstre, og så mod 17
     if(Number(delta) < 0) {
         console.log('negative')
         delta = Mod(delta, curve.mod);
@@ -902,10 +930,10 @@ function pointAdditionSteps(points) {
 
     } else {
         stepRows[0].innerHTML = `As \\(P \\neq Q\\), the slope \\(m\\) is calculated by: <br>
-                                \\(m = (y_P - y_Q) \\cdot (x_P - x_Q)^{-1} \\mod p = (${points.point1.y} - ${points.point2.y}) \\cdot (${points.point1.x} - ${points.point2.x})^{-1} = \\underline{${lambda}}\\) <br>
+                                \\(m = (y_P - y_Q) \\cdot (x_P - x_Q)^{-1} \\mod p = (${points.point1.y} - ${points.point2.y}) \\cdot (${points.point1.x} - ${points.point2.x})^{-1} \\mod ${curve.mod} = \\underline{${lambda}}\\) <br>
                                 Where \\((${points.point1.x} - ${points.point2.x})^{-1}\\) corresponds to calculating the inverse prime of the sum within the parentheses. <br>`;
         if(points.point1.x - points.point2.x < 0) {
-            stepRows[0].innerHTML += `<br>Calculating the inverse prime: As \\(${points.point1.x} - ${points.point2.x} = ${points.point1.x - points.point2.x} \\) (a negative number), \\(${points.point1.x - points.point2.x} \\mod ${curve.mod} = ${delta}\\) is calculated. <br>`;
+            stepRows[0].innerHTML += `<br>Calculating the inverse prime: <br> As \\(${points.point1.x} - ${points.point2.x} = ${points.point1.x - points.point2.x} \\) results in a negative number, \\(${points.point1.x - points.point2.x} \\mod ${curve.mod} = ${delta}\\) is calculated. <br>`;
         }  
 
         stepRows[0].innerHTML += `In the multiplicative table the inverse prime can be found by iterating rows \\(0 - ${curve.mod - 1}\\) from column \\(${delta}\\) until the entry with value \\(1\\) is found, then the inverse prime is the row to the entry, i.e. \\(${inversePrime(delta, curve.mod)}\\). <br>`;
@@ -919,9 +947,6 @@ function pointAdditionSteps(points) {
                                 \\(x_R = (m^2 - x_P - x_Q) \\mod p = (${lambda}^2 - ${points.point1.x} - ${points.point2.x}) \\mod ${curve.mod} = \\underline{${points.point3.x}}\\) <br>
                                 \\(y_R = (-y_P + m(x_P - x_R)) \\mod p = (${-points.point1.y} + ${lambda} \\cdot (${-points.point1.x} - ${points.point3.x})) \\mod ${curve.mod} = \\underline{${points.point3.y}}\\) <br> Hence:  <br>
                                 \\(\\textbf{R = (${points.point3.x}, ${points.point3.y})}\\)`;
-
-    
-                                //\\(\\textbf{-R = (${newX}, ${-newY})}\\)`;
     
         // eslint-disable-next-line no-undef
     }
@@ -943,9 +968,53 @@ function drawPointMultiplication(index, scalar) {
     for(let i = 2 ; i < scalar ; i++) {
         newPoint = curve.calcPointMultiplication(i, curve.points[index]);
         console.log(newPoint);
-        drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
-    }
+        let yellowPoint = drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
+        yellowPoint.style.pointerEvents = "none"
+        yellowPoint.setAttribute('id', 'calculatedPoint')    }
 
     newPoint = curve.calcPointMultiplication(scalar, curve.points[index]);
     drawLineDirectGood(curve.points[index], newPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
+}
+
+
+function curveParameters() {
+    const curveList = document.getElementById("curveList");
+
+    let r = new RegExp(/\d+/g);
+    let max;
+
+    let a = document.getElementById('a').value
+    let b = document.getElementById('b').value
+
+
+    
+
+    if (curveList.value.includes("GF")) {
+      let weierstrassCurve = `2. Pick curve parameters: \\(\(y^2 + cxy + dy = x^3 + ax + b\)\\)`;
+      document.getElementById("parameters").innerHTML = weierstrassCurve;
+      document.getElementById("weierstrass").style.display = "block";
+
+      const power = curveList.value.split(" ")[1];
+      max = Math.pow(curveList.value.match(r)[0], power) - 1;5
+
+      document.getElementById("a").setAttribute("max", `${max}`);
+      document.getElementById("b").setAttribute("max", `${max}`);
+      document.getElementById("c").setAttribute("max", `${max}`);
+      document.getElementById("d").setAttribute("max", `${max}`);
+      MathJax.typeset();
+    } else {
+      document.getElementById("weierstrass").style.display = "none";
+
+      let generalCurve = `2. Pick curve parameters: \\(\(y^2 = x^3 + ${a}x + ${b}\)\\)`;
+      document.getElementById("parameters").innerHTML = generalCurve
+
+      max = curveList.value.match(r)[0] - 1;
+
+      document.getElementById("a").setAttribute("max", `${max}`);
+      document.getElementById("b").setAttribute("max", `${max}`);
+
+      MathJax.typeset();
+
+
+    }
 }
