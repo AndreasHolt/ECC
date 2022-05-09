@@ -51,6 +51,7 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
 init();
 
 document.querySelector("#form").addEventListener("submit", (event) => {
+    deleteDrawing();
     event.preventDefault();
     let prime;
     let power;
@@ -164,6 +165,9 @@ document.querySelector("#form").addEventListener("submit", (event) => {
     createPoints(curve, sizeOfTable, modoli);
     curve.drawDots(sizeOfTable);
 */
+
+    document.getElementById('parameters').innerHTML = `2. Pick curve parameters: \\((y^2 = x^3 + ${a}x + ${b}) \\mod ${curve.mod} \\)`
+    MathJax.typeset();
 });
 
 function clearClickedPoints() {
@@ -270,6 +274,8 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
     let index1 = Number(event.target["index1"].value);
     let index2 = Number(event.target["index2"].value);
     pointAdditionFinite(index1, index2);
+
+
 });
 
 
@@ -968,4 +974,47 @@ function drawPointMultiplication(index, scalar) {
 
     newPoint = curve.calcPointMultiplication(scalar, curve.points[index]);
     drawLineDirectGood(curve.points[index], newPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
+}
+
+
+function curveParameters() {
+    const curveList = document.getElementById("curveList");
+
+    let r = new RegExp(/\d+/g);
+    let max;
+
+    let a = document.getElementById('a').value
+    let b = document.getElementById('b').value
+
+
+    
+
+    if (curveList.value.includes("GF")) {
+      let weierstrassCurve = `2. Pick curve parameters: \\(\(y^2 + cxy + dy = x^3 + ax + b\)\\)`;
+      document.getElementById("parameters").innerHTML = weierstrassCurve;
+      document.getElementById("weierstrass").style.display = "block";
+
+      const power = curveList.value.split(" ")[1];
+      max = Math.pow(curveList.value.match(r)[0], power) - 1;5
+
+      document.getElementById("a").setAttribute("max", `${max}`);
+      document.getElementById("b").setAttribute("max", `${max}`);
+      document.getElementById("c").setAttribute("max", `${max}`);
+      document.getElementById("d").setAttribute("max", `${max}`);
+      MathJax.typeset();
+    } else {
+      document.getElementById("weierstrass").style.display = "none";
+
+      let generalCurve = `2. Pick curve parameters: \\(\(y^2 = x^3 + ${a}x + ${b}\)\\)`;
+      document.getElementById("parameters").innerHTML = generalCurve
+
+      max = curveList.value.match(r)[0] - 1;
+
+      document.getElementById("a").setAttribute("max", `${max}`);
+      document.getElementById("b").setAttribute("max", `${max}`);
+
+      MathJax.typeset();
+
+
+    }
 }
