@@ -458,3 +458,5 @@ observer.observe(document.getElementById('layer2'), {
 });
 
 init();
+
+export {isOnPage}
