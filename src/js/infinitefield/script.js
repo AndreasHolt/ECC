@@ -26,14 +26,10 @@ document.getElementById('pointText').addEventListener('wheel', (e) => {
     }
 });
 
-/// ----------------------------------------------------------------------
-/// Draw points on graph
-/// ----------------------------------------------------------------------
-//
-
-
-
 function deletePoints() {
+    console.log("Zoom out");
+    redrawGraph(1, true);
+
     const allSVG = [
         document.getElementsByClassName('workingPoints'),
         document.getElementsByClassName('linesConnecting'),
@@ -374,10 +370,14 @@ function setGraph(zoom) {
     });
 }
 
-function redrawGraph(zoom) {
+function redrawGraph(zoom, reset) {
     myGraph.context.clearRect(0, 0, widthGraph, heightGraph, myGraph);
 
-    scaleZoom /= zoom;
+    if (reset) {
+        scaleZoom = 10;
+    } else {
+        scaleZoom /= zoom;
+    }
 
     myGraph = setGraph(scaleZoom);
 

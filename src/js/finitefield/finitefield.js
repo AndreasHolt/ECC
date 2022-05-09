@@ -668,14 +668,17 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
 
 
     for (let i = -1; i < tableSize; i++) {
-        let header = document.createElement("th");
+        let header = document.createElement("td");
 
         if (i !== -1) {
             header.textContent = i;
             header.classList.add("text-sm", "text-white", "font-medium", "px-2", "py-2", "whitespace-nowrap")
             if(i === delta) {
                 header.classList.add("border-b", "bg-red-600", "border-gray-800")
+            } else {
+                header.classList.add("border-b", "bg-gray-800", "border-gray-800")
             }
+
 
         } else {
             header.classList.add("border-b", "bg-gray-800", "border-gray-800")
@@ -692,9 +695,6 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
 
             }
         }
-        headerRow.classList.add("border-b", "bg-gray-800", "border-gray-900")
-        
-
 
         headerRow.appendChild(header);
     }
