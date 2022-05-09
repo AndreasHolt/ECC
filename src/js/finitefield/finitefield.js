@@ -3,7 +3,7 @@ import {numberOfBits2, Mod} from "./bits.js";
 import {listPoints, Curve, AXYCurve, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
 import { addField, inversePrime, multiplyField } from "./gfp.js";
 import {twoDecimalRound} from "../infinitefield/realsAddition"
-import {checkExplanationDisplay} from "../infinitefield/graphHelpers"
+import {checkExplanationDisplay, isOnPage} from "../infinitefield/graphHelpers"
 
 const canvas = document.getElementById("curveGraph");
 let ctx;
@@ -15,6 +15,20 @@ if (canvas) {
 let curve;
 
 let newCalculatedPoints = [];
+
+
+function toggleTable(bool) { // the boolean specifies whether or not the table should
+    if(isOnPage(document.getElementById('multiplicative'))) {
+        document.getElementById('multiplicative').remove();
+        document.getElementById('multiplicationTableButton').innerHTML = "Show Multiplicative Table"
+
+
+    } else if(bool === 1){
+        let arrayValues = createTable(curve.fieldOrder, curve.mod, {mode:"multiplicative"})
+        createTableHTML(arrayValues, curve.fieldOrder, "multiplicative", "outputTableMultiplication", "color");
+        document.getElementById('multiplicationTableButton').innerHTML = "Hide Multiplicative Table"
+    }
+}
 
 document.getElementById('explanationExpand').addEventListener('click', () => {
     const container = document.getElementById('explanationContainer');
@@ -28,25 +42,14 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
     }
 
 
-    function isOnPage(element) { // TODO IMPORT INSTEAD
-        return (element === document.body) ? false : document.body.contains(element);
-    }
+    
 
     // IF button is disabled
     if(document.getElementById('pointAddition').disabled) {
         document.getElementById('multiplicationTableButton').addEventListener('click', () => {
             // TODO remove event listener for the other if active?
-            
-            if(isOnPage(document.getElementById('multiplicative'))) {
-                document.getElementById('multiplicative').remove();
-                document.getElementById('multiplicationTableButton').innerHTML = "Show Multiplicative Table"
 
-
-            } else {
-                let arrayValues = createTable(curve.fieldOrder, curve.mod, {mode:"multiplicative"})
-                createTableHTML(arrayValues, curve.fieldOrder, "multiplicative", "outputTableMultiplication", "color");
-                document.getElementById('multiplicationTableButton').innerHTML = "Hide Multiplicative Table"
-            }
+            toggleTable(1);
 
         });
 
@@ -175,16 +178,66 @@ document.querySelector("#form").addEventListener("submit", (event) => {
 */
 });
 
-function pointAdditionFinite(index1, index2) {
+function clearClickedPoints() {
+
+    let circles = document.querySelectorAll('circle')
+    console.log(document.querySelectorAll('circle'))
+
+
+        circles.forEach(circle => {
+            if(!circle.classList.contains('clickedPoint')) {
+                circle.setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
+            } else if(circle.hasAttribute('pointerEvents')) {
+                circle.remove();
+            }
+
+    });
+}
+
+function clearLines() {
     let lines = document.querySelectorAll(".line");
 
     lines.forEach(line => {
         line.remove();
     })
+}
+
+function deleteDrawing(bool) {
+    clearLines();
+    
     newCalculatedPoints.forEach(point => {
         point.remove()
 
     });
+
+    // If 1 is passed as the argument, the clicked points are also removed
+    if(bool === 1) {
+        console.log('hi')
+        let clickedPoints = document.querySelectorAll('.clickedPoint')
+
+        for(let i = 0; i < clickedPoints.length; i++) {
+            clickedPoints[i].setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
+
+        }
+        clickedPoints.forEach(point => point.classList.remove('clickedPoint'))
+
+
+
+
+        
+
+    }
+}
+
+    
+
+
+function pointAdditionFinite(index1, index2) {
+
+    deleteDrawing(0);
+    
+
+    toggleTable(0)
 
  try {
         let point1 = curve.points[index1];
@@ -198,7 +251,8 @@ function pointAdditionFinite(index1, index2) {
 
         let newPoint = curve.calcPointAddition(point1, point2);
         //newCalculatedPoints.push(
-            drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
+            let yellowPoint = drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
+            yellowPoint.style.pointerEvents = "none"
             //);
 
         highlightPointTimeout(newPoint, 5, curve.fieldOrder);
@@ -253,6 +307,7 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
 
 function addScalarForm() {
     document.getElementById("scalarForm").addEventListener("submit", (event) => {
+        deleteDrawing(0);
         event.preventDefault();
         let index = Number(event.target["index1"].value);
         let point = curve.points[index];
@@ -338,6 +393,7 @@ function drawLineDirectGood (point, point3, options) {
     document.querySelectorAll("line .line").forEach(line => line.remove());
 
     newCalculatedPoints.push(drawPointElement(point3, curve.fieldOrder, 5, "fuchsia", true));
+    newCalculatedPoints[newCalculatedPoints.length - 1].style.pointerEvents = "none"
 
     while(((tempPoint.x != point3.x) || (tempPoint.y != point3.y)) && i < 100) {
         tempPoint.x += 1;
@@ -480,19 +536,12 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     svg.appendChild(circle);
 
     circle.addEventListener("click", () => {
-        ctx.clearRect(0, 0, 600, 600);
-        let clickedPoints = document.getElementsByClassName('clickedPoint')
         let circles = document.querySelectorAll('circle')
 
-
-        circles.forEach(circle => {
-            if(!circle.classList.contains('clickedPoint')) {
-                circle.setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
-            } else if(circle.hasAttribute('pointerEvents')) {
-                circle.remove();
-            }
-
-        });
+        ctx.clearRect(0, 0, 600, 600);
+        let clickedPoints = document.getElementsByClassName('clickedPoint')
+        
+        clearClickedPoints();
         
         let indexOfClickedPoints = [];
 
@@ -510,6 +559,8 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
                 clickedPoints[i].classList.remove('clickedPoint')
 
             }
+
+            clearLines();
 
             document.getElementById('index1').value = Number(document.getElementById('index').innerHTML)
 
@@ -790,19 +841,20 @@ function init() {
 const operations = document.querySelectorAll('#pointAddition, #pointMultiplication');
 
 document.getElementById('pointAddition').addEventListener('click', (e) => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    deleteDrawing(1);
+    
 
-        Array.from(operations).forEach((buttons) => {
-            if (buttons.disabled === true) {
-                // eslint-disable-next-line no-param-reassign
-                if(document.getElementById('pointAddition').disabled) {
-                    console.log('Doing point addition')
-                } else {
-                    document.getElementById('Doing point multiplication')
-                }
-                buttons.disabled = false;
+    Array.from(operations).forEach((buttons) => {
+        if (buttons.disabled === true) {
+            // eslint-disable-next-line no-param-reassign
+            if(document.getElementById('pointAddition').disabled) {
+                console.log('Doing point addition')
+            } else {
+                document.getElementById('Doing point multiplication')
             }
-        });
+            buttons.disabled = false;
+        }
+    });
 
     operationHeader.innerHTML = "Point addition";
     label1.innerHTML = "Index of 1st point:"
@@ -818,7 +870,7 @@ document.getElementById('pointAddition').addEventListener('click', (e) => {
 
 document.getElementById('pointMultiplication').addEventListener('click', (e) => {
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    deleteDrawing(1);
 
         Array.from(operations).forEach((buttons) => {
             if (buttons.disabled === true) {
@@ -832,7 +884,7 @@ document.getElementById('pointMultiplication').addEventListener('click', (e) => 
     label2.innerHTML = "Scalar to multiply"
     form.removeAttribute('additionForm')
     form.setAttribute('id', 'scalarForm')
-    addScalarForm();
+    addScalarForm(1);
 
 
 
@@ -950,7 +1002,8 @@ function drawPointMultiplication(index, scalar) {
     for(let i = 2 ; i < scalar ; i++) {
         newPoint = curve.calcPointMultiplication(i, curve.points[index]);
         console.log(newPoint);
-        drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
+        let yellowPoint = drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
+        yellowPoint.style.pointerEvents = "none"
     }
 
     newPoint = curve.calcPointMultiplication(scalar, curve.points[index]);

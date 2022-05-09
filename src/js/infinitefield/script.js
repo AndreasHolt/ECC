@@ -2,7 +2,7 @@ import { pointDouble } from './realsDoubling';
 import { pointAddition, twoDecimalRound } from './realsAddition';
 import { pointMultiplication } from './realsMultiplication';
 import {
-    movePoint, graphToCoords, coordsToGraph, addPointOnClick, addPointByInput, removeBinaryParagraphs,
+    movePoint, isOnPage, graphToCoords, coordsToGraph, addPointOnClick, addPointByInput, removeBinaryParagraphs,
 } from './graphHelpers';
 import {
     Graph, drawXAxis, drawYAxis, drawEquation,
@@ -31,9 +31,7 @@ document.getElementById('pointText').addEventListener('wheel', (e) => {
 /// ----------------------------------------------------------------------
 //
 
-function isOnPage(element) {
-    return (element === document.body) ? false : document.body.contains(element);
-}
+
 
 function deletePoints() {
     const allSVG = [
@@ -458,3 +456,4 @@ observer.observe(document.getElementById('layer2'), {
 });
 
 init();
+
