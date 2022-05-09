@@ -193,6 +193,13 @@ function clearLines() {
 function deleteDrawing(bool) {
     clearLines();
     
+    if(isOnPage(document.getElementById('calculatedPoint'))) {
+        document.getElementById('calculatedPoint').remove()
+        
+    }
+    
+    
+
     newCalculatedPoints.forEach(point => {
         point.remove()
 
@@ -233,6 +240,7 @@ function pointAdditionFinite(index1, index2) {
         //newCalculatedPoints.push(
             let yellowPoint = drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
             yellowPoint.style.pointerEvents = "none"
+            yellowPoint.setAttribute('id', 'calculatedPoint')
             //);
 
         highlightPointTimeout(newPoint, 5, curve.fieldOrder);
@@ -956,7 +964,7 @@ function drawPointMultiplication(index, scalar) {
         console.log(newPoint);
         let yellowPoint = drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
         yellowPoint.style.pointerEvents = "none"
-    }
+        yellowPoint.setAttribute('id', 'calculatedPoint')    }
 
     newPoint = curve.calcPointMultiplication(scalar, curve.points[index]);
     drawLineDirectGood(curve.points[index], newPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
