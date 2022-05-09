@@ -245,7 +245,7 @@
             <h1 class="font-bold text-xl text-gray-800 mr-5">1.</h1>
             <p class="steps"></p>
           </div>
-        <div id="outputTableMultiplication" class="ml-10 block place-items-center"></div>
+        <div id="outputTableMultiplication" class="ml-10 block place-items-center overflow-auto inline-block" style="max-height: 85vh;"></div>
         <div class="flex flex-row mt-5 mx-0 px-10 py-5 place-items-center justify-start">
             <h1 class="font-bold text-xl text-gray-800 mr-5">2.</h1>
             <p class="steps"></p>
@@ -254,16 +254,6 @@
 
 </div>
 
-
-<div id="outputTableColumn" class="flex flex-row place-items-center 
-         justify-center mt-1">
-  <button
-    id="createTablesButton"
-    class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center">
-    Create tables
-  </button>
-
-</div>
 <script defer type="module" src="./src/js/finitefield/finitefield.js"></script>
 <script>
   function curveParameters() {
@@ -278,7 +268,7 @@
       document.getElementById("weierstrass").style.display = "block";
 
       const power = curveList.value.split(" ")[1];
-      max = Math.pow(curveList.value.match(r)[0], power) - 1;
+      max = Math.pow(curveList.value.match(r)[0], power) - 1;5
 
       document.getElementById("a").setAttribute("max", `${max}`);
       document.getElementById("b").setAttribute("max", `${max}`);
