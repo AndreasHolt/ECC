@@ -414,7 +414,7 @@ function highlightPointTimeout (point, time, size) {
         circle.setAttributeNS(null, 'cy', y);
     }
     circle.setAttributeNS(null, 'r', 10);
-    circle.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 1px;' );
+    circle.setAttributeNS(null, 'style', 'fill: none; stroke: rgb(59 130 246); stroke-width: 1.5px;' );
     circle.style.zIndex = '50000';
     svg.appendChild(circle);
     setTimeout(() => {
@@ -507,11 +507,23 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
         let indexOfClickedPoints = [];
 
 
-        if(clickedPoints.length ===  2) {
+        if(document.getElementById('pointAddition').disabled && clickedPoints.length ===  2) {
             for(let i = clickedPoints.length - 1; i >= 0; i--) {
                 clickedPoints[i].setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
                 clickedPoints[i].classList.remove('clickedPoint')
             }
+            
+
+        } else if(document.getElementById('pointMultiplication').disabled && clickedPoints.length >= 0) {
+            for(let i = clickedPoints.length - 1; i >= 0; i--) {
+                clickedPoints[i].setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
+                clickedPoints[i].classList.remove('clickedPoint')
+
+            }
+
+            document.getElementById('index1').value = Number(document.getElementById('index').innerHTML)
+
+
 
         }
         circle.classList.add('clickedPoint')
@@ -555,7 +567,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
             return true;
         });
 
-        let pointDetails = [`<span class="detailKey">Index:</span> ${index}`, `<span class="detailKey">Point:</span> (${point.x}, ${point.y})`, `<span class="detailKey">Inverse:</span> (${pointDetailArray.negation.x}, ${pointDetailArray.negation.y})`, `<span class="detailKey">Subgroup: </span> ${pointDetailArray.orderOfSubGroup + 2}`,`<span class="detailKey">Generated sub group: </span> ${orderOfSubGroupString}`];
+        let pointDetails = [`<span class="detailKey">Index:</span> <span id="index">${index}</span>`, `<span class="detailKey">Point:</span> (${point.x}, ${point.y})`, `<span class="detailKey">Inverse:</span> (${pointDetailArray.negation.x}, ${pointDetailArray.negation.y})`, `<span class="detailKey">Subgroup: </span> ${pointDetailArray.orderOfSubGroup + 2}`,`<span class="detailKey">Generated sub group: </span> ${orderOfSubGroupString}`];
 
         output.innerHTML = "";
 
@@ -706,12 +718,12 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
         newTable.appendChild(row);
     }
 
+
     if (oldTable) {
         oldTable.replaceWith(newTable);
     } else {
         document.getElementById(outputID).appendChild(newTable);
     }
-
 
 }
 
@@ -793,6 +805,11 @@ document.getElementById('pointAddition').addEventListener('click', (e) => {
         Array.from(operations).forEach((buttons) => {
             if (buttons.disabled === true) {
                 // eslint-disable-next-line no-param-reassign
+                if(document.getElementById('pointAddition').disabled) {
+                    console.log('Doing point addition')
+                } else {
+                    document.getElementById('Doing point multiplication')
+                }
                 buttons.disabled = false;
             }
         });
@@ -902,10 +919,10 @@ function pointAdditionSteps(points) {
 
     } else {
         stepRows[0].innerHTML = `As \\(P \\neq Q\\), the slope \\(m\\) is calculated by: <br>
-                                \\(m = (y_P - y_Q) \\cdot (x_P - x_Q)^{-1} \\mod p = (${points.point1.y} - ${points.point2.y}) \\cdot (${points.point1.x} - ${points.point2.x})^{-1} = \\underline{${lambda}}\\) <br>
+                                \\(m = (y_P - y_Q) \\cdot (x_P - x_Q)^{-1} \\mod p = (${points.point1.y} - ${points.point2.y}) \\cdot (${points.point1.x} - ${points.point2.x})^{-1} \\mod ${curve.mod} = \\underline{${lambda}}\\) <br>
                                 Where \\((${points.point1.x} - ${points.point2.x})^{-1}\\) corresponds to calculating the inverse prime of the sum within the parentheses. <br>`;
         if(points.point1.x - points.point2.x < 0) {
-            stepRows[0].innerHTML += `<br>Calculating the inverse prime: As \\(${points.point1.x} - ${points.point2.x} = ${points.point1.x - points.point2.x} \\) (a negative number), \\(${points.point1.x - points.point2.x} \\mod ${curve.mod} = ${delta}\\) is calculated. <br>`;
+            stepRows[0].innerHTML += `<br>Calculating the inverse prime: <br> As \\(${points.point1.x} - ${points.point2.x} = ${points.point1.x - points.point2.x} \\) results in a negative number, \\(${points.point1.x - points.point2.x} \\mod ${curve.mod} = ${delta}\\) is calculated. <br>`;
         }  
 
         stepRows[0].innerHTML += `In the multiplicative table the inverse prime can be found by iterating rows \\(0 - ${curve.mod - 1}\\) from column \\(${delta}\\) until the entry with value \\(1\\) is found, then the inverse prime is the row to the entry, i.e. \\(${inversePrime(delta, curve.mod)}\\). <br>`;
