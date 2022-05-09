@@ -10,20 +10,17 @@ let ctx;
 if (canvas) {
     ctx = canvas.getContext("2d");
 }
-//let table = document.querySelector("#table");
 
 let curve;
 
 let newCalculatedPoints = [];
-
-
-function toggleTable(bool) { // the boolean specifies whether or not the table should
+function toggleTable(bool) { 
     if(isOnPage(document.getElementById('multiplicative'))) {
         document.getElementById('multiplicative').remove();
         document.getElementById('multiplicationTableButton').innerHTML = "Show Multiplicative Table"
 
 
-    } else if(bool === 1){
+    } else if(bool === 1){ // If 1 is passed as the value of the argument, then a table should also be created.
         let arrayValues = createTable(curve.fieldOrder, curve.mod, {mode:"multiplicative"})
         createTableHTML(arrayValues, curve.fieldOrder, "multiplicative", "outputTableMultiplication", "color");
         document.getElementById('multiplicationTableButton').innerHTML = "Hide Multiplicative Table"
@@ -41,23 +38,14 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
         container.style.display = 'none ';
     }
 
-
-    
-
-    // IF button is disabled
     if(document.getElementById('pointAddition').disabled) {
         document.getElementById('multiplicationTableButton').addEventListener('click', () => {
             // TODO remove event listener for the other if active?
-
             toggleTable(1);
 
         });
 
-    } /* else if(document.getElementById('pointMultiplication')){
-        document.getElementById('multiplicationTable').addEventListener('click', () => {
-
-        });
-    } */
+    }
 });
 
 init();
@@ -221,11 +209,6 @@ function deleteDrawing(bool) {
         }
         clickedPoints.forEach(point => point.classList.remove('clickedPoint'))
 
-
-
-
-        
-
     }
 }
 
@@ -233,10 +216,7 @@ function deleteDrawing(bool) {
 
 
 function pointAdditionFinite(index1, index2) {
-
     deleteDrawing(0);
-    
-
     toggleTable(0)
 
  try {
@@ -523,6 +503,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     var svgns = "http://www.w3.org/2000/svg";
     var circle = document.createElementNS(svgns, 'circle');
     circle.style.pointerEvents = 'none' // TODO: Maybe remove later
+
     if (point.x === Infinity) {
         circle.setAttributeNS(null, 'cx', canvas.width);
         circle.setAttributeNS(null, 'cy', 0);
@@ -545,7 +526,6 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
         
         let indexOfClickedPoints = [];
 
-
         if(document.getElementById('pointAddition').disabled && clickedPoints.length ===  2) {
             for(let i = clickedPoints.length - 1; i >= 0; i--) {
                 clickedPoints[i].setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
@@ -567,6 +547,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 
 
         }
+
         circle.classList.add('clickedPoint')
 
         if(clickedPoints.length === 2) {
@@ -585,6 +566,9 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 
         circle.setAttributeNS(null, 'style', 'fill: red; stroke: red; stroke-width: 1px;' );
     });
+
+    // Event listener for mouse hover over points on the finite field.
+    // Displays description of points hovered etc.
 
     circle.addEventListener("mouseover", () => {
         let pointDetailArray = pointDescription(point);
@@ -626,7 +610,6 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 
         }
 
-        //svg.appendChild(pointText(point, temp));
     });
     
     circle.addEventListener("mouseover", () => {
@@ -650,9 +633,10 @@ function pointText (point, eq = "") {
 
     if (eq) {
         textNode = document.createTextNode(eq + `(${point.x}, ${point.y})`);
-        //textElement.setAttribute('id', eq);
+
     } else {
         textNode = document.createTextNode(`(${point.x}, ${point.y})`);
+
     }
 
     textElement.appendChild(textNode);
@@ -685,7 +669,6 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
 
     for (let i = -1; i < tableSize; i++) {
         let header = document.createElement("th");
-
 
         if (i !== -1) {
             header.textContent = i;
@@ -739,6 +722,7 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
             row.firstChild.classList.add("border-b", "bg-gray-800", "border-gray-800", "text-sm", "text-white", "font-medium", "whitespace-nowrap", "text-center")
         }
         
+        // For each column
         for (let i = 0; i < tableSize; i++) {
             let dataCell = document.createElement("td");
             dataCell.classList.add("text-center")
@@ -802,24 +786,6 @@ function calculateElements(size, mod, combinationFunction) {
     return arrayValues;
 }
 
-//SLOW
-/*function numberOfBits (val) {
-    if (val === 0) {
-        return 1;
-    }
-    let i = 0;
-    while (val >> i != 0) {
-        i++;
-    }
-    return i;
-}*/
-
-
-
-function showTable(arrayValues) {
-    console.log(arrayValues);
-}
-
 function clmul32(x1, x2, mod) {         // https://www.youtube.com/watch?v=v4HKU_VBbqM
     let result = 0;
     //x2 |= 0;                            // Kun nødvendig hvis der er chance for at input er double
@@ -843,10 +809,8 @@ const operations = document.querySelectorAll('#pointAddition, #pointMultiplicati
 document.getElementById('pointAddition').addEventListener('click', (e) => {
     deleteDrawing(1);
     
-
     Array.from(operations).forEach((buttons) => {
         if (buttons.disabled === true) {
-            // eslint-disable-next-line no-param-reassign
             if(document.getElementById('pointAddition').disabled) {
                 console.log('Doing point addition')
             } else {
@@ -856,16 +820,13 @@ document.getElementById('pointAddition').addEventListener('click', (e) => {
         }
     });
 
-    operationHeader.innerHTML = "Point addition";
-    label1.innerHTML = "Index of 1st point:"
-    label2.innerHTML = "Index of 2nd point:"
-    form.removeAttribute('scalarForm')
-    form.setAttribute('id', 'additionForm')
-
-
-
-
+        operationHeader.innerHTML = "Point addition";
+        label1.innerHTML = "Index of 1st point:"
+        label2.innerHTML = "Index of 2nd point:"
+        form.removeAttribute('scalarForm')
+        form.setAttribute('id', 'additionForm')
         e.target.disabled = true;
+
     });
 
 document.getElementById('pointMultiplication').addEventListener('click', (e) => {
@@ -879,17 +840,14 @@ document.getElementById('pointMultiplication').addEventListener('click', (e) => 
             }
         });
 
-    operationHeader.innerHTML = "Point multiplication";
-    label1.innerHTML = "Index of point:"
-    label2.innerHTML = "Scalar to multiply"
-    form.removeAttribute('additionForm')
-    form.setAttribute('id', 'scalarForm')
-    addScalarForm(1);
-
-
-
-
+        operationHeader.innerHTML = "Point multiplication";
+        label1.innerHTML = "Index of point:"
+        label2.innerHTML = "Scalar to multiply"
+        form.removeAttribute('additionForm')
+        form.setAttribute('id', 'scalarForm')
+        addScalarForm(1);
         e.target.disabled = true;
+
     });
 }
 
@@ -897,7 +855,7 @@ function drawLineSvg(point1, point2, color = "black") {
     let svg = document.getElementById("lineSVG");
     var svgns = "http://www.w3.org/2000/svg";
     var line = document.createElementNS(svgns, 'line');
-    //circle.style.pointerEvents = 'none' // TODO: Maybe remove later
+
     line.setAttributeNS(null, 'x1', `${point1.getAttribute('cx')}`);
     line.setAttributeNS(null, 'y1', `${point1.getAttribute('cy')}`);
     line.setAttributeNS(null, 'x2', `${point2.getAttribute('cx')}`);
@@ -917,7 +875,6 @@ function drawLineSvg1(x1, x2, y1, y2, size, color = "black") {
     //});
 
 
-    //circle.style.pointerEvents = 'none' // TODO: Maybe remove later
     line.setAttributeNS(null, 'x1', `${x1 * (canvas.width / size)}`);
     line.setAttributeNS(null, 'y1', `${canvas.height - y1 * (canvas.height / size)}`);
     line.setAttributeNS(null, 'x2', `${x2 * (canvas.width / size)}`);
@@ -933,11 +890,9 @@ function drawLineSvg1(x1, x2, y1, y2, size, color = "black") {
 function pointAdditionSteps(points) {
 
 
-    //const lambda = twoDecimalRound(Mod((points.point1.y - points.point2.y) * inversePrime((points.point1.x - points.point2.x)), curve.mod))
     const lambda = points.point3.alfa
     const stepRows = document.getElementsByClassName('steps');
     let delta = (!(points.point1 == points.point2))?(points.point1.x - points.point2.x):(2 * points.point1.y);
-    // -7 % 17 = 10... inverse til 10 = 12 (highlight). Derefter gang 12 med det man fik til venstre, og så mod 17
     if(Number(delta) < 0) {
         console.log('negative')
         delta = Mod(delta, curve.mod);
@@ -978,9 +933,6 @@ function pointAdditionSteps(points) {
                                 \\(x_R = (m^2 - x_P - x_Q) \\mod p = (${lambda}^2 - ${points.point1.x} - ${points.point2.x}) \\mod ${curve.mod} = \\underline{${points.point3.x}}\\) <br>
                                 \\(y_R = (-y_P + m(x_P - x_R)) \\mod p = (${-points.point1.y} + ${lambda} \\cdot (${-points.point1.x} - ${points.point3.x})) \\mod ${curve.mod} = \\underline{${points.point3.y}}\\) <br> Hence:  <br>
                                 \\(\\textbf{R = (${points.point3.x}, ${points.point3.y})}\\)`;
-
-    
-                                //\\(\\textbf{-R = (${newX}, ${-newY})}\\)`;
     
         // eslint-disable-next-line no-undef
     }
