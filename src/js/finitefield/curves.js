@@ -114,7 +114,7 @@ class Curve {
     }
     inverseOfPoint (p) {
         let oppositeY = Mod(this.fieldOrder-p.y, this.fieldOrder);
-        return {x:p.x, y:oppositeY};
+        return new Point(p.x, oppositeY);
     }
     numberToPoint (num) {
         if (this.points.length >= 256) {
@@ -147,9 +147,10 @@ class Curve {
 }
 
 class Point {
-    constructor (x,y) {
+    constructor (x,y,alfa) {
         this.x = x;
         this.y = y;
+        this.alfa = alfa;
     }
     toString () {
         return `{${this.x}, ${this.y}}`;
@@ -202,20 +203,20 @@ function calcPointAdditionPrime (p1, p2) {
         let alfa = Mod((3*(p1.x*p1.x) + this.a)*inversePrime(Mod(2*p1.y, this.mod), this.mod), this.mod);
         let xR = Mod((alfa*alfa - 2*p1.x), this.mod);
         let yR = Mod(this.fieldOrder - (p1.y + alfa*(xR - p1.x)), this.mod);
-        let R = {x: xR, y: yR, alfa: alfa};
+        let R = new Point(xR, yR, alfa);
         return R;
 
     } else if (p1.x === p2.x) {
         let xR = Infinity;
         let yR = Infinity;
-        let R = {x: xR, y: yR};
+        let R = new Point(xR, yR);
         return R;
 
     } else {
         let alfa = Mod((p2.y - p1.y) * inversePrime(p2.x - p1.x, this.mod), this.mod);
         let xR = Mod((-p1.x - p2.x + alfa*alfa), this.mod);
         let yR = Mod(-p1.y + alfa*(p1.x-xR), this.mod);
-        let R = {x: xR, y: yR, alfa:alfa};
+        let R = new Point(xR, yR, alfa);
 
         return R;
     }
