@@ -194,12 +194,17 @@ function clearClickedPoints() {
     });
 }
 
-function deleteDrawing(bool) {
+function clearLines() {
     let lines = document.querySelectorAll(".line");
 
     lines.forEach(line => {
         line.remove();
     })
+}
+
+function deleteDrawing(bool) {
+    clearLines();
+    
     newCalculatedPoints.forEach(point => {
         point.remove()
 
@@ -246,7 +251,8 @@ function pointAdditionFinite(index1, index2) {
 
         let newPoint = curve.calcPointAddition(point1, point2);
         //newCalculatedPoints.push(
-            drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
+            let yellowPoint = drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
+            yellowPoint.style.pointerEvents = "none"
             //);
 
         highlightPointTimeout(newPoint, 5, curve.fieldOrder);
@@ -397,6 +403,7 @@ function drawLineDirectGood (point, point3, options) {
     document.querySelectorAll("line .line").forEach(line => line.remove());
 
     newCalculatedPoints.push(drawPointElement(point3, curve.fieldOrder, 5, "fuchsia", true));
+    newCalculatedPoints[newCalculatedPoints.length - 1].style.pointerEvents = "none"
 
     while(((tempPoint.x != point3.x) || (tempPoint.y != point3.y)) && i < 100) {
         tempPoint.x += 1;
@@ -562,6 +569,8 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
                 clickedPoints[i].classList.remove('clickedPoint')
 
             }
+
+            clearLines();
 
             document.getElementById('index1').value = Number(document.getElementById('index').innerHTML)
 
@@ -1003,7 +1012,8 @@ function drawPointMultiplication(index, scalar) {
     for(let i = 2 ; i < scalar ; i++) {
         newPoint = curve.calcPointMultiplication(i, curve.points[index]);
         console.log(newPoint);
-        drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
+        let yellowPoint = drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
+        yellowPoint.style.pointerEvents = "none"
     }
 
     newPoint = curve.calcPointMultiplication(scalar, curve.points[index]);
