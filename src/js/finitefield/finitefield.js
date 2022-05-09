@@ -251,16 +251,6 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
     }
 });*/
 
-
-let createTableButton = document.getElementById("createTablesButton");
-createTableButton.addEventListener("click", () => {
-    let optionsList = [{mode:"multiplicative"},{mode:"additive"}];
-    for (let options of optionsList) {
-        let arrayValues = createTable(curve.fieldOrder, curve.mod, options);
-        createTableHTML(arrayValues, curve.fieldOrder, options.mode, "outputTableColumn", "nocolor");
-    }
-});
-
 function addScalarForm() {
     document.getElementById("scalarForm").addEventListener("submit", (event) => {
         event.preventDefault();
@@ -629,7 +619,7 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
     newTable.id = htmlID;
 
 
-    newTable.classList.add('border-blue-500')
+    newTable.classList.add('border-blue-500', 'max-w-7xl')
 
     let delta;
 
@@ -657,7 +647,7 @@ function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
             header.classList.add("border-b", "bg-gray-800", "border-gray-800")
 
             header.classList.add("text-sm", "text-white", "font-medium", "px-6", "py-6", "whitespace-nowrap")
-            newTable.classList.add("inline-block", "relative", "w-64", "basis-1/2", "table-fixed")
+            newTable.classList.add("inline-block", "relative", "basis-1/2", "table-fixed")
 
             if (htmlID === "multiplicative") {
                 header.textContent = "*";
