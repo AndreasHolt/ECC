@@ -31,6 +31,10 @@ class Curve {
             for (let p of this.points) {
                 //Object.assign(new Point, p);
                 Object.setPrototypeOf(p, Point.prototype);
+                if (p.isAtInfinity) {
+                    p.x = Infinity;
+                    p.y = Infinity;
+                }
             }
         } else {
             this.calcPoints();
@@ -147,10 +151,11 @@ class Curve {
 }
 
 class Point {
-    constructor (x,y,alfa) {
+    constructor (x,y,alfa,isAtInfinity = false) {
         this.x = x;
         this.y = y;
         this.alfa = alfa;
+        this.isAtInfinity = isAtInfinity;
     }
     toString () {
         return `{${this.x}, ${this.y}}`;
@@ -295,7 +300,7 @@ function createPointsPrime () {
             }
         }
     }
-    this.points.push(new Point(Infinity, Infinity));
+    this.points.push(new Point(Infinity, Infinity, 0, true));
 
 }
 
