@@ -45,9 +45,7 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
         document.getElementById('multiplicationTableButton').addEventListener('click', () => {
             // TODO remove event listener for the other if active?
             toggleTable(finiteField.curve, 1);
-
         });
-
     }
 });
 
@@ -178,7 +176,7 @@ function deleteDrawing(bool) {
 
     });
 
-    // If 1 is passed as the argument, the clicked points are also removed
+    // If 1 is passed as the argument, the clicked points are also removed (converted to their original state)
     if(bool === 1) {
         console.log('hi')
         let clickedPoints = document.querySelectorAll('.clickedPoint')
@@ -187,6 +185,7 @@ function deleteDrawing(bool) {
             clickedPoints[i].setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
 
         }
+
         clickedPoints.forEach(point => point.classList.remove('clickedPoint'))
 
     }
@@ -405,6 +404,8 @@ function drawPointElement (canvas, curve, point, size, pointSize, color, temp = 
                 clickedPoints[i].classList.remove('clickedPoint')
 
             }
+
+            
 
             clearLines();
 
@@ -780,6 +781,13 @@ function pointAdditionSteps(curve, points) {
     
         // eslint-disable-next-line no-undef
     }
+
+
+    document.getElementById('multiplicationTableButton').addEventListener('click', () => {
+        // TODO remove event listener for the other if active?
+        toggleTable(1);
+
+    });
 
     
 
