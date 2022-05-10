@@ -38,14 +38,7 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
         container.style.display = 'none ';
     }
 
-    if(document.getElementById('pointAddition').disabled) {
-        document.getElementById('multiplicationTableButton').addEventListener('click', () => {
-            // TODO remove event listener for the other if active?
-            toggleTable(1);
 
-        });
-
-    }
 });
 
 init();
@@ -166,7 +159,7 @@ document.querySelector("#form").addEventListener("submit", (event) => {
     curve.drawDots(sizeOfTable);
 */
 
-    document.getElementById('parameters').innerHTML = `2. Pick curve parameters: \\((y^2 = x^3 + ${a}x + ${b}) \\mod ${curve.mod} \\)`
+    document.getElementById('parameters').innerHTML = `2. Pick curve parameters: \\(y^2 = (x^3 + ${a}x + ${b}) \\mod ${curve.mod} \\)`
     MathJax.typeset();
 });
 
@@ -209,7 +202,7 @@ function deleteDrawing(bool) {
 
     });
 
-    // If 1 is passed as the argument, the clicked points are also removed
+    // If 1 is passed as the argument, the clicked points are also removed (converted to their original state)
     if(bool === 1) {
         console.log('hi')
         let clickedPoints = document.querySelectorAll('.clickedPoint')
@@ -218,6 +211,7 @@ function deleteDrawing(bool) {
             clickedPoints[i].setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
 
         }
+
         clickedPoints.forEach(point => point.classList.remove('clickedPoint'))
 
     }
@@ -553,6 +547,8 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
                 clickedPoints[i].classList.remove('clickedPoint')
 
             }
+
+            
 
             clearLines();
 
@@ -951,6 +947,13 @@ function pointAdditionSteps(points) {
         // eslint-disable-next-line no-undef
     }
 
+
+    document.getElementById('multiplicationTableButton').addEventListener('click', () => {
+        // TODO remove event listener for the other if active?
+        toggleTable(1);
+
+    });
+
     
 
 
@@ -977,44 +980,3 @@ function drawPointMultiplication(index, scalar) {
 }
 
 
-function curveParameters() {
-    const curveList = document.getElementById("curveList");
-
-    let r = new RegExp(/\d+/g);
-    let max;
-
-    let a = document.getElementById('a').value
-    let b = document.getElementById('b').value
-
-
-    
-
-    if (curveList.value.includes("GF")) {
-      let weierstrassCurve = `2. Pick curve parameters: \\(\(y^2 + cxy + dy = x^3 + ax + b\)\\)`;
-      document.getElementById("parameters").innerHTML = weierstrassCurve;
-      document.getElementById("weierstrass").style.display = "block";
-
-      const power = curveList.value.split(" ")[1];
-      max = Math.pow(curveList.value.match(r)[0], power) - 1;5
-
-      document.getElementById("a").setAttribute("max", `${max}`);
-      document.getElementById("b").setAttribute("max", `${max}`);
-      document.getElementById("c").setAttribute("max", `${max}`);
-      document.getElementById("d").setAttribute("max", `${max}`);
-      MathJax.typeset();
-    } else {
-      document.getElementById("weierstrass").style.display = "none";
-
-      let generalCurve = `2. Pick curve parameters: \\(\(y^2 = x^3 + ${a}x + ${b}\)\\)`;
-      document.getElementById("parameters").innerHTML = generalCurve
-
-      max = curveList.value.match(r)[0] - 1;
-
-      document.getElementById("a").setAttribute("max", `${max}`);
-      document.getElementById("b").setAttribute("max", `${max}`);
-
-      MathJax.typeset();
-
-
-    }
-}
