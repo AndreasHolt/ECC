@@ -1,5 +1,6 @@
 import { Curve, AXYCurve } from "../finitefield/curves.js";
 import { Mod } from "../finitefield/bits.js";
+import {FiniteField} from "../finitefield/finiteFieldVisual.js"
 
 let curve = new Curve(118, 0, 0, 0, 257, 257); //256 points??
 console.log("Starting");
@@ -16,6 +17,8 @@ let userPrivateKeyHTML = document.getElementById("userPrivateKey");
 let users = [];
 class User {
     constructor (label) {
+        this.encryptFiniteField = new FiniteField();
+        this.decryptFiniteField = new FiniteField();
         this.label = label; //e.g. "A"
         ///Encrypted text field///
         this.encryptedTextField = document.createElement("input");
@@ -132,6 +135,8 @@ class User {
         document.getElementById(`textPreview${this.label}temp`).replaceWith(this.encryptedTextField);
         document.getElementById(`textDecrypted${this.label}temp`).replaceWith(this.decryptedTextField);
         document.getElementById(`sendMessage${this.label}temp`).replaceWith(this.sendMessageButton);
+        document.getElementById("innerDivEncryption").appendChild(this.encryptFiniteField.createHTMLElement());
+        document.getElementById("innerDivDecryption").appendChild(this.decryptFiniteField.createHTMLElement());
     }
     encrypt (curve, message, reciever) {
         let pointResult = [];

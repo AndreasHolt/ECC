@@ -2,19 +2,22 @@ import { multiplicativeXOR, additiveXOR, findInverseGF2, aXOR, mXOR } from "./gf
 import {numberOfBits2, Mod} from "./bits.js";
 import {listPoints, Curve, AXYCurve, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2} from "./curves.js";
 import { addField, inversePrime, multiplyField } from "./gfp.js";
-import {twoDecimalRound} from "../infinitefield/realsAddition"
-import {checkExplanationDisplay, isOnPage} from "../infinitefield/graphHelpers"
+import {twoDecimalRound} from "../infinitefield/realsAddition";
+import {checkExplanationDisplay, isOnPage} from "../infinitefield/graphHelpers";
+import {FiniteField} from "./finiteFieldVisual";
 
-const canvas = document.getElementById("curveGraph");
-let ctx;
-if (canvas) {
-    ctx = canvas.getContext("2d");
-}
 
-let curve;
+let finiteField = new FiniteField();
+finiteField.addCanvas(document.getElementById("curveGraph"));
+finiteField.addHighlightSVG(document.getElementById("highlightSVG"));
+finiteField.addLineSVG(document.getElementById("lineSVG"));
+
+
+
+
 
 let newCalculatedPoints = [];
-function toggleTable(bool) { 
+function toggleTable(curve, bool) { 
     if(isOnPage(document.getElementById('multiplicative'))) {
         document.getElementById('multiplicative').remove();
         document.getElementById('multiplicationTableButton').innerHTML = "Show Multiplicative Table"
@@ -22,7 +25,7 @@ function toggleTable(bool) {
 
     } else if(bool === 1){ // If 1 is passed as the value of the argument, then a table should also be created.
         let arrayValues = createTable(curve.fieldOrder, curve.mod, {mode:"multiplicative"})
-        createTableHTML(arrayValues, curve.fieldOrder, "multiplicative", "outputTableMultiplication", "color");
+        createTableHTML(curve, arrayValues, curve.fieldOrder, "multiplicative", "outputTableMultiplication", "color");
         document.getElementById('multiplicationTableButton').innerHTML = "Hide Multiplicative Table"
     }
 }
@@ -41,7 +44,7 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
     if(document.getElementById('pointAddition').disabled) {
         document.getElementById('multiplicationTableButton').addEventListener('click', () => {
             // TODO remove event listener for the other if active?
-            toggleTable(1);
+            toggleTable(finiteField.curve, 1);
 
         });
 
@@ -128,45 +131,11 @@ document.querySelector("#form").addEventListener("submit", (event) => {
     } catch (error) {
         alert(error);
     }
+    finiteField.addCurve(new Curve(a, b, c, d, Math.pow(prime, power), modoli));
+    finiteField.curve.createPoints();
+    drawPoints(finiteField.canvas, finiteField.curve, finiteField.curve.points, finiteField.curve.fieldOrder);
 
-    curve = new Curve(a, b, c, d, Math.pow(prime, power), modoli);
-
-    
-
-
-    //console.log("Subgroup for G: " + curve.calcSubGroup(curve.G));
-    curve.createPoints();
-    drawPoints(curve.points, curve.fieldOrder);
-    /*
-    curve.points = [];
-    let prime = Number(event.target["prime"].value);
-    let power = Number(event.target["power"].value);
-    let sizeOfTable = Math.pow(prime, power);
-    curve.fieldOrder = sizeOfTable;
-    let optionsList = [{mode:"multiplicative"},{mode:"additive"}];
-    let modoli;
-
-    if (power > 1) {
-        modoli = Number(event.target["modoli"].value);
-        //curve.c = 1;
-        //curve.d = 1;
-    } else {
-        modoli = prime;
-        curve.c = 0;
-        curve.d = 0;
-    }
-    curve.mod = modoli;
-
-    for (let options of optionsList) {
-        let arrayValues = createTable(sizeOfTable, modoli, options);
-        createTableHTML(arrayValues, sizeOfTable, options.mode);
-    }
-
-    createPoints(curve, sizeOfTable, modoli);
-    curve.drawDots(sizeOfTable);
-*/
-
-    document.getElementById('parameters').innerHTML = `2. Pick curve parameters: \\((y^2 = x^3 + ${a}x + ${b}) \\mod ${curve.mod} \\)`
+    document.getElementById('parameters').innerHTML = `2. Pick curve parameters: \\((y^2 = x^3 + ${a}x + ${b}) \\mod ${finiteField.curve.mod} \\)`
     MathJax.typeset();
 });
 
@@ -226,9 +195,9 @@ function deleteDrawing(bool) {
     
 
 
-function pointAdditionFinite(index1, index2) {
+function pointAdditionFinite(canvas, curve, index1, index2) {
     deleteDrawing(0);
-    toggleTable(0)
+    toggleTable(curve, 0);
 
  try {
         let point1 = curve.points[index1];
@@ -242,27 +211,28 @@ function pointAdditionFinite(index1, index2) {
 
         let newPoint = curve.calcPointAddition(point1, point2);
         //newCalculatedPoints.push(
-            let yellowPoint = drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
+            let yellowPoint = drawPointElement(canvas, curve, newPoint, curve.fieldOrder, 5, "yellow", true);
             yellowPoint.style.pointerEvents = "none"
             yellowPoint.setAttribute('id', 'calculatedPoint')
             //);
 
-        highlightPointTimeout(newPoint, 5, curve.fieldOrder);
-        newCalculatedPoints.push(drawPointElement(point1, curve.fieldOrder, 5, "red", true));
-        newCalculatedPoints.push(drawPointElement(point2, curve.fieldOrder, 5, "red", true));
-
+        highlightPointTimeout(canvas, newPoint, 5, curve.fieldOrder);
+        newCalculatedPoints.push(drawPointElement(canvas, curve, point1, curve.fieldOrder, 5, "red", true));
+        newCalculatedPoints.push(drawPointElement(canvas, curve, point2, curve.fieldOrder, 5, "red", true));
+        
+        newCalculatedPoints.push(drawPointElement(canvas, curve, newPoint, curve.fieldOrder, 5, "fuchsia", true));
+        newCalculatedPoints[newCalculatedPoints.length - 1].style.pointerEvents = "none";
 
 
         let listedPoints = listPoints(point1, point2, newPoint) // NEEDS TO PASS THE INVERSE_OF_POINT
      
-        pointAdditionSteps(listedPoints)
+        pointAdditionSteps(curve, listedPoints)
 
 
-        //drawLine(0, 16, 0, 1, curve.fieldOrder);
         if (index1 !== index2) {
             //drawLineDirect(point1, point2, newPoint, 100);
         }
-        drawLineDirectGood(point1, newPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
+        finiteField.drawLineDirectGood(point1, newPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
     } catch (e) {
         console.log("Error! find selv ud af det!");
         console.log(e);
@@ -273,166 +243,48 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
     event.preventDefault();
     let index1 = Number(event.target["index1"].value);
     let index2 = Number(event.target["index2"].value);
-    pointAdditionFinite(index1, index2);
+    pointAdditionFinite(finiteField.canvas, finiteField.curve, index1, index2);
 
 
 });
 
 
-/*document.getElementById("power").addEventListener("input", () => {
-    if (document.getElementById("power").value > 1) {
-        document.getElementById("modoliDiv").hidden = false;
-    } else {
-        document.getElementById("modoliDiv").hidden = true;
-    }
-});*/
 
-/*document.getElementById("Scalar").addEventListener("input", (event) => {
-    let index = Number(document.getElementById("index").value);
-    let point = curve.points[index];
-    let scale = Number(event.target.value);
-    if (point) {
 
-        let scaledPoint = curve.calcPointMultiplication(scale, point);
-        highlightPointTimeout(scaledPoint, 1000, curve.fieldOrder);
-
-    }
-});*/
-
-function addScalarForm() {
+function addScalarForm(canvas, curve) {
     document.getElementById("scalarForm").addEventListener("submit", (event) => {
         deleteDrawing(0);
         event.preventDefault();
         let index = Number(event.target["index1"].value);
         let point = curve.points[index];
         let scale = Number(event.target["index2"].value);
-        drawPoint(point, curve.fieldOrder, 5, "blue");
+        drawPoint(canvas, point, curve.fieldOrder, 5, "blue");
     
         if (point) {
             let scaledPoint = curve.calcPointMultiplication(scale, point);
-            drawPoint(scaledPoint, curve.fieldOrder, 5, "red");
-            drawLineDirectGood(point, scaledPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
-            drawPointMultiplication(index, scale);
+            drawPoint(canvas, scaledPoint, curve.fieldOrder, 5, "red");
+            finiteField.drawLineDirectGood(canvas, curve, point, scaledPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
+            drawPointMultiplication(canvas, curve, index, scale);
         }
     });
 }
-function drawLine (x1, x2, y1, y2, size, color = "black") {
-    /*ctx.beginPath();
-    ctx.moveTo((x1 * canvas.width / size)-3, (canvas.height - (y1 * canvas.height / size)) -3);
-    ctx.lineTo((x2 * canvas.width / size)-3, (canvas.height - (y2 * canvas.height / size)) - 3);
-    ctx.strokeStyle = color;
-    ctx.stroke();*/
-    drawLineSvg1(x1, x2, y1, y2, size, color);
-    /*if (progress < curve.fieldOrder) {
-        setTimeout(() => {drawLine(point1, point3, progress + 0.01)}, 0.1);
-        let newPoint = {"x":Mod(point1.x + (progress),curve.fieldOrder), "y":Mod(point1.y+(point3.alfa*progress),curve.fieldOrder)};
-        drawPoint(newPoint, curve.fieldOrder, 1, "green");
-    }*/
-}
-function drawLineDirect (point1, point2, newPoint, delay) {
-    let alfa = (point2.y - point1.y)/(point2.x - point1.x);
-    drawLineDirect_AUX(alfa, 0, 0.2, point1, newPoint, delay);
-}
-function drawLineDirect_AUX (alfa, progress, speed, previousPoint, target, delay) {
-    if (progress < curve.fieldOrder) {
-        //console.log("Alfa: " + alfa);
-        let newPoint = {"x":Mod(previousPoint.x + speed, curve.fieldOrder), "y":Mod(previousPoint.y+(alfa*speed), curve.fieldOrder)};
-        let xDifference = newPoint.x - (previousPoint.x + (speed));
-        let xMod = Math.abs(xDifference) > 0.00002;
-        let yDifference = newPoint.y - (previousPoint.y + (alfa*speed));
-        let yMod = Math.abs(yDifference) > 0.00002;
-        
-        //drawLine(previousPoint.x, newPoint.x, previousPoint.y, newPoint.y, curve.fieldOrder,"green");
-        //drawPoint(newPoint, curve.fieldOrder, 1, "green");
 
-        if ((previousPoint.x - target.x) / (newPoint.x - target.x) < 0 || (xMod && (previousPoint.x - target.x - curve.fieldOrder) / (newPoint.x - target.x) < 0)) {
-            drawLine(previousPoint.x, target.x, previousPoint.y, target.y, curve.fieldOrder,"black");
-            drawLine(target.x, target.x, Mod(target.y - curve.fieldOrder, curve.mod), target.y, curve.fieldOrder,"green");
-            return;
-        } else {
-            if (xMod || yMod) {
-                if (xMod && yMod) {
-                    drawLine(previousPoint.x, previousPoint.x + (speed), previousPoint.y, previousPoint.y + (alfa*speed), curve.fieldOrder,"green");
-                    drawLine(newPoint.x - (speed), newPoint.x, newPoint.y - (alfa*speed), curve.fieldOrder,"black");
-                } else if (xMod) {
-                    drawLine(previousPoint.x, previousPoint.x + (speed), previousPoint.y, newPoint.y, curve.fieldOrder,"black");
-                    drawLine(newPoint.x - (speed), newPoint.x, previousPoint.y, newPoint.y, curve.fieldOrder,"black");
-                } else {
-                    drawLine(previousPoint.x, newPoint.x, previousPoint.y, previousPoint.y + (alfa*speed), curve.fieldOrder,"black");
-                    drawLine(previousPoint.x, newPoint.x, newPoint.y - (alfa*speed), newPoint.y, curve.fieldOrder,"black");
-                }
-            } else {
-                drawLine(previousPoint.x, newPoint.x, previousPoint.y, newPoint.y, curve.fieldOrder,"black");
-            }
-            setTimeout(() => {drawLineDirect_AUX(alfa, progress, speed, newPoint, target, delay)}, delay);
-        }
-        return;
-    }
-}
 
-function drawLineDirectGood (point, point3, options) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    let point1 = {x: point.x, y: point.y};
-    let tempPoint = {x: point1.x, y: point1.y};
-    let i = 0;
 
-    //newCalculatedPoints.push(drawPointElement(point3, curve.fieldOrder, 5, "yellow", true));
 
-    if (options.prime == false && point3.x != 0) {
-        point3.y = additiveXOR(point3.y, point3.x);
-    } else if (options.prime == true) {
-        point3.y = Mod(curve.fieldOrder - point3.y, curve.fieldOrder);
-    }
 
-    document.querySelectorAll("line .line").forEach(line => line.remove());
-
-    newCalculatedPoints.push(drawPointElement(point3, curve.fieldOrder, 5, "fuchsia", true));
-    newCalculatedPoints[newCalculatedPoints.length - 1].style.pointerEvents = "none"
-
-    while(((tempPoint.x != point3.x) || (tempPoint.y != point3.y)) && i < 100) {
-        tempPoint.x += 1;
-        tempPoint.y += point3.alfa;
-
-        if (tempPoint.x === curve.fieldOrder && tempPoint.y >= curve.fieldOrder) {
-            drawLine(point1.x, (tempPoint.x - (tempPoint.y - curve.fieldOrder) * (1 / point3.alfa)), point1.y, curve.fieldOrder, curve.fieldOrder);
-            point1.x = tempPoint.x - (tempPoint.y - curve.fieldOrder) * (1 / point3.alfa);
-            point1.y = 0;
-            drawLine(tempPoint.x - (tempPoint.y - curve.fieldOrder) * (1 / point3.alfa), curve.fieldOrder, 0, point1.y, curve.fieldOrder);
-        } else if (tempPoint.x === curve.fieldOrder) {
-            drawLine(point1.x, tempPoint.x, point1.y, tempPoint.y, curve.fieldOrder);
-            point1.x = 0;
-            point1.y = tempPoint.y;
-        } else if (tempPoint.y >= curve.fieldOrder) {
-            drawLine(point1.x, (tempPoint.x - (tempPoint.y- curve.fieldOrder) / point3.alfa), point1.y, curve.fieldOrder, curve.fieldOrder);
-            point1.x = tempPoint.x - (tempPoint.y - curve.fieldOrder) / point3.alfa;
-            point1.y = 0;
-        }
-
-        tempPoint.x = Mod(tempPoint.x, curve.fieldOrder);
-        tempPoint.y = Mod(tempPoint.y, curve.fieldOrder);
-
-        ++i;
-    }
-
-    drawLine(point1.x, tempPoint.x, point1.y, tempPoint.y, curve.fieldOrder);
-
-    if (tempPoint.x === point3.x && tempPoint.y === point3.y) {
-        console.log("is true");
-        drawLine(tempPoint.x, point3.x, tempPoint.y, Mod(curve.fieldOrder - point3.y, curve.fieldOrder), curve.fieldOrder, "green");
-    }
-}
-
-function drawPoints (arrayPoints, fieldOrder) {
+function drawPoints (canvas, curve, arrayPoints, fieldOrder) {
     let pointSize = canvas.width / (fieldOrder * 1.25) < 5 ? canvas.width / (fieldOrder * 1.25) : 5;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
     for (let point of arrayPoints) {
-        drawPointElement(point, fieldOrder, pointSize, "rgb(59,129,246)");
+        drawPointElement(canvas, curve, point, fieldOrder, pointSize, "rgb(59,129,246)");
     }
 }
 
-function drawPoint (point, size, pointSize, color) {
+function drawPoint (canvas, point, size, pointSize, color) {
     //console.log("Hello1");
+    let ctx = canvas.getContext("2d");
     ctx.beginPath();
     ctx.arc(point.x * canvas.width / size, canvas.height - (point.y * canvas.height / size), pointSize, 0, 2 * Math.PI);
     ctx.fillStyle = color;
@@ -440,7 +292,7 @@ function drawPoint (point, size, pointSize, color) {
     ctx.stroke();
 }
 
-function highlightPointTimeout (point, time, size) {
+function highlightPointTimeout (canvas, point, time, size) {
     let svg = document.getElementById("highlightSVG");
     var svgns = "http://www.w3.org/2000/svg";
     var circle = document.createElementNS(svgns, 'circle');
@@ -462,7 +314,7 @@ function highlightPointTimeout (point, time, size) {
     }, time);
 }
 
-function highlightPoint (point, size) {
+function highlightPoint (canvas, point, size) {
     let svg = document.getElementById("highlightSVG");
     var svgns = "http://www.w3.org/2000/svg";
     var circle = document.createElementNS(svgns, 'circle');
@@ -474,7 +326,7 @@ function highlightPoint (point, size) {
     return circle;
 }
 
-function pointDescription(point) {
+function pointDescription(curve, point) {
     let negation = {x: point.x, y: point.y}; // If unable to find negation use ifself
     let subGroupPoint = {x: point.x, y: point.y}; //virker ikke
     let subGroup = [];
@@ -505,10 +357,10 @@ function pointDescription(point) {
 }
 
 
-function drawPointElement (point, size, pointSize, color, temp = false) {
+function drawPointElement (canvas, curve, point, size, pointSize, color, temp = false) {
     if(newCalculatedPoints.length !== 0) {
         newCalculatedPoints.forEach(point => {
-            point.remove()
+            point.remove();
 
         });
     }
@@ -516,7 +368,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     let svg = document.getElementById("highlightSVG");
     var svgns = "http://www.w3.org/2000/svg";
     var circle = document.createElementNS(svgns, 'circle');
-    circle.style.pointerEvents = 'none' // TODO: Maybe remove later
+    circle.style.pointerEvents = 'none'; // TODO: Maybe remove later
 
     if (point.x === Infinity) {
         circle.setAttributeNS(null, 'cx', canvas.width);
@@ -533,7 +385,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     circle.addEventListener("click", () => {
         let circles = document.querySelectorAll('circle')
 
-        ctx.clearRect(0, 0, 600, 600);
+        canvas.getContext("2d").clearRect(0, 0, 600, 600);
         let clickedPoints = document.getElementsByClassName('clickedPoint')
         
         clearClickedPoints();
@@ -569,11 +421,9 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
                 if(circles[i].classList.contains('clickedPoint')){
                     indexOfClickedPoints.push(i);
                 }
-
             }
             
-            pointAdditionFinite(indexOfClickedPoints[0], indexOfClickedPoints[1])
-            //drawLineSvg(clickedPoints[0], clickedPoints[1]);
+            pointAdditionFinite(canvas, curve, indexOfClickedPoints[0], indexOfClickedPoints[1])
 
         }
 
@@ -585,7 +435,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     // Displays description of points hovered etc.
 
     circle.addEventListener("mouseover", () => {
-        let pointDetailArray = pointDescription(point);
+        let pointDetailArray = pointDescription(curve, point);
 
 
         let orderOfSubGroupString = `(${point.x}, ${point.y}), `;
@@ -627,7 +477,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
     });
     
     circle.addEventListener("mouseover", () => {
-        highlightPointTimeout(point, 400, curve.fieldOrder);
+        highlightPointTimeout(canvas, point, 400, curve.fieldOrder);
     });
 
     if(temp) {
@@ -638,7 +488,7 @@ function drawPointElement (point, size, pointSize, color, temp = false) {
 }
 
 
-function pointText (point, eq = "") {
+function pointText (canvas, curve, point, eq = "") {
     let textNode;
     const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
@@ -661,7 +511,7 @@ function pointText (point, eq = "") {
 
 
 
-function createTableHTML (tableArray, tableSize, htmlID, outputID, colorBool) {
+function createTableHTML (curve, tableArray, tableSize, htmlID, outputID, colorBool) {
     
     let oldTable = document.getElementById(htmlID);
     let newTable = document.createElement("table");
@@ -859,7 +709,7 @@ document.getElementById('pointMultiplication').addEventListener('click', (e) => 
         label2.innerHTML = "Scalar to multiply"
         form.removeAttribute('additionForm')
         form.setAttribute('id', 'scalarForm')
-        addScalarForm(1);
+        addScalarForm(finiteField.canvas, finiteField.curve);
         e.target.disabled = true;
 
     });
@@ -878,30 +728,10 @@ function drawLineSvg(point1, point2, color = "black") {
     svg.appendChild(line);
 }
 
-function drawLineSvg1(x1, x2, y1, y2, size, color = "black") {
-    let svg = document.getElementById("lineSVG");
-    var svgns = "http://www.w3.org/2000/svg";
-    var line = document.createElementNS(svgns, 'line');
-    //let lines = document.querySelectorAll(".line");
-//
-    //lines.forEach(line => {
-    //    line.remove();
-    //});
-
-
-    line.setAttributeNS(null, 'x1', `${x1 * (canvas.width / size)}`);
-    line.setAttributeNS(null, 'y1', `${canvas.height - y1 * (canvas.height / size)}`);
-    line.setAttributeNS(null, 'x2', `${x2 * (canvas.width / size)}`);
-    line.setAttributeNS(null, 'y2', `${canvas.height - y2 * (canvas.height / size)}`); 
-    let styleStr = "stroke:" + color;                                                          //(canvas.height / (curve.fieldOrder * 1.2)) <= 5 ? (canvas.height / (curve.fieldOrder * 1.2)) : 5)
-    line.setAttributeNS(null, 'style', styleStr);
-    line.setAttributeNS(null, 'class', "line");
-    svg.appendChild(line);
-}
 
 
 
-function pointAdditionSteps(points) {
+function pointAdditionSteps(curve, points) {
 
 
     const lambda = points.point3.alfa
@@ -959,21 +789,21 @@ function pointAdditionSteps(points) {
 }
 
 
-function drawPointMultiplication(index, scalar) {
-    console.log("yesorno?");
-    const lines = document.querySelectorAll(".line");
+function drawPointMultiplication(canvas, curve, index, scalar) {
     let newPoint;
-    lines.forEach(line => line.remove());
-    drawPointElement(curve.points[index], curve.fieldOrder, 5, "red", true);
+
+    clearLines();
+
+    drawPointElement(canvas, curve, curve.points[index], curve.fieldOrder, 5, "red", true);
     for(let i = 2 ; i < scalar ; i++) {
         newPoint = curve.calcPointMultiplication(i, curve.points[index]);
         console.log(newPoint);
-        let yellowPoint = drawPointElement(newPoint, curve.fieldOrder, 5, "yellow", true);
+        let yellowPoint = drawPointElement(canvas, curve, newPoint, curve.fieldOrder, 5, "yellow", true);
         yellowPoint.style.pointerEvents = "none"
         yellowPoint.setAttribute('id', 'calculatedPoint')    }
 
     newPoint = curve.calcPointMultiplication(scalar, curve.points[index]);
-    drawLineDirectGood(curve.points[index], newPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
+    finiteField.drawLineDirectGood(canvas, curve, curve.points[index], newPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
 }
 
 
@@ -989,7 +819,7 @@ function curveParameters() {
 
     
 
-    if (curveList.value.includes("GF")) {
+    /*if (curveList.value.includes("GF")) {
       let weierstrassCurve = `2. Pick curve parameters: \\(\(y^2 + cxy + dy = x^3 + ax + b\)\\)`;
       document.getElementById("parameters").innerHTML = weierstrassCurve;
       document.getElementById("weierstrass").style.display = "block";
@@ -1002,7 +832,7 @@ function curveParameters() {
       document.getElementById("c").setAttribute("max", `${max}`);
       document.getElementById("d").setAttribute("max", `${max}`);
       MathJax.typeset();
-    } else {
+    } else {*/
       document.getElementById("weierstrass").style.display = "none";
 
       let generalCurve = `2. Pick curve parameters: \\(\(y^2 = x^3 + ${a}x + ${b}\)\\)`;
@@ -1016,5 +846,76 @@ function curveParameters() {
       MathJax.typeset();
 
 
-    }
+    //}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/*function drawLineDirect (curve, point1, point2, newPoint, delay) {
+    let alfa = (point2.y - point1.y)/(point2.x - point1.x);
+    drawLineDirect_AUX(curve, alfa, 0, 0.2, point1, newPoint, delay);
+}
+function drawLineDirect_AUX (curve, alfa, progress, speed, previousPoint, target, delay) {
+    if (progress < curve.fieldOrder) {
+        //console.log("Alfa: " + alfa);
+        let newPoint = {"x":Mod(previousPoint.x + speed, curve.fieldOrder), "y":Mod(previousPoint.y+(alfa*speed), curve.fieldOrder)};
+        let xDifference = newPoint.x - (previousPoint.x + (speed));
+        let xMod = Math.abs(xDifference) > 0.00002;
+        let yDifference = newPoint.y - (previousPoint.y + (alfa*speed));
+        let yMod = Math.abs(yDifference) > 0.00002;
+        
+
+        if ((previousPoint.x - target.x) / (newPoint.x - target.x) < 0 || (xMod && (previousPoint.x - target.x - curve.fieldOrder) / (newPoint.x - target.x) < 0)) {
+            drawLineSvg1(previousPoint.x, target.x, previousPoint.y, target.y, curve.fieldOrder,"black");
+            drawLineSvg1(target.x, target.x, Mod(target.y - curve.fieldOrder, curve.mod), target.y, curve.fieldOrder,"green");
+            return;
+        } else {
+            if (xMod || yMod) {
+                if (xMod && yMod) {
+                    drawLineSvg1(previousPoint.x, previousPoint.x + (speed), previousPoint.y, previousPoint.y + (alfa*speed), curve.fieldOrder,"green");
+                    drawLineSvg1(newPoint.x - (speed), newPoint.x, newPoint.y - (alfa*speed), curve.fieldOrder,"black");
+                } else if (xMod) {
+                    drawLineSvg1(previousPoint.x, previousPoint.x + (speed), previousPoint.y, newPoint.y, curve.fieldOrder,"black");
+                    drawLineSvg1(newPoint.x - (speed), newPoint.x, previousPoint.y, newPoint.y, curve.fieldOrder,"black");
+                } else {
+                    drawLineSvg1(previousPoint.x, newPoint.x, previousPoint.y, previousPoint.y + (alfa*speed), curve.fieldOrder,"black");
+                    drawLineSvg1(previousPoint.x, newPoint.x, newPoint.y - (alfa*speed), newPoint.y, curve.fieldOrder,"black");
+                }
+            } else {
+                drawLineSvg1(previousPoint.x, newPoint.x, previousPoint.y, newPoint.y, curve.fieldOrder,"black");
+            }
+            setTimeout(() => {drawLineDirect_AUX(curve, alfa, progress, speed, newPoint, target, delay)}, delay);
+        }
+        return;
+    }
+}*/
+
+
+/*document.getElementById("power").addEventListener("input", () => {
+    if (document.getElementById("power").value > 1) {
+        document.getElementById("modoliDiv").hidden = false;
+    } else {
+        document.getElementById("modoliDiv").hidden = true;
+    }
+});*/
+
+/*document.getElementById("Scalar").addEventListener("input", (event) => {
+    let index = Number(document.getElementById("index").value);
+    let point = curve.points[index];
+    let scale = Number(event.target.value);
+    if (point) {
+
+        let scaledPoint = curve.calcPointMultiplication(scale, point);
+        highlightPointTimeout(scaledPoint, 1000, curve.fieldOrder);
+
+    }
+});*/
