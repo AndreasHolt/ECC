@@ -42,7 +42,7 @@ class User {
         this.sendMessageButton.textContent = "Send message";
 
         this.sendMessageButton.addEventListener("click", (e) => {
-            let encryptedMessage = BigInt(this.encryptedTextField.value);           ///Works????
+            let encryptedMessage = this.encryptedTextField.value;           ///Works????
             let textOut = this.decryptedTextField;
             let decryptedMessage = this.decrypt(curve, encryptedMessage, humanUser);
             textOut.value = decryptedMessage;
@@ -157,24 +157,26 @@ class User {
             pointResult.push(encryptedPoint);
             numberResult.push(curve.pointToNumber(encryptedPoint));
         }
-        let pointTextResult = "";
-        pointResult.forEach((e) => {
-            pointTextResult += e.toString() + ","; 
-        });
-        pointTextResult = pointTextResult.slice(0, pointTextResult.length-1);
-        return pointTextResult;
+        //let pointTextResult = "";
+        //pointResult.forEach((e) => {
+            //pointTextResult += e.toString() + ","; 
+        //});
+        //pointTextResult = pointTextResult.slice(0, pointTextResult.length-1);
+        //return pointTextResult;
+        return JSON.stringify(pointResult);
         return combineLettersToNumber(numberResult, base);     //block3 * 256 ^ blocksize ^ 2 + block2 * 256 ^ blocksize ^ 1 + block1 * 256 ^ blocksize ^ 0
     }
-    decrypt (curve, number, sender) {
+    decrypt (curve, chipherText, sender) {
+        let pointArray = JSON.parse(chipherText);
         let result = "";
         let numPoints = BigInt(curve.points.length);
         let blockSize = estLog2BigIntFloor(numPoints)/estLog2BigIntFloor(charSize);    //log__base(points)
         if (blockSize < 1) {
             throw("Not enough points on curve");
         }
-        let blockArr = seperateLettersFromNumber(number, base);
-        for (let block of blockArr) {
-            let point = curve.numberToPoint(block);
+        //let blockArr = seperateLettersFromNumber(chipherText, base);
+        for (let point of pointArray) {
+            //let point = curve.numberToPoint(block);
             let decruptValue = decryptBlock(curve, point, sender, this);
             let arrIntVal = seperateLettersFromNumber(decruptValue, charSize);
             arrIntVal.forEach((elem)=> {
