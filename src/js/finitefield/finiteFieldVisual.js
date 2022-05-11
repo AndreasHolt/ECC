@@ -42,6 +42,28 @@ class FiniteField {
         this.highlightSVG.setAttributeNS(null, "style", svgStyle + "z-index: 2;");
         return wrapperDiv;
     }
+    drawPointSvg (point, style, temp = false) {
+        const pointSize = this.canvas.width / (this.curve.fieldOrder * 1.5);
+
+        let circle = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+    
+        if (point.x === Infinity) {
+            circle.setAttributeNS(null, 'cx', canvas.width);
+            circle.setAttributeNS(null, 'cy', 0);
+        } else {
+            circle.setAttributeNS(null, 'cx', point.x * this.canvas.width / this.curve.fieldOrder);
+            circle.setAttributeNS(null, 'cy', this.canvas.height - (point.y * this.canvas.height / this.curve.fieldOrder));
+        }
+        
+        circle.setAttributeNS(null, 'r', pointSize);                                                             //(canvas.height / (curve.fieldOrder * 1.2)) <= 5 ? (canvas.height / (curve.fieldOrder * 1.2)) : 5)
+        circle.setAttributeNS(null, 'style', style + " pointerEvents: none;");
+        
+        if (temp) {
+            circle.setAttributeNS(null, "class", "temp");
+        }
+
+        this.highlightSVG.appendChild(circle);
+    }
     drawLineSvg1 (x1, x2, y1, y2, size, color = "black") {
         //let svg = document.getElementById("lineSVG");
         var svgns = "http://www.w3.org/2000/svg";
