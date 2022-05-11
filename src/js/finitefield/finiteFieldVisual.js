@@ -11,7 +11,7 @@ class FiniteField {
         this.lineSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       
         this.highlightSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                          //Alternativer
+                                                                                                            //Alternativer
         this.pointStyle = "fill: rgb(59, 129, 246); stroke: rgb(59, 129, 246); stroke-width: 1px;";         //
         this.operationPointStyle = "fill: red; stroke: red; stroke-width: 1px;";                            //
         this.intermediatePointStyle = "fill: yellow; stroke: yellow; stroke-width: 1px;";                   //
