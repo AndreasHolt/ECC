@@ -85,6 +85,7 @@ class User {
         // console.log(this.label + " has private key: " + this.privateKey);
         this.publicKey = curve.calcPointMultiplication(this.privateKey, curve.G);
         this.stageHistory = [];
+        this.currentStage = 0;
     }
     insertMessageRecieveHTML () {
         let outerDiv = document.createElement("div");
@@ -152,6 +153,7 @@ class User {
         let pointResult = [];
         let numberResult = [];
         let blockIndex = [];
+        let blockString = [];
         let numPoints = BigInt(curve.points.length);
         let blockSize = estLog2BigIntFloor(numPoints)/estLog2BigIntFloor(charSize);    //log__charSize(points)
         if (blockSize < 1) {
@@ -180,7 +182,7 @@ class User {
         //});
         //pointTextResult = pointTextResult.slice(0, pointTextResult.length-1);
         //return pointTextResult;
-        return {encryptedPoints: JSON.stringify(pointResult), blocks: blockIndex };
+        return {encryptedPoints: JSON.stringify(pointResult), blocks: {blockIndex, blockString}};
         //return combineLettersToNumber(numberResult, base);     //block3 * 256 ^ blocksize ^ 2 + block2 * 256 ^ blocksize ^ 1 + block1 * 256 ^ blocksize ^ 0
     }
     decrypt (curve, chipherText, sender) {
@@ -205,8 +207,48 @@ class User {
         }
         return result;
     }
+    stage(lastStage, blockIndex, blockString) {
+        this.message = lastStage.message + blockString;
+        this.point = this.encryptFiniteField.curve.points[blockIndex];
+        this.show = 0;
+    }
     clearStages() {
         this.stageHistory = [];
+        let akg = this.encryptFiniteField.curve.calcPointMultiplication(sender.privateKey, reciever.publicKey);
+        this.stageHistory[0] = {message: "", point: akg, show: 1};
+        this.currentStage = 0;
+    }
+    readyStages(blocks) {
+        for(let i = 0 ; i < blocks.blockIndex.length; i++) {
+            this.stageHistory[i + 1] = new this.stage(this.stageHistory[i], blocks.blockIndex[i], blocks.blockString[i]);
+        }
+    }
+    changeStage(bool) {
+        if (!this.currentStage) {
+            this.encryptFiniteField.drawPointSvg(this.stageHistory[this.changeStage].point, this.encryptFiniteField.operationPointStyle);
+            this.currentStage++
+            return;
+        }
+
+        document.querySelectorAll(".temp").forEach(point => point.remove());
+        this.encryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage].point, this.encryptFiniteField.intermediatePointStyle, true);
+
+        if (bool) {
+            if (this.stageHistory[this.currentStage].show) {
+                this.stageHistory[this.currentStage].show = 0;
+                this.currentStage++
+                this.changeStage(bool);
+            } else {
+                this.encryptFiniteField.drawPointSvg(this.encryptFiniteField.curve.calcPointAddition(this.stageHistory[0], this.stageHistory[this.currentStage].point), this.encryptFiniteField.intermediatePointStyle, true);
+                this.stageHistory[this.currentStage].show = 1;
+            }
+        } else {
+            if(this.stageHistory[this.currentStage].show === 0){
+                this.currentStage--
+            } else {
+                this.stageHistory[this.currentStage].show = 0;
+            }
+        }
     }
 }
 
@@ -293,6 +335,8 @@ document.getElementById("inputMessageForm").addEventListener("submit", (Event) =
     for (let user of users) {
         let textOut = document.getElementById("encryptedText" + user.label);
         let encryptedText = humanUser.encrypt(curve, inputField.value, user);
+        user.clearStages();
+        user.readyStages(encryptedText.blocks);
         textOut.value = encryptedText.encryptedPoints;
     }
 });
