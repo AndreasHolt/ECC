@@ -1,0 +1,186 @@
+import {encrypt, decrypt} from "./cryptography.js";
+import {FiniteField} from "../finitefield/finiteFieldVisual.js"
+
+
+
+class User {
+    constructor (label, curve, humanUser) {
+        if (humanUser) {
+            this.encryptFiniteField = new FiniteField();
+            this.decryptFiniteField = new FiniteField();
+            this.encryptFiniteField.addCurve(curve);
+            this.decryptFiniteField.addCurve(curve);
+            this.label = label; //e.g. "A"
+            ///Encrypted text field///
+            this.encryptedTextField = document.createElement("input");
+            this.encryptedTextField.classList.add("appearance-none", "block", "w-full", "bg-gray-200", "text-gray-700", "border", "border-gray-200", "rounded", "py-3", "px-4", "leading-tight", "focus:outline-none", "focus:bg-white", "focus:border-gray-500");
+            this.encryptedTextField.type = "text";
+            this.encryptedTextField.id = "encryptedText" + this.label;
+            this.encryptedTextField.readOnly = true;
+            this.encryptedTextField.placeholder = "Encrypted text";
+            this.encryptedTextField.disabled = true;
+
+            ///Decrypted text field///
+            this.decryptedTextField = document.createElement("input");
+            this.decryptedTextField.classList.add("appearance-none", "block", "w-full", "bg-gray-200", "text-gray-700", "border", "border-gray-200", "rounded", "py-3", "px-4", "leading-tight", "focus:outline-none", "focus:bg-white", "focus:border-gray-500");
+            this.decryptedTextField.type = "text";
+            this.decryptedTextField.id = "textDecrypted" + this.label;
+            this.decryptedTextField.readOnly = true;
+            this.decryptedTextField.placeholder = "Decrypted text";
+            this.decryptedTextField.disabled = true;
+
+            ///Decrypt message button///
+            this.sendMessageButton = document.createElement("button");
+            this.sendMessageButton.classList.add("bg-white", "hover:bg-gray-100", "disabled:bg-gray-200", "text-gray-800", "font-semibold", "py-2", "px-4", "border", "border-gray-400", "rounded", "shadow", "inline-flex", "items-center", "mb-10");
+            this.sendMessageButton.id = "sendMessage" + this.label;
+            this.sendMessageButton.textContent = "Send message";
+            this.sendMessageButton.addEventListener("click", (e) => {
+                let encryptedMessage = this.encryptedTextField.value;           //Works????
+                let textOut = this.decryptedTextField;
+                let decryptedMessage = decrypt(curve, encryptedMessage, humanUser, this);
+                textOut.value = decryptedMessage;
+    
+                let back = document.createElement("INPUT");
+                back.setAttribute("type", "button");
+                back.setAttribute("value", "Back");
+                back.setAttribute("id", `backButton${this.label}`);
+                back.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1")
+                document.getElementById(`titleBox${this.label}`).appendChild(back);
+    
+                let next = document.createElement("INPUT"); //Next button goes to 2nd part of visualization
+                next.setAttribute("type", "button");
+                next.setAttribute("value", "Next");
+                next.setAttribute("id", `nextButton${this.label}`);
+                next.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1")
+                document.getElementById(`titleBox${this.label}`).appendChild(next);
+    
+                /* document.getElementById(`encryption${this.label}`).hidden = true; */
+                document.getElementById(`encryptionVisualization${this.label}`).hidden = false;
+    
+                e.target.disabled = true;
+    
+                encryptionVisualization(this.label);
+            });
+        }
+        /*document.getElementById("sendMessageA").addEventListener("click", () => {
+            let encryptedMessage = BigInt(document.getElementById("textPreviewA").value);
+            let textOut = document.getElementById("textDecryptedA");
+            console.log(encryptedMessage);
+            let decryptedMessage = decrypt(curve, encryptedMessage, users[0], users[1]);
+            textOut.value = decryptedMessage;
+        });*/
+
+        this.privateKey = Math.floor(Math.random() * 100);
+        // console.log(this.label + " has private key: " + this.privateKey);
+        this.publicKey = curve.calcPointMultiplication(this.privateKey, curve.G);
+        this.stageHistory = [];
+        this.currentStage = 0;
+    }
+    insertMessageRecieveHTML (humanUser) {
+        let outerDiv = document.createElement("div");
+        outerDiv.classList.add(`basis-1/3`);
+        outerDiv.innerHTML = `
+            <p class="font-bold text-xl mb-2 text-blue-400">From you to person ${this.label}</p>
+            <p id="titleBox${this.label}"></p>
+            <div class="flex flex-col gap-1 border-2 border-black rounded-md"
+            id="encryptionBox">
+                <div class="grow basis-7/8 grid grid-cols-2 p-0.5">
+                    <div class="col-span-1 flex flex-col border-2 border-black rounded-md p-0.5">
+                        <h1 id="encryption${this.label}"
+                        class="basis-1/8 font-bold text-xl mb-2 text-gray-800">Encryption</h1>
+                        <div id="innerDivEncryption">
+                            <h1 id="encryptionVisualization${this.label}" hidden="True"
+                            class="grow basis-7/8 font-bold text-xl mb-2 text-gray-800">lmao</h1>
+                            <h1 id="encryptionVisualization${this.label}" 
+                            class="grow basis-7/8 font-bold text-xl mb-2 text-gray-800">hej</h1>
+                        </div>
+                    </div>
+                    <div class="col-span-1 flex flex-col border-2 border-black rounded-md p-0.5">
+                        <h1 id="decryption${this.label}"
+                        class="basis-1/8 font-bold text-xl mb-2 text-gray-800">Decryption</h1>
+                        <div id="innerDivDecryption">
+                            <h1 id="decryptionVisualization${this.label}" hidden="True"
+                            class="grow basis-7/8 font-bold text-xl mb-2 text-gray-800">idiot</h1>
+                            <h1 id="decryptionVisualization${this.label}" 
+                            class="grow basis-7/8 font-bold text-xl mb-2 text-gray-800">idiot</h1>
+                            <h1 id="decryptionVisualization${this.label}" 
+                            class="grow basis-7/8 font-bold text-xl mb-2 text-gray-800">idiot</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="basis-1/8 flex flex-row">
+                    <div class="basis-1/2 px-0.5 py-1">
+                        <input class="border-2 border-black w-full" 
+                        type="text" id="textPreview${this.label}temp" readonly="true" placeholder="Encrypted text">
+                    </div>
+                    <div class="basis-1/2 pr-0.5 pl-0 py-1">
+                        <input class="border-2 border-black w-full"
+                        type="text" id="textDecrypted${this.label}temp" readonly="true" placeholder="Decrypted text">
+                    </div>
+                </div>
+            </div>
+            <div class="p-0.5">
+                <button class="border-2 rounded-md border-slate-700"
+                id="sendMessage${this.label}temp" >Send message</button>
+            </div>
+        `;
+        document.getElementById("communication").appendChild(outerDiv);
+        document.getElementById(`textPreview${this.label}temp`).replaceWith(this.encryptedTextField);
+        document.getElementById(`textDecrypted${this.label}temp`).replaceWith(this.decryptedTextField);
+        document.getElementById(`sendMessage${this.label}temp`).replaceWith(this.sendMessageButton);
+        document.getElementById("innerDivEncryption").appendChild(this.encryptFiniteField.createHTMLElement());
+        document.getElementById("innerDivDecryption").appendChild(this.decryptFiniteField.createHTMLElement());
+        this.encryptFiniteField.drawPointSvg(humanUser.publicKey, this.encryptFiniteField.operationPointStyle);
+        this.decryptFiniteField.drawPointSvg(humanUser.publicKey, this.decryptFiniteField.operationPointStyle);
+        this.encryptFiniteField.drawPointSvg(this.publicKey, this.encryptFiniteField.operationPointStyle);
+        this.decryptFiniteField.drawPointSvg(this.publicKey, this.decryptFiniteField.operationPointStyle);
+        this.encryptFiniteField.drawPointSvg(this.encryptFiniteField.curve.G, this.encryptFiniteField.pointStyle);
+        this.decryptFiniteField.drawPointSvg(this.decryptFiniteField.curve.G, this.decryptFiniteField.pointStyle);
+    
+    }
+    stage(lastStage, blockIndex, blockString) {
+        this.message = lastStage.message + blockString;
+        this.point = this.encryptFiniteField.curve.points[blockIndex];
+        this.show = 0;
+    }
+    clearStages() {
+        this.stageHistory = [];
+        let akg = this.encryptFiniteField.curve.calcPointMultiplication(sender.privateKey, reciever.publicKey);
+        this.stageHistory[0] = {message: "", point: akg, show: 1};
+        this.currentStage = 0;
+    }
+    readyStages(blocks) {
+        for(let i = 0 ; i < blocks.blockIndex.length; i++) {
+            this.stageHistory[i + 1] = new this.stage(this.stageHistory[i], blocks.blockIndex[i], blocks.blockString[i]);
+        }
+    }
+    changeStage(bool) {
+        if (!this.currentStage) {
+            this.encryptFiniteField.drawPointSvg(this.stageHistory[this.changeStage].point, this.encryptFiniteField.operationPointStyle);
+            this.currentStage++
+            return;
+        }
+
+        document.querySelectorAll(".temp").forEach(point => point.remove());
+        this.encryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage].point, this.encryptFiniteField.intermediatePointStyle, true);
+
+        if (bool) {
+            if (this.stageHistory[this.currentStage].show) {
+                this.stageHistory[this.currentStage].show = 0;
+                this.currentStage++
+                this.changeStage(bool);
+            } else {
+                this.encryptFiniteField.drawPointSvg(this.encryptFiniteField.curve.calcPointAddition(this.stageHistory[0], this.stageHistory[this.currentStage].point), this.encryptFiniteField.intermediatePointStyle, true);
+                this.stageHistory[this.currentStage].show = 1;
+            }
+        } else {
+            if(this.stageHistory[this.currentStage].show === 0){
+                this.currentStage--
+            } else {
+                this.stageHistory[this.currentStage].show = 0;
+            }
+        }
+    }
+}
+
+export{User};
