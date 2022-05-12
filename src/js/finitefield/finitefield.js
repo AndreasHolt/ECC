@@ -178,7 +178,6 @@ function deleteDrawing(bool) {
 
     // If 1 is passed as the argument, the clicked points are also removed (converted to their original state)
     if(bool === 1) {
-        console.log('hi')
         let clickedPoints = document.querySelectorAll('.clickedPoint')
 
         for(let i = 0; i < clickedPoints.length; i++) {

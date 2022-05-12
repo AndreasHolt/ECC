@@ -148,6 +148,16 @@ class Curve {
             return index;
         }
     }
+    pointListToString (list) {
+        result = ``;
+        for (let element of list) {
+            result = result + `(${element.x},${element.y}), `;
+        }
+        result = result.subString(0, result.length() - 2);
+    }
+    stringToPointList (string) {
+        
+    }
 }
 
 class Point {
@@ -293,7 +303,7 @@ function createPointsPrime () {
                 if (oppositeY === this.fieldOrder) {
                     break;
                 }
-                if(Mod((oppositeY*oppositeY), this.fieldOrder) === rightSide) {
+                if(Mod((oppositeY*oppositeY), this.fieldOrder) === rightSide && oppositeY !== y) {
                     this.points.push(new Point(x, oppositeY));
                     break;
                 }

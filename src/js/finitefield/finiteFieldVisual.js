@@ -12,10 +12,10 @@ class FiniteField {
       
         this.highlightSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
                                                                                                             //Alternativer
-        this.pointStyle = "fill: rgb(59, 129, 246); stroke: rgb(59, 129, 246); stroke-width: 1px;";         //
-        this.operationPointStyle = "fill: red; stroke: red; stroke-width: 1px;";                            //
-        this.intermediatePointStyle = "fill: yellow; stroke: yellow; stroke-width: 1px;";                   //
-        this.resultPointStyle = "fill: fuchsia; stroke: fuchsia; stroke-width: 1px;";                       // 
+        this.pointStyle = "fill: rgb(59, 129, 246); stroke: rgb(59, 129, 246); stroke-width: 5px;";         //
+        this.operationPointStyle = "fill: red; stroke: red; stroke-width: 5px;";                            //
+        this.intermediatePointStyle = "fill: yellow; stroke: yellow; stroke-width: 5px;";                   //
+        this.resultPointStyle = "fill: fuchsia; stroke: fuchsia; stroke-width: 5px;";                       // 
     }
 
     addCanvas (canvas) {
@@ -127,6 +127,9 @@ class FiniteField {
             console.log("is true");
             this.drawLineSvg1(tempPoint.x, point3.x, tempPoint.y, Mod(this.curve.fieldOrder - point3.y, this.curve.fieldOrder), this.curve.fieldOrder, "green");
         }
+    }
+    clearVisual () {
+
     }
 }
 
