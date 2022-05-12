@@ -102,11 +102,11 @@ class FiniteField {
     
             if (tempPoint.x === this.curve.fieldOrder && tempPoint.y >= this.curve.fieldOrder) {
                 this.drawLineSvg1(point1.x, (tempPoint.x - (tempPoint.y - this.curve.fieldOrder) * (1 / point3.alfa)), point1.y, this.curve.fieldOrder, this.curve.fieldOrder);
-                point1.x = tempPoint.x - (tempPoint.y - curve.fieldOrder) * (1 / point3.alfa);
+                point1.x = tempPoint.x - (tempPoint.y - this.curve.fieldOrder) * (1 / point3.alfa);
                 point1.y = 0;
                 this.drawLineSvg1(tempPoint.x - (tempPoint.y - this.curve.fieldOrder) * (1 / point3.alfa), this.curve.fieldOrder, 0, point1.y, this.curve.fieldOrder);
             } else if (tempPoint.x === this.curve.fieldOrder) {
-                this.drawLineSvg1(point1.x, tempPoint.x, point1.y, tempPoint.y, curve.fieldOrder);
+                this.drawLineSvg1(point1.x, tempPoint.x, point1.y, tempPoint.y, this.curve.fieldOrder);
                 point1.x = 0;
                 point1.y = tempPoint.y;
             } else if (tempPoint.y >= this.curve.fieldOrder) {
