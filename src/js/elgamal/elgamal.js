@@ -19,6 +19,8 @@ class User {
     constructor (label) {
         this.encryptFiniteField = new FiniteField();
         this.decryptFiniteField = new FiniteField();
+        this.encryptFiniteField.addCurve(curve);
+        this.decryptFiniteField.addCurve(curve);
         this.label = label; //e.g. "A"
         ///Encrypted text field///
         this.encryptedTextField = document.createElement("input");
@@ -45,7 +47,7 @@ class User {
         this.sendMessageButton.textContent = "Send message";
 
         this.sendMessageButton.addEventListener("click", (e) => {
-            let encryptedMessage = this.encryptedTextField.value;           ///Works????
+            let encryptedMessage = this.encryptedTextField.value;           //Works????
             let textOut = this.decryptedTextField;
             let decryptedMessage = this.decrypt(curve, encryptedMessage, humanUser);
             textOut.value = decryptedMessage;
@@ -137,6 +139,13 @@ class User {
         document.getElementById(`sendMessage${this.label}temp`).replaceWith(this.sendMessageButton);
         document.getElementById("innerDivEncryption").appendChild(this.encryptFiniteField.createHTMLElement());
         document.getElementById("innerDivDecryption").appendChild(this.decryptFiniteField.createHTMLElement());
+        this.encryptFiniteField.drawPointSvg(humanUser.publicKey, humanUser.encryptFiniteField.operationPointStyle);
+        this.decryptFiniteField.drawPointSvg(humanUser.publicKey, humanUser.decryptFiniteField.operationPointStyle);
+        this.encryptFiniteField.drawPointSvg(this.publicKey, this.encryptFiniteField.operationPointStyle);
+        this.decryptFiniteField.drawPointSvg(this.publicKey, this.decryptFiniteField.operationPointStyle);
+        this.encryptFiniteField.drawPointSvg(this.encryptFiniteField.curve.G, this.encryptFiniteField.pointStyle);
+        this.decryptFiniteField.drawPointSvg(this.decryptFiniteField.curve.G, this.decryptFiniteField.pointStyle);
+    
     }
     encrypt (curve, message, reciever) {
         let pointResult = [];
