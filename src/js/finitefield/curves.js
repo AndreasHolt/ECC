@@ -148,16 +148,7 @@ class Curve {
             return index;
         }
     }
-    pointListToString (list) {
-        result = ``;
-        for (let element of list) {
-            result = result + `(${element.x},${element.y}), `;
-        }
-        result = result.subString(0, result.length() - 2);
-    }
-    stringToPointList (string) {
-        
-    }
+    
 }
 
 class Point {
@@ -331,4 +322,4 @@ function listPoints(point1, point2, point3) {
 
 
 
-export {Curve, AXYCurve, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2, listPoints};
+export {Curve, Point, AXYCurve, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2, listPoints};
