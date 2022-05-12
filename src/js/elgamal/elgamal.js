@@ -84,6 +84,7 @@ class User {
         this.privateKey = Math.floor(Math.random() * 100);
         // console.log(this.label + " has private key: " + this.privateKey);
         this.publicKey = curve.calcPointMultiplication(this.privateKey, curve.G);
+        this.stageHistory = [];
     }
     insertMessageRecieveHTML () {
         let outerDiv = document.createElement("div");
@@ -150,6 +151,7 @@ class User {
     encrypt (curve, message, reciever) {
         let pointResult = [];
         let numberResult = [];
+        let blockIndex = [];
         let numPoints = BigInt(curve.points.length);
         let blockSize = estLog2BigIntFloor(numPoints)/estLog2BigIntFloor(charSize);    //log__charSize(points)
         if (blockSize < 1) {
@@ -168,6 +170,7 @@ class User {
             }
             let blockValue = combineLettersToNumber(charValuesArr, charSize);    //char3 * 256^2 + char2 * 256^1 + char1 * 256^0
             let encryptedPoint = encryptBlock(curve, blockValue, this, reciever);
+            blockIndex.push(blockValue);
             pointResult.push(encryptedPoint);
             numberResult.push(curve.pointToNumber(encryptedPoint));
         }
@@ -177,8 +180,8 @@ class User {
         //});
         //pointTextResult = pointTextResult.slice(0, pointTextResult.length-1);
         //return pointTextResult;
-        return JSON.stringify(pointResult);
-        return combineLettersToNumber(numberResult, base);     //block3 * 256 ^ blocksize ^ 2 + block2 * 256 ^ blocksize ^ 1 + block1 * 256 ^ blocksize ^ 0
+        return {encryptedPoints: JSON.stringify(pointResult), blocks: blockIndex };
+        //return combineLettersToNumber(numberResult, base);     //block3 * 256 ^ blocksize ^ 2 + block2 * 256 ^ blocksize ^ 1 + block1 * 256 ^ blocksize ^ 0
     }
     decrypt (curve, chipherText, sender) {
         let pointArray = JSON.parse(chipherText);
@@ -201,6 +204,9 @@ class User {
             //return String.fromCharCode();
         }
         return result;
+    }
+    clearStages() {
+        this.stageHistory = [];
     }
 }
 
@@ -287,7 +293,7 @@ document.getElementById("inputMessageForm").addEventListener("submit", (Event) =
     for (let user of users) {
         let textOut = document.getElementById("encryptedText" + user.label);
         let encryptedText = humanUser.encrypt(curve, inputField.value, user);
-        textOut.value = encryptedText;
+        textOut.value = encryptedText.encryptedPoints;
     }
 });
 document.getElementById("newKeyButton").addEventListener("click", () => {
