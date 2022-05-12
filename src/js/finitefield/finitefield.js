@@ -784,7 +784,7 @@ function pointAdditionSteps(curve, points) {
 
     document.getElementById('multiplicationTableButton').addEventListener('click', () => {
         // TODO remove event listener for the other if active?
-        toggleTable(1);
+        toggleTable(curve, 1);
 
     });
 
