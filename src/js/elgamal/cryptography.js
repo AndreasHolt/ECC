@@ -5,9 +5,10 @@ import { Mod } from "../finitefield/bits.js";
 let charSize = BigInt(256);
 
 function encrypt (curve, message, sender, reciever) {
+    let points = [];
     let pointResult = [];
     let numberResult = [];
-    let blockIndex = [];
+    let blockString = [];
     let numPoints = BigInt(curve.points.length);
     let blockSize = estLog2BigIntFloor(numPoints)/estLog2BigIntFloor(charSize);    //log__charSize(points)
     if (blockSize < 1) {
@@ -25,19 +26,16 @@ function encrypt (curve, message, sender, reciever) {
             charValuesArr.push(char.charCodeAt(0));
         }
         let blockValue = combineLettersToNumber(charValuesArr, charSize);    //char3 * 256^2 + char2 * 256^1 + char1 * 256^0
-        let encryptedPoint = encryptBlock(curve, blockValue, sender, reciever);
-        blockIndex.push(blockValue);
+        let point = curve.numberToPoint(blockValue);
+        let encryptedPoint = encryptBlock(curve, point, sender, reciever);
+        points.push(point);
+        blockString.push(block);
         pointResult.push(encryptedPoint);
-        numberResult.push(curve.pointToNumber(encryptedPoint));
+        //numberResult.push(curve.pointToNumber(encryptedPoint));
     }
-    //let pointTextResult = "";
-    //pointResult.forEach((e) => {
-        //pointTextResult += e.toString() + ","; 
-    //});
-    //pointTextResult = pointTextResult.slice(0, pointTextResult.length-1);
-    //return pointTextResult;
-    return {encryptedPoints: pointListToString(pointResult)/*JSON.stringify(pointResult)*/, blocks: blockIndex };
-    //return combineLettersToNumber(numberResult, BigInt(curve.points.length));     //block3 * 256 ^ blocksize ^ 2 + block2 * 256 ^ blocksize ^ 1 + block1 * 256 ^ blocksize ^ 0
+    
+    return {encryptedPoints: pointResult, points, blockString};
+    //return combineLettersToNumber(numberResult, BigInt(curve.points.length)); points to number.     //block3 * 256 ^ blocksize ^ 2 + block2 * 256 ^ blocksize ^ 1 + block1 * 256 ^ blocksize ^ 0
 }
 function decrypt (curve, chipherText, sender, reciever) {
     let pointArray = stringToPointList(chipherText);// JSON.parse(chipherText);
@@ -62,12 +60,9 @@ function decrypt (curve, chipherText, sender, reciever) {
     return result;
 }
 
-function encryptBlock (curve, number, sender, reciever) {
-    let pointMessage = curve.numberToPoint(number);
+function encryptBlock (curve, point, sender, reciever) {
     let akG = curve.calcPointMultiplication(sender.privateKey, reciever.publicKey);
-    let encryptedPoint = curve.calcPointAddition(pointMessage, akG);
-
-    return encryptedPoint;
+    return curve.calcPointAddition(point, akG);
 }
 
 function decryptBlock (curve, point, sender, reciever) {
@@ -95,6 +90,7 @@ function combineLettersToNumber (numbers, base) {
     for(let i = BigInt(0); i < numbers.length; i++) {
         let value = BigInt(numbers[i]);
         if (numbers[i] >= base) {
+            let test = 0;
             throw("The value can not be larger than the base");
         }
         sum += value * (base ** i); // === value * Math.pow(base, i);
@@ -116,10 +112,9 @@ function seperateLettersFromNumber (number, base) {
 function pointListToString (list) {
     let result = ``;
     for (let element of list) {
-        result = result + `(${element.x},${element.y}), `;
+        result = result + element.toString() + `, `;
     }
-    result = result.substring(0, result.length - 2);
-    return result;
+    return result.substring(0, result.length - 2);
 }
 function stringToPointList (string) {
     let pointArray = [];
@@ -135,5 +130,5 @@ function stringToPointList (string) {
     return pointArray;
 }
 
-export {encrypt, decrypt}
+export {encrypt, decrypt, pointListToString};
 

@@ -40,41 +40,35 @@ class User {
                 let decryptedMessage = decrypt(curve, encryptedMessage, humanUser, this);
                 textOut.value = decryptedMessage;
     
-                let back = document.createElement("INPUT");
-                back.setAttribute("type", "button");
-                back.setAttribute("value", "Back");
-                back.setAttribute("id", `backButton${this.label}`);
-                back.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1")
-                document.getElementById(`titleBox${this.label}`).appendChild(back);
-    
-                let next = document.createElement("INPUT"); //Next button goes to 2nd part of visualization
-                next.setAttribute("type", "button");
-                next.setAttribute("value", "Next");
-                next.setAttribute("id", `nextButton${this.label}`);
-                next.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1")
-                document.getElementById(`titleBox${this.label}`).appendChild(next);
+                
     
                 /* document.getElementById(`encryption${this.label}`).hidden = true; */
-                document.getElementById(`encryptionVisualization${this.label}`).hidden = false;
+                //document.getElementById(`encryptionVisualization${this.label}`).hidden = false;
     
                 e.target.disabled = true;
     
                 encryptionVisualization(this.label);
             });
+
+            this.back = document.createElement("INPUT");
+            this.back.setAttribute("type", "button");
+            this.back.setAttribute("value", "Back");
+            this.back.setAttribute("id", `backButton${this.label}`);
+            this.back.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1");
+            
+            this.next = document.createElement("INPUT"); //Next button goes to 2nd part of visualization
+            this.next.setAttribute("type", "button");
+            this.next.setAttribute("value", "Next");
+            this.next.setAttribute("id", `nextButton${this.label}`);
+            this.next.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1");
+        
+            
+            this.StageSystem = new StageSystem(this);
         }
-        /*document.getElementById("sendMessageA").addEventListener("click", () => {
-            let encryptedMessage = BigInt(document.getElementById("textPreviewA").value);
-            let textOut = document.getElementById("textDecryptedA");
-            console.log(encryptedMessage);
-            let decryptedMessage = decrypt(curve, encryptedMessage, users[0], users[1]);
-            textOut.value = decryptedMessage;
-        });*/
 
         this.privateKey = Math.floor(Math.random() * 100);
         // console.log(this.label + " has private key: " + this.privateKey);
         this.publicKey = curve.calcPointMultiplication(this.privateKey, curve.G);
-        this.stageHistory = [];
-        this.currentStage = 0;
     }
     insertMessageRecieveHTML (humanUser) {
         let outerDiv = document.createElement("div");
@@ -136,41 +130,68 @@ class User {
         this.decryptFiniteField.drawPointSvg(this.publicKey, this.decryptFiniteField.operationPointStyle);
         this.encryptFiniteField.drawPointSvg(this.encryptFiniteField.curve.G, this.encryptFiniteField.pointStyle);
         this.decryptFiniteField.drawPointSvg(this.decryptFiniteField.curve.G, this.decryptFiniteField.pointStyle);
-    
+        
+        
+        document.getElementById(`titleBox${this.label}`).appendChild(this.back);
+        document.getElementById(`titleBox${this.label}`).appendChild(this.next);
     }
-    stage(lastStage, blockIndex, blockString) {
-        this.message = lastStage.message + blockString;
-        this.point = this.encryptFiniteField.curve.points[blockIndex];
+    
+}
+
+class Stage {
+    constructor (lastStage, point, encryptedPoint, blockString) {
+        this.encryptedMessage = lastStage.encryptedMessage + encryptedPoint.toString();
+        this.char = blockString;
+        this.decryptedMessage = lastStage.decryptedMessage + blockString;
+        this.point = point;
+        this.encryptedPoint = encryptedPoint;
         this.show = 0;
     }
-    clearStages() {
+}
+class StageSystem {
+    constructor (user) {
+        if (user instanceof User) {
+            this.parent = user;
+        } else {
+            throw("StageSystem can only be assigned to a user");
+        }
         this.stageHistory = [];
-        let akg = this.encryptFiniteField.curve.calcPointMultiplication(sender.privateKey, reciever.publicKey);
-        this.stageHistory[0] = {message: "", point: akg, show: 1};
         this.currentStage = 0;
     }
-    readyStages(blocks) {
-        for(let i = 0 ; i < blocks.blockIndex.length; i++) {
-            this.stageHistory[i + 1] = new this.stage(this.stageHistory[i], blocks.blockIndex[i], blocks.blockString[i]);
+    nextStage () {
+        this.changeStage(1);
+    }
+    previousStage () {
+        this.changeStage(0);
+    }
+    clearStages(sender) {
+        this.stageHistory = [];
+        let akg = this.parent.encryptFiniteField.curve.calcPointMultiplication(sender.privateKey, this.parent.publicKey);
+        this.stageHistory[0] = {encryptedMessage: "", decryptedMessage: "", point: akg, show: 1};
+        this.currentStage = 0;
+    }
+    readyStages(points, encryptedPoints, blockStrings) {
+        for(let i = 0 ; i < encryptedPoints.length ; i++) {
+            this.stageHistory[i + 1] = new Stage(this.stageHistory[i], points[i], encryptedPoints[i], blockStrings[i]);
         }
     }
     changeStage(bool) {
         if (!this.currentStage) {
-            this.encryptFiniteField.drawPointSvg(this.stageHistory[this.changeStage].point, this.encryptFiniteField.operationPointStyle);
+            this.parent.encryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage].point, this.parent.encryptFiniteField.operationPointStyle);
             this.currentStage++
             return;
         }
 
         document.querySelectorAll(".temp").forEach(point => point.remove());
-        this.encryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage].point, this.encryptFiniteField.intermediatePointStyle, true);
+        this.parent.encryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage].point, this.parent.encryptFiniteField.intermediatePointStyle, true);
 
         if (bool) {
-            if (this.stageHistory[this.currentStage].show) {
+            if (this.stageHistory[this.currentStage].show === 1) {
                 this.stageHistory[this.currentStage].show = 0;
                 this.currentStage++
                 this.changeStage(bool);
             } else {
-                this.encryptFiniteField.drawPointSvg(this.encryptFiniteField.curve.calcPointAddition(this.stageHistory[0], this.stageHistory[this.currentStage].point), this.encryptFiniteField.intermediatePointStyle, true);
+                this.parent.encryptFiniteField.drawPointSvg(this.parent.encryptFiniteField.curve.calcPointAddition(this.stageHistory[0].point, this.stageHistory[this.currentStage].point), this.parent.encryptFiniteField.intermediatePointStyle, true);
                 this.stageHistory[this.currentStage].show = 1;
             }
         } else {
@@ -182,5 +203,6 @@ class User {
         }
     }
 }
+
 
 export{User};
