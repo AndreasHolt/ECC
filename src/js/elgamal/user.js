@@ -159,7 +159,14 @@ class StageSystem {
         this.currentStage = 0;
     }
     nextStage () {
+        // try {
+        //     this.changeStage(1);
+        // } catch (error) {
+        //     console.log(error, this.currentStage, this.finalStage);
+        //     this.currentStage--;
+        // }
         this.changeStage(1);
+
     }
     previousStage () {
         this.changeStage(0);
@@ -174,31 +181,84 @@ class StageSystem {
         for(let i = 0 ; i < encryptedPoints.length ; i++) {
             this.stageHistory[i + 1] = new Stage(this.stageHistory[i], points[i], encryptedPoints[i], blockStrings[i]);
         }
+        this.finalStage = this.stageHistory.length;
     }
     changeStage(bool) {
         if (!this.currentStage) {
             this.parent.encryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage].point, this.parent.encryptFiniteField.operationPointStyle);
+            this.parent.decryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage].point, this.parent.encryptFiniteField.operationPointStyle);
+
+            this.parent.encryptedTextField.value = "";
+            this.parent.decryptedTextField.value = "";
             this.currentStage++
+            // this.changeStage(1);
+            // this.stageHistory[this.currentStage].show++
+            this.parent.back.disabled = true;
+            return;
+        } else if (this.currentStage == this.finalStage) {
+            if (bool){
+                this.parent.next.disabled = true;
+                this.parent.decryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage - 1].point, this.parent.decryptFiniteField.resultPointStyle, true);
+                this.parent.decryptFiniteField.pointText(this.stageHistory[this.currentStage - 1].point, this.stageHistory[this.currentStage - 1].char, true);
+                this.parent.decryptedTextField.value = this.stageHistory[this.currentStage - 1].decryptedMessage;                
+            } else {
+                this.currentStage--
+                this.changeStage(!bool);
+            }
             return;
         }
 
-        document.querySelectorAll(".temp").forEach(point => point.remove());
+        this.parent.back.disabled = false;
+        this.parent.next.disabled = false;
+
+        document.querySelectorAll(".temp").forEach(element => element.remove());
         this.parent.encryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage].point, this.parent.encryptFiniteField.intermediatePointStyle, true);
+        this.parent.encryptFiniteField.pointText(this.stageHistory[this.currentStage].point, this.stageHistory[this.currentStage].char, true);
+
+        
+
+
+
+
+
+
+
 
         if (bool) {
-            if (this.stageHistory[this.currentStage].show === 1) {
-                this.stageHistory[this.currentStage].show = 0;
+            if (this.stageHistory[this.currentStage].show === 2) {
+                this.stageHistory[this.currentStage].show = 1;
                 this.currentStage++
                 this.changeStage(bool);
+            } else if (this.stageHistory[this.currentStage].show === 1) {
+                // let encryptedPoint = this.parent.encryptFiniteField.curve.calcPointAddition(this.stageHistory[0].point, this.stageHistory[this.currentStage].point);
+                this.parent.encryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage].encryptedPoint, this.parent.encryptFiniteField.resultPointStyle, true);
+                this.parent.encryptFiniteField.pointText(this.stageHistory[this.currentStage].encryptedPoint, this.stageHistory[this.currentStage].char + "'", true);
+                this.parent.encryptedTextField.value = this.stageHistory[this.currentStage].encryptedMessage;
+
+                this.parent.decryptFiniteField.pointText(this.stageHistory[this.currentStage].encryptedPoint, "", true);
+                this.parent.decryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage].encryptedPoint, this.parent.decryptFiniteField.intermediatePointStyle, true);
+                this.parent.decryptedTextField.value = this.stageHistory[this.currentStage - 1].decryptedMessage;                
+
+                this.stageHistory[this.currentStage].show++;
             } else {
-                this.parent.encryptFiniteField.drawPointSvg(this.parent.encryptFiniteField.curve.calcPointAddition(this.stageHistory[0].point, this.stageHistory[this.currentStage].point), this.parent.encryptFiniteField.intermediatePointStyle, true);
-                this.stageHistory[this.currentStage].show = 1;
+                this.parent.encryptedTextField.value = this.stageHistory[this.currentStage - 1].encryptedMessage;
+
+                if(this.currentStage > 1) {
+                    this.parent.decryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage - 1].point, this.parent.decryptFiniteField.resultPointStyle, true);
+                    this.parent.decryptFiniteField.pointText(this.stageHistory[this.currentStage - 1].point, this.stageHistory[this.currentStage - 1].char, true);
+                    this.parent.decryptedTextField.value = this.stageHistory[this.currentStage - 1].decryptedMessage;                
+                }
+
+                this.stageHistory[this.currentStage].show++;
             }
         } else {
-            if(this.stageHistory[this.currentStage].show === 0){
+            if(this.stageHistory[this.currentStage].show === 1){
+                this.stageHistory[this.currentStage].show = 0;
                 this.currentStage--
+                this.changeStage(!bool);
             } else {
                 this.stageHistory[this.currentStage].show = 0;
+                this.changeStage(!bool);
             }
         }
     }
