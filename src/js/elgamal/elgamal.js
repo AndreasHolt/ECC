@@ -107,7 +107,8 @@ document.getElementById("inputMessageForm").addEventListener("submit", (Event) =
         let encryptedResult = encrypt(curve, inputField.value, humanUser, user);
         user.StageSystem.clearStages(humanUser);
         user.StageSystem.readyStages(encryptedResult.points, encryptedResult.encryptedPoints, encryptedResult.blockString);
-        textOut.value = pointListToString(encryptedResult.encryptedPoints);
+        user.StageSystem.nextStage();
+        //textOut.value = pointListToString(encryptedResult.encryptedPoints);
     }
 });
 document.getElementById("newKeyButton").addEventListener("click", () => {

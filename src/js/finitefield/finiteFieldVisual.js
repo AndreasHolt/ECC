@@ -131,6 +131,26 @@ class FiniteField {
     clearVisual () {
 
     }
+    pointText (point, string = "", coordinates = false, temp = true) {
+        let textNode;
+        let text = string;
+        const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    
+        textElement.setAttributeNS(null, 'x', point.x * this.canvas.width / this.curve.fieldOrder);
+        textElement.setAttributeNS(null, 'y', this.canvas.height - (point.y * this.canvas.height / this.curve.fieldOrder));
+        if (temp) {
+            textElement.setAttributeNS(null, 'class', "temp");
+        }
+
+        if (coordinates) {
+            text += `(${point.x}, ${point.y})`;
+        } 
+        
+        textNode = document.createTextNode(text);
+    
+        textElement.appendChild(textNode);
+        this.highlightSVG.appendChild(textElement);
+    }
 }
 
 class InteractibleFiniteField extends FiniteField {
