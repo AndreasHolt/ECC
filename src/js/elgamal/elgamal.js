@@ -2,9 +2,12 @@ import { Curve, AXYCurve } from "../finitefield/curves.js";
 import {User} from "./user.js";
 import {encrypt, decrypt, pointListToString} from "./cryptography.js";
 
-let curve = new Curve(118, 0, 0, 0, 257, 257); //256 points??
+let curve = new Curve(118, 0, 0, 0, 65537, 65537); //256 points??
 console.log("Starting");
+let startTime = Date.now();
 curve.createPoints();
+let stopTime = Date.now();
+console.log(`That took ${(stopTime-startTime) / 1000}`);
 console.log("Done: "+ curve.points.length);
 curve.G = curve.points[143];//curve.points[Math.floor(Math.random()*curve.points.length)];
 // console.log(`G.x: ${curve.G.x}, G.y: ${curve.G.y}.`);
@@ -14,7 +17,8 @@ let userPublicKeyHTML = document.getElementById("userPublicKey");
 let userPrivateKeyHTML = document.getElementById("userPrivateKey");
 
 let users = [];
-
+//let tableKeyCells = [];
+//let tableValueCells = [];
 
 function createUTF8EncodingTable () {
     //Index from 32 to 127
@@ -36,6 +40,8 @@ function createUTF8EncodingTable () {
         let dataCellValue = document.createElement("td");
         dataCellValue.textContent = String.fromCharCode(i);
         rowValue.appendChild(dataCellValue);
+        //tableKeyCells[i] = rowKey;
+        //tableValueCells[i] = tableValueCells;
     }
     return table;
 }
