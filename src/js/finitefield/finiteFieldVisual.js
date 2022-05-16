@@ -129,7 +129,8 @@ class FiniteField {
         }
     }
     clearVisual () {
-
+        this.lineSVG.querySelectorAll('*').forEach(element => element.remove());
+        this.highlightSVG.querySelectorAll('*').forEach(element => element.remove());
     }
     pointText (point, string = "", coordinates = false, temp = true) {
         let textNode;

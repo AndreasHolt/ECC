@@ -47,7 +47,7 @@ class User {
     
                 e.target.disabled = true;
     
-                encryptionVisualization(this.label);
+                // encryptionVisualization(this.label);
             });
 
             this.back = document.createElement("INPUT");
@@ -83,22 +83,12 @@ class User {
                         <h1 id="encryption${this.label}"
                         class="basis-1/8 font-bold text-xl mb-2 text-gray-800">Encryption</h1>
                         <div id="innerDivEncryption">
-                            <h1 id="encryptionVisualization${this.label}" hidden="True"
-                            class="grow basis-7/8 font-bold text-xl mb-2 text-gray-800">lmao</h1>
-                            <h1 id="encryptionVisualization${this.label}" 
-                            class="grow basis-7/8 font-bold text-xl mb-2 text-gray-800">hej</h1>
                         </div>
                     </div>
                     <div class="col-span-1 flex flex-col border-2 border-black rounded-md p-0.5">
                         <h1 id="decryption${this.label}"
                         class="basis-1/8 font-bold text-xl mb-2 text-gray-800">Decryption</h1>
                         <div id="innerDivDecryption">
-                            <h1 id="decryptionVisualization${this.label}" hidden="True"
-                            class="grow basis-7/8 font-bold text-xl mb-2 text-gray-800">idiot</h1>
-                            <h1 id="decryptionVisualization${this.label}" 
-                            class="grow basis-7/8 font-bold text-xl mb-2 text-gray-800">idiot</h1>
-                            <h1 id="decryptionVisualization${this.label}" 
-                            class="grow basis-7/8 font-bold text-xl mb-2 text-gray-800">idiot</h1>
                         </div>
                     </div>
                 </div>
@@ -124,18 +114,26 @@ class User {
         document.getElementById(`sendMessage${this.label}temp`).replaceWith(this.sendMessageButton);
         document.getElementById("innerDivEncryption").appendChild(this.encryptFiniteField.createHTMLElement());
         document.getElementById("innerDivDecryption").appendChild(this.decryptFiniteField.createHTMLElement());
-        this.encryptFiniteField.drawPointSvg(humanUser.publicKey, this.encryptFiniteField.operationPointStyle);
-        this.decryptFiniteField.drawPointSvg(humanUser.publicKey, this.decryptFiniteField.operationPointStyle);
-        this.encryptFiniteField.drawPointSvg(this.publicKey, this.encryptFiniteField.operationPointStyle);
-        this.decryptFiniteField.drawPointSvg(this.publicKey, this.decryptFiniteField.operationPointStyle);
-        this.encryptFiniteField.drawPointSvg(this.encryptFiniteField.curve.G, this.encryptFiniteField.pointStyle);
-        this.decryptFiniteField.drawPointSvg(this.decryptFiniteField.curve.G, this.decryptFiniteField.pointStyle);
-        
+
+        this.drawKeys(humanUser);
         
         document.getElementById(`titleBox${this.label}`).appendChild(this.back);
         document.getElementById(`titleBox${this.label}`).appendChild(this.next);
     }
-    
+    drawKeys(humanUser) {
+        this.encryptFiniteField.clearVisual();
+        this.decryptFiniteField.clearVisual();
+
+        this.decryptFiniteField.drawPointSvg(humanUser.publicKey, this.decryptFiniteField.operationPointStyle);
+        this.decryptFiniteField.pointText(humanUser.publicKey, "aG", false, false);
+        this.encryptFiniteField.drawPointSvg(this.publicKey, this.encryptFiniteField.operationPointStyle);
+        this.encryptFiniteField.pointText(this.publicKey, "kG", false, false);
+
+        this.encryptFiniteField.drawPointSvg(this.encryptFiniteField.curve.G, this.encryptFiniteField.pointStyle);
+        this.decryptFiniteField.drawPointSvg(this.encryptFiniteField.curve.G, this.encryptFiniteField.pointStyle);
+        this.encryptFiniteField.pointText(this.encryptFiniteField.curve.G, "G",false, false);
+        this.decryptFiniteField.pointText(this.encryptFiniteField.curve.G, "G",false, false );
+    }
 }
 
 class Stage {
@@ -188,6 +186,9 @@ class StageSystem {
             this.parent.encryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage].point, this.parent.encryptFiniteField.operationPointStyle);
             this.parent.decryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage].point, this.parent.encryptFiniteField.operationPointStyle);
 
+            this.parent.encryptFiniteField.pointText(this.stageHistory[this.currentStage].point, "akG", true, false);
+            this.parent.decryptFiniteField.pointText(this.stageHistory[this.currentStage].point, "akG", true, false);
+
             this.parent.encryptedTextField.value = "";
             this.parent.decryptedTextField.value = "";
             this.currentStage++
@@ -214,15 +215,6 @@ class StageSystem {
         document.querySelectorAll(".temp").forEach(element => element.remove());
         this.parent.encryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage].point, this.parent.encryptFiniteField.intermediatePointStyle, true);
         this.parent.encryptFiniteField.pointText(this.stageHistory[this.currentStage].point, this.stageHistory[this.currentStage].char, true);
-
-        
-
-
-
-
-
-
-
 
         if (bool) {
             if (this.stageHistory[this.currentStage].show === 2) {

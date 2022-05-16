@@ -24,6 +24,8 @@ function createUTF8EncodingTable () {
     for (let i = 32; i <= 127; i++) {
         if ((i-32) % 19 === 0) {
             if (rowKey && rowValue && (i !== 32)) {
+                rowKey.classList.add('bg-blue-100');
+                rowValue.classList.add('bg-white');
                 table.appendChild(rowKey);
                 table.appendChild(rowValue);
             }
@@ -31,9 +33,13 @@ function createUTF8EncodingTable () {
             rowValue = document.createElement("tr");
         }
         let dataCellKey = document.createElement("td");
+        dataCellKey.setAttribute('align', 'center');
+        dataCellKey.setAttribute('id','pointCell' + `${i}`);
         dataCellKey.textContent = curve.numberToPoint(i).toString();
         rowKey.appendChild(dataCellKey);
         let dataCellValue = document.createElement("td");
+        dataCellValue.setAttribute('align', 'center');
+        dataCellValue.setAttribute('id','charCell' + `${i}`);
         dataCellValue.textContent = String.fromCharCode(i);
         rowValue.appendChild(dataCellValue);
     }
@@ -71,7 +77,7 @@ users[2].publicKey = curve.calcPointMultiplication(users[2].privateKey, curve.G)
 */
 for (const user of users) {
     document.getElementById(`privatekey-${user.label}`).textContent += user.privateKey;
-    console.log(user.publicKey);
+    // console.log(user.publicKey);
     document.getElementById(`publickey-${user.label}`).textContent += user.publicKey.toString(); //TODO use correct public key
     user.back.addEventListener("click", back);
     user.next.addEventListener("click", next);
@@ -116,6 +122,7 @@ document.getElementById("newKeyButton").addEventListener("click", () => {
     humanUser.publicKey = curve.calcPointMultiplication(humanUser.privateKey, curve.G);
     userPrivateKeyHTML.textContent = humanUser.privateKey;
     userPublicKeyHTML.textContent = humanUser.publicKey.toString();
+    users[0].drawKeys(humanUser);
 });
 /*document.getElementById("sendMessageA").addEventListener("click", () => {
     let encryptedMessage = BigInt(document.getElementById("textPreviewA").value);
@@ -134,8 +141,8 @@ document.getElementById("newKeyButton").addEventListener("click", () => {
 
 function back(e) {
     let label = e.target.id[e.target.id.length-1];
-    console.log("Hell");
     users[Number(label)].StageSystem.previousStage();
+    highlightCell(users[Number(label)].StageSystem.stageHistory[users[Number(label)].StageSystem.currentStage].char);
 
     /*document.getElementById(`encryption${label}`).hidden = false;
     document.getElementById(`encryptionVisualization${label}`).hidden = true;
@@ -149,6 +156,7 @@ function back(e) {
 function next(e) {
     let label = e.target.id[e.target.id.length-1];
     users[Number(label)].StageSystem.nextStage();
+    highlightCell(users[Number(label)].StageSystem.stageHistory[    users[Number(label)].StageSystem.currentStage].char);
 
     /*document.getElementById(`decryption${label}`).hidden = true;
     document.getElementById(`decryptionVisualization${label}`).hidden = false;
@@ -185,4 +193,13 @@ function back1(e) {
     document.getElementById(`backButton${label}`).addEventListener("click", back1);
 }*/
 
-
+function highlightCell(char) {
+    const UTF8 = char.charCodeAt(0);
+    document.querySelectorAll('.tempCell').forEach(cell => {
+        cell.classList.remove('bg-red-100', 'tempCell');
+    });
+    const charCell = document.querySelector(`#charCell${UTF8}`);
+    const pointCell = document.querySelector(`#pointCell${UTF8}`);
+    charCell.classList.add('bg-red-100', 'tempCell');
+    pointCell.classList.add('bg-red-100', 'tempCell');
+}
