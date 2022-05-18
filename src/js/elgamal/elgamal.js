@@ -2,7 +2,7 @@ import { Curve, AXYCurve } from "../finitefield/curves.js";
 import {User} from "./user.js";
 import {encrypt, decrypt, pointListToString} from "./cryptography.js";
 
-let curve = new Curve(118, 0, 0, 0, 65537, 65537); //256 points??
+let curve = new Curve(118, 0, 0, 0, 257, 257); //256 points??
 console.log("Starting");
 let startTime = Date.now();
 curve.createPoints();
@@ -82,9 +82,9 @@ users[2].publicKey = curve.calcPointMultiplication(users[2].privateKey, curve.G)
 
 */
 for (const user of users) {
-    document.getElementById(`privatekey-${user.label}`).textContent += user.privateKey;
+    document.getElementById(`recieverPrivateKey`).textContent += user.privateKey;
     // console.log(user.publicKey);
-    document.getElementById(`publickey-${user.label}`).textContent += user.publicKey.toString(); //TODO use correct public key
+    document.getElementById(`recieverPublicKey`).textContent += user.publicKey.toString(); //TODO use correct public key
     user.back.addEventListener("click", back);
     user.next.addEventListener("click", next);
 }
