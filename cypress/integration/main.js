@@ -4,11 +4,8 @@ import {
     movePoint, moveSection, mouseToGraph, graphToCoords, coordsToGraph, getPointPlacement,
     addCalculatedPoint, logicPointAddition, drawLine, addPointOnClick,
 } from '../../src/js/InfiniteField/graphHelpers';
-
 import { calculateAddition } from '../../src/js/InfiniteField/realsAddition';
-
 import { calculateDouble } from '../../src/js/InfiniteField/realsDoubling';
-
 const myGraph = {
     canvas: {},
     minX: -10,
@@ -36,6 +33,13 @@ const myGraph = {
     centerY: 195,
     centerX: 375.5,
 };
+
+import {Curve, Point, AXYCurve, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2, listPoints} from "../../src/js/finitefield/curves.js";
+const myCurve = new Curve(2, 1, 0, 0, 317, 317);
+myCurve.createPoints();
+
+
+
 
 describe('Unit Test Application Code', () => {
     before(() => {
@@ -233,5 +237,12 @@ describe('Unit Test Application Code', () => {
         it('test y coordinate', () => {
         });
         // [ -1.2916111850865513, -4.393553613618751 ]
+    });
+
+    context('Finite field operations', () => {
+        it(`Points include 1 correct point`, () => {
+            const newPoint = new Point(144, 17);
+            expect(myCurve.points.includes(newPoint)).to.eq(true);
+        });
     });
 });
