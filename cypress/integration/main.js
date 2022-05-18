@@ -1,11 +1,14 @@
 /// <reference types="cypress" />
 /* eslint-disable no-undef */
 import {
-    movePoint, moveSection, mouseToGraph, graphToCoords, coordsToGraph, getPointPlacement,
+    movePoint, moveSection, mouseToGraph, coordsToGraph, getPointPlacement,
     addCalculatedPoint, logicPointAddition, drawLine, addPointOnClick,
-} from '../../src/js/InfiniteField/graphHelpers';
-import { calculateAddition } from '../../src/js/InfiniteField/realsAddition';
-import { calculateDouble } from '../../src/js/InfiniteField/realsDoubling';
+} from '../../src/js/infinitefield/graphHelpers';
+
+import { calculateAddition } from '../../src/js/infinitefield/realsAddition';
+
+import { calculateDouble } from '../../src/js/infinitefield/realsDoubling';
+
 const myGraph = {
     canvas: {},
     minX: -10,
@@ -73,7 +76,7 @@ describe('Unit Test Application Code', () => {
             });
 
             it('Point Addition button click', () => {
-                cy.get('#pointAddition').click();
+                cy.get('#pointAddition').click({force: true});
             });
 
             it('Point Addition button disabled', () => {

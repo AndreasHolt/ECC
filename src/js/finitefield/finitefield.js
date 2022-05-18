@@ -747,11 +747,11 @@ function pointAdditionSteps(curve, points) {
 
     if(points.point1 === points.point2) {
         stepRows[0].innerHTML = `As \\(P = Q\\), the slope \\(m\\) is calculated by: <br>
-                                \\(m = (3x^2_p) \\cdot (2y_p)^{-1} \\cdot (x_P - x_Q)^{-1} \\mod p = \\frac{${points.point1.y} - ${points.point2.y}}{${points.point1.x} - ${points.point2.x}} = \\underline{${lambda}}\\)`;
+                                \\(m = (3x^2_p) \\cdot (2y_p)^{-1} \\cdot (x_P - x_Q)^{-1} \\mod p \\equiv \\frac{${points.point1.y} - ${points.point2.y}}{${points.point1.x} - ${points.point2.x}} \\equiv \\underline{${lambda}}\\)`;
     
         stepRows[1].innerHTML = `The equations for point addition are similar to the equations in the infinite field, except we need to add \\(mod p)\\) at the end of the expression. \\(P + Q = R\\) is calculated by: <br>
-                                \\(x_R = (m^2 - x_P - x_Q) \\mod p = (${lambda}^2 - ${points.point1.x} - ${points.point2.x} = \\underline{${points.point3.x})\\) <br>
-                                \\(y_R = y_P + m(x_R - x_P) = ${points.point1.y} + ${lambda}(${points.point3.x} - ${points.point1.x}) = \\underline{${points.point3.y}}\\) <br> Hence:  <br>
+                                \\(x_R = (m^2 - x_P - x_Q) \\mod p \\equiv (${lambda}^2 - ${points.point1.x} - ${points.point2.x} \\equiv \\underline{${points.point3.x})\\) <br>
+                                \\(y_R = y_P + m(x_R - x_P) = ${points.point1.y} + ${lambda}(${points.point3.x} - ${points.point1.x}) \\equiv  \\underline{${points.point3.y}}\\) <br> Hence:  <br>
                                 \\(\\textbf{R = (${points.point3.x}, ${points.point3.y})}\\)`;
     
                                 //\\(\\textbf{-R = (${newX}, ${-newY})}\\)`;
@@ -760,10 +760,10 @@ function pointAdditionSteps(curve, points) {
 
     } else {
         stepRows[0].innerHTML = `As \\(P \\neq Q\\), the slope \\(m\\) is calculated by: <br>
-                                \\(m = (y_P - y_Q) \\cdot (x_P - x_Q)^{-1} \\mod p = (${points.point1.y} - ${points.point2.y}) \\cdot (${points.point1.x} - ${points.point2.x})^{-1} \\mod ${curve.mod} = \\underline{${lambda}}\\) <br>
+                                \\(m = (y_P - y_Q) \\cdot (x_P - x_Q)^{-1} \\mod p \\equiv (${points.point1.y} - ${points.point2.y}) \\cdot (${points.point1.x} - ${points.point2.x})^{-1} \\mod ${curve.mod} \\equiv \\underline{${lambda}}\\) <br>
                                 Where \\((${points.point1.x} - ${points.point2.x})^{-1}\\) corresponds to calculating the inverse prime of the sum within the parentheses. <br>`;
         if(points.point1.x - points.point2.x < 0) {
-            stepRows[0].innerHTML += `<br>Calculating the inverse prime: <br> As \\(${points.point1.x} - ${points.point2.x} = ${points.point1.x - points.point2.x} \\) results in a negative number, \\(${points.point1.x - points.point2.x} \\mod ${curve.mod} = ${delta}\\) is calculated. <br>`;
+            stepRows[0].innerHTML += `<br>Calculating the inverse prime: <br> As \\(${points.point1.x} - ${points.point2.x} = ${points.point1.x - points.point2.x} \\) results in a negative number, \\(${points.point1.x - points.point2.x} \\mod ${curve.mod} \\equiv ${delta}\\) is calculated. <br>`;
         }  
 
         stepRows[0].innerHTML += `In the multiplicative table the inverse prime can be found by iterating rows \\(0 - ${curve.mod - 1}\\) from column \\(${delta}\\) until the entry with value \\(1\\) is found, then the inverse prime is the row to the entry, i.e. \\(${inversePrime(delta, curve.mod)}\\). <br>`;
@@ -774,8 +774,8 @@ function pointAdditionSteps(curve, points) {
 
     
         stepRows[1].innerHTML = `The intersection of this line with the elliptic curve is a third point -\\(R = (x_R, y_R)\\), where: <br>
-                                \\(x_R = (m^2 - x_P - x_Q) \\mod p = (${lambda}^2 - ${points.point1.x} - ${points.point2.x}) \\mod ${curve.mod} = \\underline{${points.point3.x}}\\) <br>
-                                \\(y_R = (-y_P + m(x_P - x_R)) \\mod p = (${-points.point1.y} + ${lambda} \\cdot (${-points.point1.x} - ${points.point3.x})) \\mod ${curve.mod} = \\underline{${points.point3.y}}\\) <br> Hence:  <br>
+                                \\(x_R = (m^2 - x_P - x_Q) \\mod p \\equiv (${lambda}^2 - ${points.point1.x} - ${points.point2.x}) \\mod ${curve.mod} \\equiv \\underline{${points.point3.x}}\\) <br>
+                                \\(y_R = (-y_P + m(x_P - x_R)) \\mod p \\equiv (${-points.point1.y} + ${lambda} \\cdot (${-points.point1.x} - ${points.point3.x})) \\mod ${curve.mod} \\equiv \\underline{${points.point3.y}}\\) <br> Hence:  <br>
                                 \\(\\textbf{R = (${points.point3.x}, ${points.point3.y})}\\)`;
     
         // eslint-disable-next-line no-undef
