@@ -1,6 +1,15 @@
-import { Curve, AXYCurve } from "../finitefield/curves.js";
+import { Curve, AXYCurve, Point } from "../finitefield/curves.js";
 import {User} from "./user.js";
 import {encrypt, decrypt, pointListToString} from "./cryptography.js";
+
+const myCurve = new Curve(2, 1, 0, 0, 317, 317);
+myCurve.createPoints();
+const newPoint = new Point(144, 17);
+console.log("Hej");
+console.log(myCurve.calcPointMultiplication(2, newPoint).toString());
+console.log("Hej");
+
+
 
 let curve = new Curve(118, 0, 0, 0, 257, 257); //256 points??
 console.log("Starting");
