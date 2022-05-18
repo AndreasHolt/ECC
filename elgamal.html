@@ -36,8 +36,8 @@
             <div id="privateKey" 
             class="basis-1/6 grid place-content-center">
                 <div class="">
-                    <p class="font-bold text-xl mb-2 text-gray-800">Your public key is: <span id="userPublicKey"></span></p>
-                    <p class="font-bold text-xl mb-2 text-gray-800">Your private key is: <span id="userPrivateKey"></span></p>
+                    <p class="font-bold text-xl mb-2 text-gray-800">Your public key (aG) is: <span id="userPublicKey"></span></p>
+                    <p class="font-bold text-xl mb-2 text-gray-800">Your private key (a) is: <span id="userPrivateKey"></span></p>
                     <!-- <button class="border-2 border-slate-700 rounded-md w-20" id="newKeyButton">New key</button> -->
                     <button class="bg-white hover:bg-gray-100 
                     disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 
@@ -58,12 +58,16 @@
             <div class="basis-4/6 flex flex-col" id="communication">
             </div>
             <div class="basis-1/6 grid place-items-center">
-                <div>
-                    <table class="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight">
-                        <tr>
-                            <th >
-                            Public keys:
-                            </th>
+                <p class="font-bold text-xl mb-2 text-gray-800">Recievers public key (kG) is: <span id="recieverPublicKey"></span></p>
+                <p class="font-bold text-xl mb-2 text-gray-800">Recievers private key (k) is: <span id="recieverPrivateKey"></span></p>
+                <!--
+
+                    <div>
+                        <table class="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight">
+                            <tr>
+                                <th >
+                                    Public keys:
+                                </th>
                         </tr>
                         <tr>
                             <td>
@@ -93,20 +97,20 @@
                             <tr>
                                 <td>
                                 <p id="privatekey-0">privateKey: </p>
-                                </td>
-                            </tr>
-                        </table>
+                            </td>
+                        </tr>
+                    </table>
                     </div>
                     <div>
                         <table class="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight mb-2">
                             <tr>
                                 <th>
-                                <p>Person B keys: </p>
+                                    <p>Person B keys: </p>
                                 </th>
                             </tr>
                             <tr>
                                 <td>
-                                <p id="privatekey-1">privateKey: </p>
+                                    <p id="privatekey-1">privateKey: </p>
                                 </td>
                             </tr>
                         </table >
@@ -126,6 +130,7 @@
                         </table>
                     </div>
                 </div>
+            -->
             </div>
         </div>
         <div>
