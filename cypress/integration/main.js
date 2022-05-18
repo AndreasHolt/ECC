@@ -253,5 +253,10 @@ describe('Unit Test Application Code', () => {
             }
             expect(result).to.eq(true);
         });
+        it(`Point addition`, () => {
+            const newPoint = new Point(144, 17);
+            expect(curve.calcPointMultiplication(2, newPoint).x).to.eq(303);
+            expect(curve.calcPointMultiplication(2, newPoint).y).to.eq(159);
+        });
     });
 });

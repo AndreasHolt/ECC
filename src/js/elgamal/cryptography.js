@@ -25,7 +25,7 @@ function encrypt (curve, message, sender, reciever) {
         for (let char of block) {
             charValuesArr.push(char.charCodeAt(0));
         }
-        let blockValue = combineLettersToNumber(charValuesArr, charSize);    //char3 * 256^2 + char2 * 256^1 + char1 * 256^0
+        let blockValue = combineNumbersToNumberGivenABase(charValuesArr, charSize);    //char3 * 256^2 + char2 * 256^1 + char1 * 256^0
         let point = curve.numberToPoint(blockValue);
         let encryptedPoint = encryptBlock(curve, point, sender, reciever);
         points.push(point);
@@ -49,7 +49,7 @@ function decrypt (curve, chipherText, sender, reciever) {
     for (let point of pointArray) {
         //let point = curve.numberToPoint(block);
         let decruptValue = decryptBlock(curve, point, sender, reciever);
-        let arrIntVal = seperateLettersFromNumber(decruptValue, charSize);
+        let arrIntVal = seperateNumberIntoArrayOfNumbersGivenABase(decruptValue, charSize);
         arrIntVal.forEach((elem)=> {
             result += String.fromCharCode(Number(elem));
         });
@@ -85,7 +85,7 @@ function estLog2BigIntFloor(bigInt) {
     return BigInt(bigInt.toString(2).length-1);
 }
 
-function combineLettersToNumber (numbers, base) {
+function combineNumbersToNumberGivenABase (numbers, base) {
     let sum = BigInt(0);
     for(let i = BigInt(0); i < numbers.length; i++) {
         let value = BigInt(numbers[i]);
@@ -98,7 +98,7 @@ function combineLettersToNumber (numbers, base) {
     return sum;
 }
 
-function seperateLettersFromNumber (number, base) {
+function seperateNumberIntoArrayOfNumbersGivenABase (number, base) {
     let result = [];
     let i = BigInt(0);
     let val = BigInt(0);
