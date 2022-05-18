@@ -308,7 +308,7 @@ function createPointsPrime () {
 function listPoints(point1, point2, point3) {
     const pointsListed = document.getElementById('pointsListed');
 
-    pointsListed.innerHTML = `\\(P = (${point1.x}, ${point1.y})\\) &nbsp \\(Q = (${point2.x}, ${point2.y})\\) &nbsp \\(R = (${point3.x}, ${point3.y})\\)`;
+    pointsListed.innerHTML = `\\(P = (${point1.x}, ${point1.y})\\) , &nbsp \\(Q = (${point2.x}, ${point2.y})\\) , &nbsp \\(R = (${point3.x}, ${point3.y})\\)`;
     // eslint-disable-next-line no-undef
     if(!(document.getElementById("explanationContainer").style.display == "none")) {
         MathJax.typeset()
