@@ -31,7 +31,7 @@ class User {
 
             ///Decrypt message button///
             this.sendMessageButton = document.createElement("button");
-            this.sendMessageButton.classList.add("bg-white", "hover:bg-gray-100", "disabled:bg-gray-200", "text-gray-800", "font-semibold", "py-2", "px-4", "border", "border-gray-400", "rounded", "shadow", "inline-flex", "items-center", "mb-10");
+            this.sendMessageButton.classList.add("bg-white", "hover:bg-gray-100", "disabled:bg-gray-200", "text-gray-800", "font-semibold", "py-2", "px-4", "border", "border-gray-400", "rounded", "shadow", "inline-flex", "items-center", "mb-10", "hidden");
             this.sendMessageButton.id = "sendMessage" + this.label;
             this.sendMessageButton.textContent = "Send message";
             this.sendMessageButton.addEventListener("click", (e) => {
@@ -52,15 +52,17 @@ class User {
 
             this.back = document.createElement("INPUT");
             this.back.setAttribute("type", "button");
-            this.back.setAttribute("value", "Back");
+            this.back.setAttribute("value", "← Back");
             this.back.setAttribute("id", `backButton${this.label}`);
-            this.back.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1");
+            this.back.setAttribute("class", "text-red-600 bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-red-600 rounded shadow inline-flex items-center mb-1 mr-5");
+
             
             this.next = document.createElement("INPUT"); //Next button goes to 2nd part of visualization
             this.next.setAttribute("type", "button");
-            this.next.setAttribute("value", "Next");
+            this.next.setAttribute("value", "Next →");
             this.next.setAttribute("id", `nextButton${this.label}`);
-            this.next.setAttribute("class", "bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow inline-flex items-center mb-1");
+            this.next.setAttribute("class", "text-green-600 bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-green-600 rounded shadow inline-flex items-center mb-1");
+            
         
             
             this.StageSystem = new StageSystem(this);
@@ -74,20 +76,19 @@ class User {
         let outerDiv = document.createElement("div");
         outerDiv.classList.add(`basis-1/3`);
         outerDiv.innerHTML = `
-            <p class="font-bold text-xl mb-2 text-blue-400">From you to person ${this.label}</p>
             <p id="titleBox${this.label}"></p>
-            <div class="flex flex-col gap-1 border-2 border-black rounded-md"
+            <div class="flex flex-col gap-1 border-2 border-blue-500 rounded-md"
             id="encryptionBox">
                 <div class="grow basis-7/8 grid grid-cols-2 p-0.5">
-                    <div class="col-span-1 flex flex-col border-2 border-black rounded-md p-0.5">
+                    <div class="col-span-1 flex flex-col border-2 border-right-blue-500 rounded-md p-0.5">
                         <h1 id="encryption${this.label}"
-                        class="basis-1/8 font-bold text-xl mb-2 text-gray-800">Encryption</h1>
+                        class="basis-1/8 font-bold text-xl text-center mt-3 mb-2 text-gray-800">Encryption</h1>
                         <div id="innerDivEncryption">
                         </div>
                     </div>
-                    <div class="col-span-1 flex flex-col border-2 border-black rounded-md p-0.5">
+                    <div class="col-span-1 flex flex-col border-2 border-left-blue-500 rounded-md p-0.5">
                         <h1 id="decryption${this.label}"
-                        class="basis-1/8 font-bold text-xl mb-2 text-gray-800">Decryption</h1>
+                        class="basis-1/8 font-bold text-xl text-center mt-3 mb-2 text-gray-800">Decryption</h1>
                         <div id="innerDivDecryption">
                         </div>
                     </div>
@@ -103,9 +104,9 @@ class User {
                     </div>
                 </div>
             </div>
-            <div class="p-0.5">
-                <button class="border-2 rounded-md border-slate-700"
-                id="sendMessage${this.label}temp" >Send message</button>
+            <div class="p-0.5"> 
+                <button class="border-2 rounded-md border-slate-700 hidden" 
+                id="sendMessage${this.label}temp" ></button>
             </div>
         `;
         document.getElementById("communication").appendChild(outerDiv);
