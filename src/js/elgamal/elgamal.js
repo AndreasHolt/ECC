@@ -2,7 +2,7 @@ import { Curve, AXYCurve } from "../finitefield/curves.js";
 import {User} from "./user.js";
 import {encrypt, decrypt, pointListToString} from "./cryptography.js";
 
-let curve = new Curve(118, 0, 0, 0, 65537, 65537); //256 points??
+let curve = new Curve(118, 0, 0, 0, 257, 257); //256 points??
 console.log("Starting");
 let startTime = Date.now();
 curve.createPoints();
