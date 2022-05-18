@@ -245,7 +245,18 @@ describe('Unit Test Application Code', () => {
     context('Finite field operations', () => {
         it(`Points include 1 correct point`, () => {
             const newPoint = new Point(144, 17);
-            expect(myCurve.points.includes(newPoint)).to.eq(true);
+            let result = false;
+            for (let element of yCurve.points) {
+                if (element.x === newPoint.x && element.y === newPoint.y) {
+                    result = true;
+                }
+            }
+            expect(result).to.eq(true);
+        });
+        it(`Point addition`, () => {
+            const newPoint = new Point(144, 17);
+            expect(curve.calcPointMultiplication(2, newPoint).x).to.eq(303);
+            expect(curve.calcPointMultiplication(2, newPoint).y).to.eq(159);
         });
     });
 });
