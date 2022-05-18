@@ -52,7 +52,7 @@ function createUTF8EncodingTable () {
             rowValue = document.createElement("tr");
         }
         let dataCellKey = document.createElement("td");
-        dataCellKey.classList.add("text-white", "text-sm", "font-medium", "px-1", "py-3", "border-b", "bg-gray-800", "border-gray-600")
+        dataCellKey.classList.add("text-white", "text-sm", "font-medium", "px-1", "py-3", "border-b", "bg-gray-800", "border-gray-800")
         dataCellKey.setAttribute('align', 'center');
         dataCellKey.setAttribute('id','pointCell' + `${i}`);
         dataCellKey.textContent = curve.numberToPoint(i).toString();
