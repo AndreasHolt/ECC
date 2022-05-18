@@ -25,6 +25,12 @@ function createUTF8EncodingTable () {
     let table = document.createElement("table");
     let rowKey = document.createElement("tr");
     let rowValue = document.createElement("tr");
+
+    table.classList.add('mb-20')
+
+    table.setAttribute('align', 'center')
+
+    
     for (let i = 32; i <= 127; i++) {
         if ((i-32) % 19 === 0) {
             if (rowKey && rowValue && (i !== 32)) {
@@ -37,6 +43,7 @@ function createUTF8EncodingTable () {
             rowValue = document.createElement("tr");
         }
         let dataCellKey = document.createElement("td");
+        dataCellKey.classList.add("text-white", "text-sm", "font-medium", "px-1", "py-3", "border-b", "bg-gray-800", "border-gray-600")
         dataCellKey.setAttribute('align', 'center');
         dataCellKey.setAttribute('id','pointCell' + `${i}`);
         dataCellKey.textContent = curve.numberToPoint(i).toString();
@@ -44,6 +51,7 @@ function createUTF8EncodingTable () {
         let dataCellValue = document.createElement("td");
         dataCellValue.setAttribute('align', 'center');
         dataCellValue.setAttribute('id','charCell' + `${i}`);
+        (i % 2 === 1)?(dataCellValue.classList.add("bg-gray-100", "py-1")):("")
         dataCellValue.textContent = String.fromCharCode(i);
         rowValue.appendChild(dataCellValue);
         //tableKeyCells[i] = rowKey;
