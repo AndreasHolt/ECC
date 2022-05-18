@@ -668,9 +668,9 @@ function init() {
     let label2 = document.getElementById('labelForm2')
     let form = document.querySelector("#operationForm > form:first-of-type")
 
-const operations = document.querySelectorAll('#pointAddition, #pointMultiplication');
+    const operations = document.querySelectorAll('#pointAddition, #pointMultiplication');
 
-document.getElementById('pointAddition').addEventListener('click', (e) => {
+    document.getElementById('pointAddition').addEventListener('click', (e) => {
     deleteDrawing(1);
     
     Array.from(operations).forEach((buttons) => {
@@ -693,9 +693,9 @@ document.getElementById('pointAddition').addEventListener('click', (e) => {
 
     });
 
-document.getElementById('pointMultiplication').addEventListener('click', (e) => {
+    document.getElementById('pointMultiplication').addEventListener('click', (e) => {
 
-    deleteDrawing(1);
+        deleteDrawing(1);
 
         Array.from(operations).forEach((buttons) => {
             if (buttons.disabled === true) {
