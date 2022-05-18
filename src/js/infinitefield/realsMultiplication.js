@@ -35,7 +35,7 @@ function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
     // clear inner HTML whenever a new scalar is being input
 
     document.getElementById('calculatingHeader').innerHTML = 'Point Multiplication: Double and Add Algorithm';
-    stepRows[0].innerHTML = `There exist faster algorithms than simply computing \\(n \\cdot P\\), which requires n additions. One of them is the double and add algorithm: <br>
+    stepRows[0].innerHTML = `There exist faster algorithms than simply computing \\(n \\cdot P\\), which requires \\(n - 1\\) additions. One of them is the double and add algorithm: <br>
                               Get the binary representation of the scalar \\(${scalar}\\), which is \\(\\textbf{${binary}}\\). This binary representation can be turned into a sum of powers of two: <br>
                               \\(${scalar} = \\) &nbsp`;
 
