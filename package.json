@@ -11,7 +11,7 @@
     "es:fix": "eslint --ext .js ./ --fix",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
-    "test": "start-server-and-test dev http-get://localhost:3000 cy:run",
+    "test": "start-server-and-test dev http-get://localhost:3000 cy:run"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.4",
