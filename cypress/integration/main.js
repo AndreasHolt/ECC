@@ -37,6 +37,13 @@ const myGraph = {
     centerX: 375.5,
 };
 
+import {Curve, Point, AXYCurve, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2, listPoints} from "../../src/js/finitefield/curves.js";
+const myCurve = new Curve(2, 1, 0, 0, 317, 317);
+myCurve.createPoints();
+
+
+
+
 describe('Unit Test Application Code', () => {
     before(() => {
         // check if the import worked correctly
@@ -233,5 +240,23 @@ describe('Unit Test Application Code', () => {
         it('test y coordinate', () => {
         });
         // [ -1.2916111850865513, -4.393553613618751 ]
+    });
+
+    context('Finite field operations', () => {
+        it(`Points include 1 correct point`, () => {
+            const newPoint = new Point(144, 17);
+            let result = false;
+            for (let element of yCurve.points) {
+                if (element.x === newPoint.x && element.y === newPoint.y) {
+                    result = true;
+                }
+            }
+            expect(result).to.eq(true);
+        });
+        it(`Point addition`, () => {
+            const newPoint = new Point(144, 17);
+            expect(myCurve.calcPointMultiplication(2, newPoint).x).to.eq(303);
+            expect(myCurve.calcPointMultiplication(2, newPoint).y).to.eq(159);
+        });
     });
 });
