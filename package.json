@@ -7,10 +7,11 @@
     "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "eslint": "eslint --ext .js ./",
-    "eslintfix": "eslint --ext .js ./ --fix",
-    "test": "concurrently -k 'wait-on http://localhost:3000/ & cypress run' 'npm run dev'",
-    "cypress": "cypress open"
+    "es": "eslint --ext .js ./",
+    "es:fix": "eslint --ext .js ./ --fix",
+    "cy:run": "cypress run",
+    "cy:open": "cypress open",
+    "test": "start-server-and-test dev http-get://localhost:3000 cy:run",
   },
   "devDependencies": {
     "autoprefixer": "^10.4.4",
@@ -21,6 +22,7 @@
     "eslint-plugin-import": "^2.25.4",
     "jest": "^27.5.1",
     "postcss": "^8.4.12",
+    "start-server-and-test": "^1.14.0",
     "tailwindcss": "^3.0.23",
     "vite": "^2.9.1",
     "wait-on": "^6.0.1"
