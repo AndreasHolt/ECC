@@ -228,9 +228,9 @@ function pointAdditionFinite(canvas, curve, index1, index2) {
 
 
         if (index1 !== index2) {
-            //drawLineDirect(point1, point2, newPoint, 100);
+            finiteField.drawLineDirect(point1, point2, newPoint, 5);
         }
-        finiteField.drawLineDirectGood(point1, newPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
+        //finiteField.drawLineDirectGood(point1, newPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
     } catch (e) {
         console.log("Error! find selv ud af det!");
         console.log(e);
@@ -238,6 +238,8 @@ function pointAdditionFinite(canvas, curve, index1, index2) {
 }
 
 document.getElementById("additionForm").addEventListener("submit", (event) => {
+    console.log("HelloAddition");
+    
     event.preventDefault();
     let index1 = Number(event.target["index1"].value);
     let index2 = Number(event.target["index2"].value);
@@ -251,6 +253,7 @@ document.getElementById("additionForm").addEventListener("submit", (event) => {
 
 function addScalarForm(canvas, curve) {
     document.getElementById("scalarForm").addEventListener("submit", (event) => {
+        console.log("HelloScalar");
         deleteDrawing(0);
         event.preventDefault();
         let index = Number(event.target["index1"].value);
@@ -867,44 +870,7 @@ function curveParameters() {
 
 
 
-/*function drawLineDirect (curve, point1, point2, newPoint, delay) {
-    let alfa = (point2.y - point1.y)/(point2.x - point1.x);
-    drawLineDirect_AUX(curve, alfa, 0, 0.2, point1, newPoint, delay);
-}
-function drawLineDirect_AUX (curve, alfa, progress, speed, previousPoint, target, delay) {
-    if (progress < curve.fieldOrder) {
-        //console.log("Alfa: " + alfa);
-        let newPoint = {"x":Mod(previousPoint.x + speed, curve.fieldOrder), "y":Mod(previousPoint.y+(alfa*speed), curve.fieldOrder)};
-        let xDifference = newPoint.x - (previousPoint.x + (speed));
-        let xMod = Math.abs(xDifference) > 0.00002;
-        let yDifference = newPoint.y - (previousPoint.y + (alfa*speed));
-        let yMod = Math.abs(yDifference) > 0.00002;
-        
 
-        if ((previousPoint.x - target.x) / (newPoint.x - target.x) < 0 || (xMod && (previousPoint.x - target.x - curve.fieldOrder) / (newPoint.x - target.x) < 0)) {
-            drawLineSvg1(previousPoint.x, target.x, previousPoint.y, target.y, curve.fieldOrder,"black");
-            drawLineSvg1(target.x, target.x, Mod(target.y - curve.fieldOrder, curve.mod), target.y, curve.fieldOrder,"green");
-            return;
-        } else {
-            if (xMod || yMod) {
-                if (xMod && yMod) {
-                    drawLineSvg1(previousPoint.x, previousPoint.x + (speed), previousPoint.y, previousPoint.y + (alfa*speed), curve.fieldOrder,"green");
-                    drawLineSvg1(newPoint.x - (speed), newPoint.x, newPoint.y - (alfa*speed), curve.fieldOrder,"black");
-                } else if (xMod) {
-                    drawLineSvg1(previousPoint.x, previousPoint.x + (speed), previousPoint.y, newPoint.y, curve.fieldOrder,"black");
-                    drawLineSvg1(newPoint.x - (speed), newPoint.x, previousPoint.y, newPoint.y, curve.fieldOrder,"black");
-                } else {
-                    drawLineSvg1(previousPoint.x, newPoint.x, previousPoint.y, previousPoint.y + (alfa*speed), curve.fieldOrder,"black");
-                    drawLineSvg1(previousPoint.x, newPoint.x, newPoint.y - (alfa*speed), newPoint.y, curve.fieldOrder,"black");
-                }
-            } else {
-                drawLineSvg1(previousPoint.x, newPoint.x, previousPoint.y, newPoint.y, curve.fieldOrder,"black");
-            }
-            setTimeout(() => {drawLineDirect_AUX(curve, alfa, progress, speed, newPoint, target, delay)}, delay);
-        }
-        return;
-    }
-}*/
 
 
 /*document.getElementById("power").addEventListener("input", () => {

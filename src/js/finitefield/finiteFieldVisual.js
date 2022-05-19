@@ -128,6 +128,52 @@ class FiniteField {
             this.drawLineSvg1(tempPoint.x, point3.x, tempPoint.y, Mod(this.curve.fieldOrder - point3.y, this.curve.fieldOrder), this.curve.fieldOrder, "green");
         }
     }
+    drawLineDirect (point1, point2, newPoint, delay) {
+        let alfa = (point2.y - point1.y)/(point2.x - point1.x);
+        this.drawLineDirect_AUX(alfa, 0, this.curve.fieldOrder / 100 , point1, newPoint, delay);
+    }
+    drawLineDirect_AUX (alfa, progress, speed, previousPoint, target, delay) {
+        if (progress < this.curve.fieldOrder) {
+            //console.log("Alfa: " + alfa);
+            let newPoint = {"x":Mod(previousPoint.x + speed, this.curve.fieldOrder), "y":Mod(previousPoint.y+(alfa*speed), this.curve.fieldOrder)};
+            let xDifference = newPoint.x - (previousPoint.x + (speed));
+            let xMod = Math.abs(xDifference) > 0.00002;
+            let yDifference = newPoint.y - (previousPoint.y + (alfa*speed));
+            let yMod = Math.abs(yDifference) > 0.00002;
+            
+            let collideX = !xMod && (previousPoint.x - target.x) / (newPoint.x - target.x) < 0;
+            let collideY = !yMod && (previousPoint.y - this.curve.inverseOfPoint(target).y) / (newPoint.y - this.curve.inverseOfPoint(target).y) < 0;
+            let collide = collideX && collideY;
+            console.log(collideX + " " + collideY);
+            //console.log(collide);
+
+            if (collide || ((xMod || yMod) && (Math.abs(previousPoint.x - target.x) < speed || Math.abs(newPoint.x - target.x) < speed) && (Math.abs(previousPoint.y - this.curve.inverseOfPoint(target).y) < speed || Math.abs(newPoint.y - this.curve.inverseOfPoint(target).y) < speed))) {
+                if ((xMod && yMod) === false) {
+                    this.drawLineSvg1(previousPoint.x, target.x, previousPoint.y, this.curve.inverseOfPoint(target).y, this.curve.fieldOrder,"black");
+                    console.log("Hello");
+                }
+                this.drawLineSvg1(target.x, target.x, this.curve.inverseOfPoint(target).y, target.y, this.curve.fieldOrder,"green");
+                return;
+            } else {
+                if (xMod || yMod) {
+                    if (xMod && yMod) {
+                        this.drawLineSvg1(previousPoint.x, previousPoint.x + (speed), previousPoint.y, previousPoint.y + (alfa*speed), this.curve.fieldOrder,"green");
+                        this.drawLineSvg1(newPoint.x - (speed), newPoint.x, newPoint.y - (alfa*speed), this.curve.fieldOrder,"black");
+                    } else if (xMod) {
+                        this.drawLineSvg1(previousPoint.x, previousPoint.x + (speed), previousPoint.y, newPoint.y, this.curve.fieldOrder,"black");
+                        this.drawLineSvg1(newPoint.x - (speed), newPoint.x, previousPoint.y, newPoint.y, this.curve.fieldOrder,"black");
+                    } else {
+                        this.drawLineSvg1(previousPoint.x, newPoint.x, previousPoint.y, previousPoint.y + (alfa*speed), this.curve.fieldOrder,"black");
+                        this.drawLineSvg1(previousPoint.x, newPoint.x, newPoint.y - (alfa*speed), newPoint.y, this.curve.fieldOrder,"black");
+                    }
+                } else {
+                    this.drawLineSvg1(previousPoint.x, newPoint.x, previousPoint.y, newPoint.y, this.curve.fieldOrder,"black");
+                }
+                setTimeout(() => {this.drawLineDirect_AUX(alfa, progress, speed, newPoint, target, delay)}, delay);
+            }
+            return;
+        }
+    }
     clearVisual () {
         this.lineSVG.querySelectorAll('*').forEach(element => element.remove());
         this.highlightSVG.querySelectorAll('*').forEach(element => element.remove());
