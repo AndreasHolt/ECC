@@ -41,13 +41,9 @@ import {Curve, Point, AXYCurve, calcPointAdditionPrime, calcPointAdditionGF2, ca
 const myCurve = new Curve(2, 1, 0, 0, 317, 317);
 myCurve.createPoints();
 
-
-
-
 describe('Unit Test Application Code', () => {
     before(() => {
         // check if the import worked correctly
-        // expect(moveSection, 'moveSection').to.be.a('function');
         cy.visit('http://localhost:3000/');
     });
 
@@ -246,7 +242,7 @@ describe('Unit Test Application Code', () => {
         it(`Points include 1 correct point`, () => {
             const newPoint = new Point(144, 17);
             let result = false;
-            for (let element of yCurve.points) {
+            for (let element of myCurve.points) {
                 if (element.x === newPoint.x && element.y === newPoint.y) {
                     result = true;
                 }
