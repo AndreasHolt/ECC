@@ -322,7 +322,7 @@ function init() {
 
     function performEdgeCase() {
         let sel = document.getElementById('edgeCaseList')
-        let opt;
+        let opt, selected;
 
         
 
@@ -330,8 +330,20 @@ function init() {
             opt = sel.options[i]
             if(opt.selected === true) {
                 console.log(opt.value)
+                sel = opt.value
                 break;
             }
+        }
+
+        if(sel === 'Point at infinity') {
+            // CODE HERE
+    
+        } else if(sel === 'Point addition with the same point') {
+            // CODE HERE
+
+        } else if(sel ==='Point at infliction') {
+            // CODE HERE
+            
         }
 
 
@@ -345,7 +357,7 @@ function init() {
         } else if(action === 'create' && !isOnPage(document.getElementById('edgeCaseForm'))) {
             let div = document.createElement('div')
             div.setAttribute('id', 'edgeCaseForm')
-            div.classList.add('inline-grid', 'grid-cols-1', 'gap-4', 'mr-20')
+            div.classList.add('inline-grid', 'grid-cols-1', 'gap-2', 'mr-20')
             document.getElementById('right-column-infinite').appendChild(div)
     
             const html = '<hr class="mt-20">'
@@ -354,6 +366,7 @@ function init() {
                         + '<option value="" selected disabled hidden>Select edge case</option>'
                         + '<option>Point at infinity</option>'
                         + '<option>Point addition with the same point</option>'
+                        + '<option>Pint at infliction</option>'
                         + '</select>'
                         + '<button class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center mr-10" id="edgeCaseSubmit">Show Edge Case</button>'
             
