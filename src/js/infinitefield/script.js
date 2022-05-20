@@ -110,13 +110,8 @@ document.getElementById('negateQ').addEventListener('click', () => {
 
 document.getElementById('pointQ').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
-        const pointsOnGraph = document.getElementsByClassName('workingPoints');
+        const pointsOnGraph = document.querySelectorAll('.workingPoints');
 
-        for (const point of pointsOnGraph) {
-            if (point.getAttribute('idPoint') === 'Q') {
-                point.remove();
-            }
-        }
         // Delete the point on the graph that was placed first
         if (document.getElementById('pointAddition').disabled) {
             if (pointsOnGraph.length === 0) {
@@ -133,13 +128,8 @@ document.getElementById('pointQ').addEventListener('keypress', (e) => {
 
 document.getElementById('pointP').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
-        const pointsOnGraph = document.getElementsByClassName('workingPoints');
+        const pointsOnGraph = document.querySelectorAll('.workingPoints');
 
-        for (const point of pointsOnGraph) {
-            if (point.getAttribute('idPoint') === 'P') {
-                point.remove();
-            }
-        }
         // Delete the point on the graph that was placed first
         if (document.getElementById('pointAddition').disabled) {
             if (pointsOnGraph.length === 0) {
