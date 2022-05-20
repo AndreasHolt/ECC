@@ -82,7 +82,7 @@ function convertToBinary(scalar, arrayBool) {
     let binary = (num % 2).toString();
 
     while (num > 1) {
-        num = parseInt(num / 2);
+        num = parseInt(num / 2, 10);
         binary = (num % 2) + (binary);
     }
 
@@ -110,8 +110,6 @@ function pointMultiplication(myGraph, changedScalar = false) {
 
     const scalar = document.getElementById('scalarForm').value;
     const binary = convertToBinary(scalar, 1); // the array of bits, from msb to lsb
-
-    const Q = 0;
 
     const bits = binary;
     let i = bits.length - 2;

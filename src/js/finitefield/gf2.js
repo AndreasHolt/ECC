@@ -1,4 +1,5 @@
-import { numberOfBits2 } from './bits.js';
+/* eslint-disable no-bitwise */
+import { numberOfBits2 } from './bits';
 
 function aXOR(...theArgs) {
     return theArgs.reduce((previous, current) => previous ^ current);
@@ -17,7 +18,7 @@ function multiplicativeXOR(x1, x2, mod) {
     let tempResult = 0;
     const x2bitLength = numberOfBits2(x2);
     // console.log(`${x2} has ${x2bitLength} bits`);
-    for (let i = 0; i <= x2bitLength; i++) {
+    for (let i = 0; i <= x2bitLength; i += 1) {
         if (x2 >> i & 1 === 1) {
             const leftshiftedValue = x1 << i;
             tempResult = additiveXOR(leftshiftedValue, tempResult);
