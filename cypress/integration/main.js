@@ -284,19 +284,13 @@ describe('Unit Test Application Code', () => {
     context('Elgamal operations', () => {
         it(`Check plain text equals decrypted chipher text`, () => {
             let plainText = "Hej Test 120 , ";
-            cy.log(plainText);
-            let encryptedPoints = encrypt(myCurve, plainText, user1, user2).encryptedPoints;
-            let chipherText = "";
-            for (let point of encryptedPoints) {
-                chipherText += point.toString();
-            }
-            //encryptedPoints.reduce((prev, point) => {return prev += point.toString()});
-            cy.log(chipherText);
-            if (chipherText === undefined) {
-                return true;
-            }
-            expect(plainText).to.eq(chipherText);
-            //decrypt(myCurve, chipherText, user1, user2)
+            //let encryptedPoints = encrypt(myCurve, plainText, user1, user2).encryptedPoints;
+            let chipherText = encrypt(myCurve, plainText, user1, user2).encryptedPoints.reduce((prev, elem) => {
+                prev = prev + elem.toString() + ",";
+                return prev;
+            }, "");
+            let decrypted = decrypt(myCurve, chipherText, user1, user2)
+            expect(plainText).to.eq(decrypted);
         })
     })
 
