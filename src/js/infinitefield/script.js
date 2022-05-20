@@ -1,8 +1,8 @@
-import { pointDouble } from './realsDoubling';
+import { pointDouble, calculateDouble } from './realsDoubling';
 import { pointAddition, twoDecimalRound } from './realsAddition';
 import { pointMultiplication } from './realsMultiplication';
 import {
-    movePoint, isOnPage, graphToCoords, coordsToGraph, addPointOnClick, addPointByInput, removeBinaryParagraphs,
+    movePoint, isOnPage, graphToCoords, coordsToGraph, addPointOnClick, addPointByInput, removeBinaryParagraphs, addCalculatedPoint
 } from './graphHelpers';
 import {
     Graph, drawXAxis, drawYAxis, drawEquation,
@@ -342,8 +342,29 @@ function init() {
             // CODE HERE
 
         } else if(sel ==='Point at infliction') {
-            // CODE HERE
+            function testInfliction(myGraph, x) {
+                let initPoint = {x: x, y: -myGraph.equationP(x)};
+                let P = findInfliction(initPoint, myGraph);
+                console.log(P)
+                document.getElementById('Px').value = P.x;
+                addPointByInput('Px', myGraph);
+                addCalculatedPoint(myGraph, P, 2);
+            }
             
+            function findInfliction(P, myGraph) {
+                let newP = calculateDouble(myGraph, P);
+                if(Math.abs(newP.x - P.x) < 0.00001) {
+                    console.log(newP);
+                    return newP;
+                }
+                else {
+                    newP.x = (newP.x - (newP.x - P.x)/2)
+                    newP.y = -myGraph.equationP(newP.x);
+                    return findInfliction(newP, myGraph);
+                }
+            }
+            
+            testInfliction(myGraph, 0);   
         }
 
 
@@ -366,7 +387,7 @@ function init() {
                         + '<option value="" selected disabled hidden>Select edge case</option>'
                         + '<option>Point at infinity</option>'
                         + '<option>Point addition with the same point</option>'
-                        + '<option>Pint at infliction</option>'
+                        + '<option>Point at infliction</option>'
                         + '</select>'
                         + '<button class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center mr-10" id="edgeCaseSubmit">Show Edge Case</button>'
             
