@@ -158,21 +158,50 @@ function drawEquation(equation, color, thickness, myGraph) {
 
     let lastX = 0;
 
-    for (let x = myGraph.minX + myGraph.iteration; x <= myGraph.maxX; x += myGraph.iteration) {
+    /*for (let x = myGraph.minX + myGraph.iteration; x <= myGraph.maxX; x += myGraph.iteration) {
         if (Number.isNaN(equation(x))) {
             lastX = x;
         }
-    }
+    }*/
 
     const realRootMultiplier = 1.01;
     const realRoot = lastX * realRootMultiplier;
 
+    let isPrevXInSolution = false;
+    let isCurrentXInSolution = false;
     for (let x = myGraph.minX + myGraph.iteration; x <= myGraph.maxX; x += myGraph.iteration) {
-        if (Number.isNaN(equation(x)) && x > realRoot) {
-            context.lineTo(x, 0);
+        if (Number.isNaN(equation(x)) /*&& x > realRoot*/) {
+            //context.lineTo(x, 0);
+            isCurrentXInSolution = false;
         } else {
-            context.lineTo(x, equation(x));
+            
+            isCurrentXInSolution = true;
         }
+
+        if (isCurrentXInSolution || isPrevXInSolution) {
+            if (isCurrentXInSolution && isPrevXInSolution) {
+                context.lineTo(x, equation(x));
+            } else if (isCurrentXInSolution) {
+                context.beginPath();
+                context.moveTo(x - myGraph.iteration, 0);
+                context.lineTo(x, equation(x));
+            } else {
+                context.lineTo(x, 0);
+                context.restore();
+                context.lineJoin = 'round';
+                context.lineWidth = thickness;
+                context.strokeStyle = color;
+                context.stroke();
+                context.closePath();
+                context.save();
+                transformContext(myGraph);
+            }
+
+        }
+
+
+
+        isPrevXInSolution = isCurrentXInSolution;
     }
 
     context.restore();
