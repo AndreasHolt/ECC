@@ -1,8 +1,8 @@
-import { pointDouble } from './realsDoubling';
+import { pointDouble, calculateDouble } from './realsDoubling';
 import { pointAddition, twoDecimalRound } from './realsAddition';
 import { pointMultiplication } from './realsMultiplication';
 import {
-    movePoint, isOnPage, graphToCoords, coordsToGraph, addPointOnClick, addPointByInput, removeBinaryParagraphs,
+    movePoint, isOnPage, graphToCoords, coordsToGraph, addPointOnClick, addPointByInput, removeBinaryParagraphs, addCalculatedPoint
 } from './graphHelpers';
 import {
     Graph, drawXAxis, drawYAxis, drawEquation,
@@ -322,7 +322,7 @@ function init() {
 
     function performEdgeCase() {
         let sel = document.getElementById('edgeCaseList')
-        let opt;
+        let opt, selected;
 
         
 
@@ -330,8 +330,41 @@ function init() {
             opt = sel.options[i]
             if(opt.selected === true) {
                 console.log(opt.value)
+                sel = opt.value
                 break;
             }
+        }
+
+        if(sel === 'Point at infinity') {
+            // CODE HERE
+    
+        } else if(sel === 'Point addition with the same point') {
+            // CODE HERE
+
+        } else if(sel ==='Point at infliction') {
+            function testInfliction(myGraph, x) {
+                let initPoint = {x: x, y: -myGraph.equationP(x)};
+                let P = findInfliction(initPoint, myGraph);
+                console.log(P)
+                document.getElementById('Px').value = P.x;
+                addPointByInput('Px', myGraph);
+                addCalculatedPoint(myGraph, P, 2);
+            }
+            
+            function findInfliction(P, myGraph) {
+                let newP = calculateDouble(myGraph, P);
+                if(Math.abs(newP.x - P.x) < 0.00001) {
+                    console.log(newP);
+                    return newP;
+                }
+                else {
+                    newP.x = (newP.x - (newP.x - P.x)/2)
+                    newP.y = -myGraph.equationP(newP.x);
+                    return findInfliction(newP, myGraph);
+                }
+            }
+            
+            testInfliction(myGraph, 0);   
         }
 
 
@@ -345,7 +378,7 @@ function init() {
         } else if(action === 'create' && !isOnPage(document.getElementById('edgeCaseForm'))) {
             let div = document.createElement('div')
             div.setAttribute('id', 'edgeCaseForm')
-            div.classList.add('inline-grid', 'grid-cols-1', 'gap-4', 'mr-20')
+            div.classList.add('inline-grid', 'grid-cols-1', 'gap-2', 'mr-20')
             document.getElementById('right-column-infinite').appendChild(div)
     
             const html = '<hr class="mt-20">'
@@ -354,6 +387,7 @@ function init() {
                         + '<option value="" selected disabled hidden>Select edge case</option>'
                         + '<option>Point at infinity</option>'
                         + '<option>Point addition with the same point</option>'
+                        + '<option>Point at infliction</option>'
                         + '</select>'
                         + '<button class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center mr-10" id="edgeCaseSubmit">Show Edge Case</button>'
             
