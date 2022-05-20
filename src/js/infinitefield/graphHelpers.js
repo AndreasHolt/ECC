@@ -283,10 +283,16 @@ function addPointByInput(idX, myGraph) {
     circle.setAttribute('r', 5);
     circle.setAttribute('idPoint', `${idX[0]}`);
 
-    document.getElementById(idX).value = `${twoDecimalRound(x)}`
+    document.getElementById(idX).value = `${twoDecimalRound(x)}`;
     y.value = `${twoDecimalRound(myGraph.equationP(x))}`;
     const svg = document.querySelector('svg');
     svg.appendChild(circle);
+
+    if (idX === 'Px') {
+        addTextToPoints(myGraph, { x: (circle.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: -(circle.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY }, 2);
+    } else if (idX === 'Qx') {
+        addTextToPoints(myGraph, { x: (circle.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: (circle.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY }, 3);
+    }
 }
 
 function removeBinaryParagraphs() {
