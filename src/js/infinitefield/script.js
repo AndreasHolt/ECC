@@ -402,7 +402,7 @@ function init() {
         } else if(action === 'create' && !isOnPage(document.getElementById('edgeCaseForm'))) {
             let div = document.createElement('div')
             div.setAttribute('id', 'edgeCaseForm')
-            div.classList.add('grid', 'grid-cols-1', 'gap-2', 'mr-20', 'w-1/4')
+            div.classList.add('grid', 'grid-cols-1', 'gap-2', 'mr-20', 'w-64')
             document.getElementById('right-column-infinite').appendChild(div)
     
             const html = '<hr class="mt-20">'
