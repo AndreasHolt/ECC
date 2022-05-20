@@ -40,6 +40,16 @@ const myGraph = {
 import {Curve, Point, AXYCurve, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2, listPoints} from "../../src/js/finitefield/curves.js";
 const myCurve = new Curve(2, 1, 0, 0, 317, 317);
 myCurve.createPoints();
+myCurve.G = myCurve.points[142];
+
+import {User} from "../../src/js/elgamal/user.js";
+import { encrypt, decrypt } from '../../src/js/elgamal/cryptography.js';
+let user1 = new User("0", myCurve, undefined);
+let user2 = new User("1", myCurve, undefined);
+
+
+
+
 
 describe('Unit Test Application Code', () => {
     before(() => {
@@ -240,7 +250,7 @@ describe('Unit Test Application Code', () => {
 
     context('Finite field operations', () => {
         it(`Points include 1 correct point`, () => {
-            const newPoint = new Point(144, 17);
+            const newPoint = new Point(90, 9);
             let result = false;
             for (let element of myCurve.points) {
                 if (element.x === newPoint.x && element.y === newPoint.y) {
@@ -249,10 +259,46 @@ describe('Unit Test Application Code', () => {
             }
             expect(result).to.eq(true);
         });
-        it(`Point addition`, () => {
-            const newPoint = new Point(144, 17);
-            expect(myCurve.calcPointMultiplication(2, newPoint).x).to.eq(18);
-            expect(myCurve.calcPointMultiplication(2, newPoint).y).to.eq(131);
+        it(`Point multiplication`, () => {
+            const newPoint = new Point(90, 9);
+            console.log(myCurve.calcPointMultiplication(2, newPoint).toString());
+            expect(myCurve.calcPointMultiplication(2, newPoint).x).to.eq(97);
+            expect(myCurve.calcPointMultiplication(2, newPoint).y).to.eq(15);
+        });
+        it(`Check all points`, () => {
+            let result = true;
+            for (let p of myCurve.points) {
+                if (p.x === Infinity) {
+                    if (p.y !== Infinity) {
+                        result = false;
+                    }
+                } else {
+                    if (Math.pow(p.y, 2) % myCurve.fieldOrder === (Math.pow(p.x, 3) + myCurve.a * p.x + myCurve.b) % myCurve.fieldOrder) {
+                        result = false;
+                    }
+                }
+            }
+
         });
     });
+    context('Elgamal operations', () => {
+        it(`Check plain text equals decrypted chipher text`, () => {
+            let plainText = "Hej Test 120 , ";
+            cy.log(plainText);
+            let encryptedPoints = encrypt(myCurve, plainText, user1, user2).encryptedPoints;
+            let chipherText = "";
+            for (let point of encryptedPoints) {
+                chipherText += point.toString();
+            }
+            //encryptedPoints.reduce((prev, point) => {return prev += point.toString()});
+            cy.log(chipherText);
+            if (chipherText === undefined) {
+                return true;
+            }
+            expect(plainText).to.eq(chipherText);
+            //decrypt(myCurve, chipherText, user1, user2)
+        })
+    })
+
+
 });
