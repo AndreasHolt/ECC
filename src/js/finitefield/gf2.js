@@ -1,30 +1,25 @@
-import {numberOfBits2} from "./bits.js";
+import { numberOfBits2 } from './bits.js';
 
-
-function aXOR (...theArgs) {
-    return theArgs.reduce((previous, current) => {
-        return previous ^ current;
-    });
+function aXOR(...theArgs) {
+    return theArgs.reduce((previous, current) => previous ^ current);
 }
 
-function mXOR (mod, ...theArgs) {
-    return theArgs.reduce((previous, current) => {
-        return multiplicativeXOR(previous, current, mod);
-    });
+function mXOR(mod, ...theArgs) {
+    return theArgs.reduce((previous, current) => multiplicativeXOR(previous, current, mod));
 }
 
-//Adds two numbers in GF2
-function additiveXOR (x1, x2) {
-    return x1^x2;
+// Adds two numbers in GF2
+function additiveXOR(x1, x2) {
+    return x1 ^ x2;
 }
 
-function multiplicativeXOR (x1, x2, mod) {
+function multiplicativeXOR(x1, x2, mod) {
     let tempResult = 0;
-    let x2bitLength = numberOfBits2(x2);
-    //console.log(`${x2} has ${x2bitLength} bits`);
+    const x2bitLength = numberOfBits2(x2);
+    // console.log(`${x2} has ${x2bitLength} bits`);
     for (let i = 0; i <= x2bitLength; i++) {
         if (x2 >> i & 1 === 1) {
-            let leftshiftedValue = x1 << i;
+            const leftshiftedValue = x1 << i;
             tempResult = additiveXOR(leftshiftedValue, tempResult);
         }
     }
@@ -34,26 +29,24 @@ function multiplicativeXOR (x1, x2, mod) {
     return tempResult;
 }
 
+function findInverseGF2(x1, modoli) {
+    // Find the inverse a in a*x1 = 1 (mod modoli)
+    const inverse = gf2_quo_rem(gf2_eea_rec(x1, modoli).x, modoli).remainder;
 
-function findInverseGF2 (x1, modoli) {
-    //Find the inverse a in a*x1 = 1 (mod modoli)
-    let inverse = gf2_quo_rem(gf2_eea_rec(x1, modoli).x, modoli).remainder;
-    
-
-    //Magic
+    // Magic
     // console.log("Inverse: " + inverse);
-    //ExtEuclidAlgXOR(modoli, x1, modoli);
+    // ExtEuclidAlgXOR(modoli, x1, modoli);
 
     return inverse;
 }
 
-/*function ExtEuclidAlg (a, b) {
+/* function ExtEuclidAlg (a, b) {
     let quotients = [];
     let remainders = [a, b];
     let Si = [1, 0];
     let Ti = [0, 1];
     let index = 1;
-    
+
     while (remainders[index] !== 0) {
         index++;
         quotients[index] = Math.floor(remainders[index-2] / remainders[index-1]);
@@ -72,7 +65,7 @@ function ExtEuclidAlgXOR (a, b, mod) {
     let Si = [1, 0];
     let Ti = [0, 1];
     let index = 1;
-    
+
     while (remainders[index] !== 0) {
         index++;
         quotients[index] = Math.floor(remainders[index-2] / remainders[index-1]);
@@ -83,58 +76,53 @@ function ExtEuclidAlgXOR (a, b, mod) {
 
     }
 
-}*/
+} */
 
 // Returns d, x, y such that a*x+b*y=d
 // d = gcd(a,b)
-function gf2_eea_rec (a, b) {
+function gf2_eea_rec(a, b) {
     if (b === 0) {
-        let d = a;
-        let x = 1;
-        let y = 0;
-        return {d:d, x:x, y:y};
-    } else {
-        let qr = gf2_quo_rem(a,b);
-        let q = qr.quotient;
-        let r = qr.remainder;
-        let temp = gf2_eea_rec(b, r);
-        let d = temp.d;
-        let x1 = temp.x;
-        let y1 = temp.y;
-
-        let x = y1;
-        let y = additiveXOR(x1, multiplicativeXOR(y1, q));
-        return {"d":d, "x":x, "y":y};
+        const d = a;
+        const x = 1;
+        const y = 0;
+        return { d, x, y };
     }
+    const qr = gf2_quo_rem(a, b);
+    const q = qr.quotient;
+    const r = qr.remainder;
+    const temp = gf2_eea_rec(b, r);
+    const { d } = temp;
+    const x1 = temp.x;
+    const y1 = temp.y;
+
+    const x = y1;
+    const y = additiveXOR(x1, multiplicativeXOR(y1, q));
+    return { d, x, y };
 }
 
-function gf2_quo_rem (a, b) {
+function gf2_quo_rem(a, b) {
     let remainder = a;
     let quotient = 0;
     while (degree(remainder) >= degree(b)) {
-        let pos = degree(remainder) - degree(b);
-        remainder = remainder ^ (b << pos);
-        quotient += 1<<pos
+        const pos = degree(remainder) - degree(b);
+        remainder ^= (b << pos);
+        quotient += 1 << pos;
     }
-    return {"quotient":quotient, "remainder":remainder};
+    return { quotient, remainder };
 }
 
-function degree (a) {
+function degree(a) {
     if (a === 0) {
         return -1;
-    } else {
-        return numberOfBits2(a) - 1;
     }
+    return numberOfBits2(a) - 1;
 }
 
-//Performs modulo operation on the polynomial.
-function polyMod (value, mod) {
+// Performs modulo operation on the polynomial.
+function polyMod(value, mod) {
     return value ^ (mod << (numberOfBits2(value) - numberOfBits2(mod)));
 }
 
-
 export {
-    aXOR, mXOR, additiveXOR, multiplicativeXOR, findInverseGF2, 
+    aXOR, mXOR, additiveXOR, multiplicativeXOR, findInverseGF2,
 };
-
-
