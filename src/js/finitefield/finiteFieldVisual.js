@@ -1,4 +1,5 @@
-import { Mod } from './bits.js';
+import { Mod } from './bits';
+import { additiveXOR } from './gf2';
 
 class FiniteField {
     constructor() {
@@ -53,7 +54,7 @@ class FiniteField {
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
         if (point.x === Infinity) {
-            circle.setAttributeNS(null, 'cx', canvas.width);
+            circle.setAttributeNS(null, 'cx', this.canvas.width);
             circle.setAttributeNS(null, 'cy', 0);
         } else {
             circle.setAttributeNS(null, 'cx', point.x * this.canvas.width / this.curve.fieldOrder);
@@ -187,7 +188,6 @@ class FiniteField {
     }
 
     pointText(point, string = '', coordinates = false, temp = true) {
-        let textNode;
         let text = string;
         const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
@@ -201,15 +201,15 @@ class FiniteField {
             text += `(${point.x}, ${point.y})`;
         }
 
-        textNode = document.createTextNode(text);
+        const textNode = document.createTextNode(text);
 
         textElement.appendChild(textNode);
         this.highlightSVG.appendChild(textElement);
     }
 }
 
-class InteractibleFiniteField extends FiniteField {
+// class InteractibleFiniteField extends FiniteField {
 
-}
+// }
 
-export { FiniteField };
+export default FiniteField;

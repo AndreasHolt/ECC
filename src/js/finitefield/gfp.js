@@ -1,4 +1,5 @@
-import { Mod, numberOfBits2 } from './bits.js';
+/* eslint-disable no-bitwise */
+import { Mod, numberOfBits2 } from './bits';
 
 export { inversePrime, addField, multiplyField };
 

@@ -1,5 +1,5 @@
-import { encrypt, decrypt } from './cryptography.js';
-import { FiniteField } from '../finitefield/finiteFieldVisual.js';
+import { decrypt } from './cryptography';
+import FiniteField from '../finitefield/finiteFieldVisual';
 
 class User {
     constructor(label, curve, humanUser) {
@@ -11,7 +11,22 @@ class User {
             this.label = label; // e.g. "A"
             /// Encrypted text field///
             this.encryptedTextField = document.createElement('input');
-            this.encryptedTextField.classList.add('appearance-none', 'block', 'w-full', 'bg-gray-200', 'text-gray-700', 'border', 'border-gray-200', 'rounded', 'py-3', 'px-4', 'leading-tight', 'focus:outline-none', 'focus:bg-white', 'focus:border-gray-500');
+            this.encryptedTextField.classList.add(
+                'appearance-none',
+                'block',
+                'w-full',
+                'bg-gray-200',
+                'text-gray-700',
+                'border',
+                'border-gray-200',
+                'rounded',
+                'py-3',
+                'px-4',
+                'leading-tight',
+                'focus:outline-none',
+                'focus:bg-white',
+                'focus:border-gray-500',
+            );
             this.encryptedTextField.type = 'text';
             this.encryptedTextField.id = `encryptedText${this.label}`;
             this.encryptedTextField.readOnly = true;
@@ -20,7 +35,22 @@ class User {
 
             /// Decrypted text field///
             this.decryptedTextField = document.createElement('input');
-            this.decryptedTextField.classList.add('appearance-none', 'block', 'w-full', 'bg-gray-200', 'text-gray-700', 'border', 'border-gray-200', 'rounded', 'py-3', 'px-4', 'leading-tight', 'focus:outline-none', 'focus:bg-white', 'focus:border-gray-500');
+            this.decryptedTextField.classList.add(
+                'appearance-none',
+                'block',
+                'w-full',
+                'bg-gray-200',
+                'text-gray-700',
+                'border',
+                'border-gray-200',
+                'rounded',
+                'py-3',
+                'px-4',
+                'leading-tight',
+                'focus:outline-none',
+                'focus:bg-white',
+                'focus:border-gray-500',
+            );
             this.decryptedTextField.type = 'text';
             this.decryptedTextField.id = `textDecrypted${this.label}`;
             this.decryptedTextField.readOnly = true;
@@ -29,7 +59,23 @@ class User {
 
             /// Decrypt message button///
             this.sendMessageButton = document.createElement('button');
-            this.sendMessageButton.classList.add('bg-white', 'hover:bg-gray-100', 'disabled:bg-gray-200', 'text-gray-800', 'font-semibold', 'py-2', 'px-4', 'border', 'border-gray-400', 'rounded', 'shadow', 'inline-flex', 'items-center', 'mb-10', 'hidden');
+            this.sendMessageButton.classList.add(
+                'bg-white',
+                'hover:bg-gray-100',
+                'disabled:bg-gray-200',
+                'text-gray-800',
+                'font-semibold',
+                'py-2',
+                'px-4',
+                'border',
+                'border-gray-400',
+                'rounded',
+                'shadow',
+                'inline-flex',
+                'items-center',
+                'mb-10',
+                'hidden',
+            );
             this.sendMessageButton.id = `sendMessage${this.label}`;
             this.sendMessageButton.textContent = 'Send message';
             this.sendMessageButton.addEventListener('click', (e) => {
@@ -50,13 +96,46 @@ class User {
             this.back.setAttribute('type', 'button');
             this.back.setAttribute('value', '← Back');
             this.back.setAttribute('id', `backButton${this.label}`);
-            this.back.setAttribute('class', 'text-red-600 bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-red-600 rounded shadow inline-flex items-center mb-1 mr-5');
+            this.back.classList.add(
+                'text-red-600',
+                'bg-white',
+                'hover:bg-gray-100',
+                'disabled:bg-gray-200',
+                'text-gray-800',
+                'font-semibold',
+                'py-2',
+                'px-4',
+                'border',
+                'border-red-600',
+                'rounded',
+                'shadow',
+                'inline-flex',
+                'items-center',
+                'mb-1',
+                'mr-5',
+            );
 
             this.next = document.createElement('INPUT'); // Next button goes to 2nd part of visualization
             this.next.setAttribute('type', 'button');
             this.next.setAttribute('value', 'Next →');
             this.next.setAttribute('id', `nextButton${this.label}`);
-            this.next.setAttribute('class', 'text-green-600 bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-green-600 rounded shadow inline-flex items-center mb-1');
+            this.next.classList.add(
+                'text-green-600',
+                'bg-white',
+                'hover:bg-gray-100',
+                'disabled:bg-gray-200',
+                'text-gray-800',
+                'font-semibold',
+                'py-2',
+                'px-4',
+                'border',
+                'border-green-600',
+                'rounded',
+                'shadow',
+                'inline-flex',
+                'items-center',
+                'mb-1',
+            );
 
             this.StageSystem = new StageSystem(this);
         }
@@ -147,7 +226,7 @@ class StageSystem {
         if (user instanceof User) {
             this.parent = user;
         } else {
-            throw ('StageSystem can only be assigned to a user');
+            throw new Error('StageSystem can only be assigned to a user');
         }
         this.stageHistory = [];
         this.currentStage = 0;
@@ -177,7 +256,7 @@ class StageSystem {
     }
 
     readyStages(points, encryptedPoints, blockStrings) {
-        for (let i = 0; i < encryptedPoints.length; i++) {
+        for (let i = 0; i < encryptedPoints.length; i += 1) {
             this.stageHistory[i + 1] = new Stage(this.stageHistory[i], points[i], encryptedPoints[i], blockStrings[i]);
         }
         this.finalStage = this.stageHistory.length;
@@ -193,7 +272,7 @@ class StageSystem {
 
             this.parent.encryptedTextField.value = '';
             this.parent.decryptedTextField.value = '';
-            this.currentStage++;
+            this.currentStage += 1;
             // this.changeStage(1);
             // this.stageHistory[this.currentStage].show++
             this.parent.back.disabled = true;
@@ -205,7 +284,7 @@ class StageSystem {
                 this.parent.decryptFiniteField.pointText(this.stageHistory[this.currentStage - 1].point, this.stageHistory[this.currentStage - 1].char, true);
                 this.parent.decryptedTextField.value = this.stageHistory[this.currentStage - 1].decryptedMessage;
             } else {
-                this.currentStage--;
+                this.currentStage -= 1;
                 this.changeStage(!bool);
             }
             return;
@@ -221,7 +300,7 @@ class StageSystem {
         if (bool) {
             if (this.stageHistory[this.currentStage].show === 2) {
                 this.stageHistory[this.currentStage].show = 1;
-                this.currentStage++;
+                this.currentStage += 1;
                 this.changeStage(bool);
             } else if (this.stageHistory[this.currentStage].show === 1) {
                 // let encryptedPoint = this.parent.encryptFiniteField.curve.calcPointAddition(this.stageHistory[0].point, this.stageHistory[this.currentStage].point);
@@ -233,7 +312,7 @@ class StageSystem {
                 this.parent.decryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage].encryptedPoint, this.parent.decryptFiniteField.intermediatePointStyle, true);
                 this.parent.decryptedTextField.value = this.stageHistory[this.currentStage - 1].decryptedMessage;
 
-                this.stageHistory[this.currentStage].show++;
+                this.stageHistory[this.currentStage].show += 1;
             } else {
                 this.parent.encryptedTextField.value = this.stageHistory[this.currentStage - 1].encryptedMessage;
 
@@ -243,11 +322,11 @@ class StageSystem {
                     this.parent.decryptedTextField.value = this.stageHistory[this.currentStage - 1].decryptedMessage;
                 }
 
-                this.stageHistory[this.currentStage].show++;
+                this.stageHistory[this.currentStage].show += 1;
             }
         } else if (this.stageHistory[this.currentStage].show === 1) {
             this.stageHistory[this.currentStage].show = 0;
-            this.currentStage--;
+            this.currentStage -= 1;
             this.changeStage(!bool);
         } else {
             this.stageHistory[this.currentStage].show = 0;
@@ -256,4 +335,4 @@ class StageSystem {
     }
 }
 
-export { User };
+export default User;
