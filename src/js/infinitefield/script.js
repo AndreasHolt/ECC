@@ -301,6 +301,7 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
 });
 
 function init() {
+    edgeCaseForm('create') // As default operation is point addition
     drawEquations();
 
     const operations = document.querySelectorAll('#pointAddition, #pointDoubling, #pointMultiplication');
@@ -314,10 +315,66 @@ function init() {
         });
         document.getElementById('pointQ').style.display = 'block';
 
+        edgeCaseForm('create');
+
+
         document.getElementById('explanationContainer').style.display = 'none';
         deletePoints();
         e.target.disabled = true;
     });
+
+    function performEdgeCase() {
+        let sel = document.getElementById('edgeCaseList')
+        let opt;
+
+        
+
+        for(let i = 0; i < sel.options.length; i++) {
+            opt = sel.options[i]
+            if(opt.selected === true) {
+                console.log(opt.value)
+                break;
+            }
+        }
+
+
+
+    }
+
+    function edgeCaseForm(action) {
+        if(action === 'delete' && isOnPage(document.getElementById('edgeCaseForm'))) {
+            document.getElementById('edgeCaseForm').remove();
+            return 1;
+        } else if(action === 'create' && !isOnPage(document.getElementById('edgeCaseForm'))) {
+            let div = document.createElement('div')
+            div.setAttribute('id', 'edgeCaseForm')
+            div.classList.add('inline-grid', 'grid-cols-1', 'gap-4', 'mr-20')
+            document.getElementById('right-column-infinite').appendChild(div)
+    
+            const html = '<hr class="mt-20">'
+                        +'<p class="font-bold text-xl text-gray-800 mb-2 mt-5">Discover Edge Cases</p>'
+                        + '<select name="edgeCaseList" id="edgeCaseList" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-3 px-4 border border-gray-400 rounded shadow inline-flex items-center mr-5">'
+                        + '<option value="" selected disabled hidden>Select edge case</option>'
+                        + '<option>Point at infinity</option>'
+                        + '<option>Point addition with the same point</option>'
+                        + '</select>'
+                        + '<button class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center mr-10" id="edgeCaseSubmit">Show Edge Case</button>'
+            
+        
+    
+            div.innerHTML += html;
+    
+            document.getElementById('edgeCaseSubmit').addEventListener('click', performEdgeCase, false)
+        }
+
+        
+        
+
+
+        
+    };
+
+  
 
     document.getElementById('pointDoubling').addEventListener('click', (e) => {
         Array.from(operations).forEach((buttons) => {
@@ -331,6 +388,7 @@ function init() {
 
         document.getElementById('explanationContainer').style.display = 'none';
         deletePoints();
+        edgeCaseForm('delete')
         e.target.disabled = true;
     });
 
@@ -345,6 +403,8 @@ function init() {
 
         document.getElementById('explanationContainer').style.display = 'none';
         deletePoints();
+        edgeCaseForm('delete')
+
         e.target.disabled = true;
     });
 }
