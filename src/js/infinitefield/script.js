@@ -326,17 +326,46 @@ function init() {
         }
 
         if(sel === 'Point at infinity') {
-            if(myGraph.equationP(1)!=undefined) {
+            deletePoints();
+            if(Number.isNaN(myGraph.equationP(1))===false) {
+                console.log(myGraph.equationP(1));
                 document.getElementById('Px').value = 1;
                 addPointToEdgeCase('Px', '+', myGraph);
                 document.getElementById('Qx').value = 1;
                 addPointToEdgeCase('Qx', '-', myGraph); 
+                pointAddition(myGraph);
+            } else if(Number.isNaN(myGraph.equationP(-1))===false) {
+                document.getElementById('Px').value = 0;
+                addPointToEdgeCase('Px', '+', myGraph);
+                document.getElementById('Qx').value = 0;
+                addPointToEdgeCase('Qx', '-', myGraph); 
+                pointAddition(myGraph);
+            } else if(Number.isNaN(myGraph.equationP(0))===false) {
+                document.getElementById('Px').value = -1;
+                addPointToEdgeCase('Px', '+', myGraph);
+                document.getElementById('Qx').value = -1;
+                addPointToEdgeCase('Qx', '-', myGraph); 
+                pointAddition(myGraph);
+            } else if(Number.isNaN(myGraph.equationP(-5))===false) {
+                document.getElementById('Px').value = -5;
+                addPointToEdgeCase('Px', '+', myGraph);
+                document.getElementById('Qx').value = -5;
+                addPointToEdgeCase('Qx', '-', myGraph); 
+                pointAddition(myGraph);
+            } else if(Number.isNaN(myGraph.equationP(5))===false) {
+                document.getElementById('Px').value = 5;
+                addPointToEdgeCase('Px', '+', myGraph);
+                document.getElementById('Qx').value = 5;
+                addPointToEdgeCase('Qx', '-', myGraph); 
+                pointAddition(myGraph);
             }
+            setTimeout(()=>{redrawGraph(1, true)}, 1);
     
         } else if(sel === 'Point addition with the same point') {
             // CODE HERE
 
         } else if(sel ==='Point at infliction') {
+            deletePoints();
             function testInfliction(myGraph, x) {
                 let initPoint = {x: x, y: -myGraph.equationP(x)};
                 let P = findInfliction(initPoint, myGraph);
