@@ -2,7 +2,7 @@ import { pointDouble, calculateDouble } from './realsDoubling';
 import { pointAddition, twoDecimalRound } from './realsAddition';
 import { pointMultiplication } from './realsMultiplication';
 import {
-    movePoint, isOnPage, graphToCoords, coordsToGraph, addPointOnClick, addPointByInput, removeBinaryParagraphs, addCalculatedPoint
+    movePoint, isOnPage, graphToCoords, coordsToGraph, addPointOnClick, addPointByInput, removeBinaryParagraphs, addCalculatedPoint, addPointToEdgeCase
 } from './graphHelpers';
 import {
     Graph, drawXAxis, drawYAxis, drawEquation,
@@ -336,7 +336,12 @@ function init() {
         }
 
         if(sel === 'Point at infinity') {
-            // CODE HERE
+            if(myGraph.equationP(1)!=undefined) {
+                document.getElementById('Px').value = 1;
+                addPointToEdgeCase('Px', '+', myGraph);
+                document.getElementById('Qx').value = 1;
+                addPointToEdgeCase('Qx', '-', myGraph); 
+            }
     
         } else if(sel === 'Point addition with the same point') {
             // CODE HERE

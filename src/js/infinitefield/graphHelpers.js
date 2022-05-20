@@ -287,6 +287,36 @@ function addPointByInput(idX, myGraph) {
     y.value = `${twoDecimalRound(myGraph.equationP(x))}`;
     const svg = document.querySelector('svg');
     svg.appendChild(circle);
+
+    if (document.getElementsByClassName('workingPoints').length === 1) {
+        addTextToPoints(myGraph, { x: (point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: -(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY }, 2);
+    } else if (document.getElementsByClassName('workingPoints').length === 2) {
+        addTextToPoints(myGraph, { x: (point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: (point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY }, 3);
+    }
+}
+
+function addPointToEdgeCase(idX, sign, myGraph) {
+    const x = document.getElementById(idX).value;
+    const y = document.getElementById(`${idX[0]}y`);
+
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('fill', 'red');
+    circle.setAttribute('cx', myGraph.centerX + (x * myGraph.scaleX));
+    circle.setAttribute('cy', myGraph.centerY + (myGraph.scaleY * ((sign==='+')?(myGraph.equationP(x)):(-myGraph.equationP(x)))));
+    circle.classList.add('workingPoints');
+    circle.setAttribute('r', 5);
+    circle.setAttribute('idPoint', `${idX[0]}`);
+
+    document.getElementById(idX).value = `${twoDecimalRound(x)}`
+    y.value = `${twoDecimalRound((sign==='+')?(myGraph.equationP(x)):(-myGraph.equationP(x)))}`;
+    const svg = document.querySelector('svg');
+    svg.appendChild(circle);
+
+    if (document.getElementsByClassName('workingPoints').length === 1) {
+        addTextToPoints(myGraph, { x: (point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: -(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY }, 2);
+    } else if (document.getElementsByClassName('workingPoints').length === 2) {
+        addTextToPoints(myGraph, { x: (point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: (point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY }, 3);
+    }
 }
 
 function removeBinaryParagraphs() {
@@ -301,5 +331,5 @@ function removeBinaryParagraphs() {
 export {
     movePoint, moveSection, mouseToGraph, convertToXY, graphToCoords, coordsToGraph,
     getPointPlacement, addCalculatedPoint, logicPointAddition, drawLine, addPointOnClick,
-    getXY, addPointByInput, removeBinaryParagraphs, checkExplanationDisplay, isOnPage,
+    getXY, addPointByInput, removeBinaryParagraphs, checkExplanationDisplay, isOnPage, addPointToEdgeCase
 };
