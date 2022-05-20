@@ -1,12 +1,11 @@
 import {
-    multiplicativeXOR, additiveXOR, findInverseGF2, aXOR, mXOR,
-} from './gf2.js';
-import { numberOfBits2, Mod } from './bits.js';
+    multiplicativeXOR, additiveXOR,
+} from './gf2';
+import { Mod } from './bits';
 import {
-    listPoints, Curve, AXYCurve, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2,
-} from './curves.js';
-import { addField, inversePrime, multiplyField } from './gfp.js';
-import { twoDecimalRound } from '../infinitefield/realsAddition';
+    listPoints, Curve, calcDiscriminant, calcDiscriminantGF2,
+} from './curves';
+import { addField, inversePrime, multiplyField } from './gfp';
 import { checkExplanationDisplay, isOnPage } from '../infinitefield/graphHelpers';
 import { FiniteField } from './finiteFieldVisual';
 
@@ -106,6 +105,8 @@ document.querySelector('#form').addEventListener('submit', (event) => {
         power = 8;
         modoli = 285;
         break;
+    default:
+        throw new Error('Error 109');
     }
 
     if (event.target.curveList.value.includes('GF')) {
@@ -118,10 +119,10 @@ document.querySelector('#form').addEventListener('submit', (event) => {
 
     try {
         if (discriminant === 0) {
-            throw 'Discriminant is 0, please choose another curve';
+            throw new Error('Discriminant is 0, please choose another curve');
         }
         if (discriminant === null) {
-            throw 'Discriminant is null';
+            throw new Error('Discriminant is null');
         }
     } catch (error) {
         alert(error);
@@ -136,7 +137,7 @@ document.querySelector('#form').addEventListener('submit', (event) => {
 
 function clearClickedPoints() {
     const circles = document.querySelectorAll('circle');
-    console.log(document.querySelectorAll('circle'));
+    // console.log(document.querySelectorAll('circle'));
 
     circles.forEach((circle) => {
         if (!circle.classList.contains('clickedPoint')) {
@@ -170,7 +171,7 @@ function deleteDrawing(bool) {
     if (bool === 1) {
         const clickedPoints = document.querySelectorAll('.clickedPoint');
 
-        for (let i = 0; i < clickedPoints.length; i++) {
+        for (let i = 0; i < clickedPoints.length; i += 1) {
             clickedPoints[i].setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
         }
 
@@ -221,7 +222,7 @@ function pointAdditionFinite(canvas, curve, index1, index2) {
 }
 
 document.getElementById('additionForm').addEventListener('submit', (event) => {
-    console.log('HelloAddition');
+    // console.log('HelloAddition');
 
     event.preventDefault();
     const index1 = Number(event.target.index1.value);
@@ -231,7 +232,7 @@ document.getElementById('additionForm').addEventListener('submit', (event) => {
 
 function addScalarForm(canvas, curve) {
     document.getElementById('scalarForm').addEventListener('submit', (event) => {
-        console.log('HelloScalar');
+        // console.log('HelloScalar');
         deleteDrawing(0);
         event.preventDefault();
         const index = Number(event.target.index1.value);
@@ -289,17 +290,17 @@ function highlightPointTimeout(canvas, point, time, size) {
     }, time);
 }
 
-function highlightPoint(canvas, point, size) {
-    const svg = document.getElementById('highlightSVG');
-    const svgns = 'http://www.w3.org/2000/svg';
-    const circle = document.createElementNS(svgns, 'circle');
-    circle.setAttributeNS(null, 'cx', point.x * canvas.width / size);
-    circle.setAttributeNS(null, 'cy', canvas.height - (point.y * canvas.height / size));
-    circle.setAttributeNS(null, 'r', 10);
-    circle.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 1px;');
-    svg.appendChild(circle);
-    return circle;
-}
+// function highlightPoint(canvas, point, size) {
+//     const svg = document.getElementById('highlightSVG');
+//     const svgns = 'http://www.w3.org/2000/svg';
+//     const circle = document.createElementNS(svgns, 'circle');
+//     circle.setAttributeNS(null, 'cx', point.x * canvas.width / size);
+//     circle.setAttributeNS(null, 'cy', canvas.height - (point.y * canvas.height / size));
+//     circle.setAttributeNS(null, 'r', 10);
+//     circle.setAttributeNS(null, 'style', 'fill: none; stroke: blue; stroke-width: 1px;');
+//     svg.appendChild(circle);
+//     return circle;
+// }
 
 function pointDescription(curve, point) {
     let negation = { x: point.x, y: point.y }; // If unable to find negation use ifself
@@ -323,7 +324,7 @@ function pointDescription(curve, point) {
     while (subGroupPoint.x !== negation.x || subGroupPoint.y !== negation.y) {
         subGroupPoint = curve.calcPointAddition(subGroupPoint, point);
         subGroup[orderOfSubGroup] = subGroupPoint;
-        orderOfSubGroup++;
+        orderOfSubGroup += 1;
     }
 
     return { negation, subGroup, orderOfSubGroup };
@@ -331,8 +332,8 @@ function pointDescription(curve, point) {
 
 function drawPointElement(canvas, curve, point, size, pointSize, color, temp = false) {
     if (newCalculatedPoints.length !== 0) {
-        newCalculatedPoints.forEach((point) => {
-            point.remove();
+        newCalculatedPoints.forEach((nPoint) => {
+            nPoint.remove();
         });
     }
 
@@ -364,12 +365,12 @@ function drawPointElement(canvas, curve, point, size, pointSize, color, temp = f
         const indexOfClickedPoints = [];
 
         if (document.getElementById('pointAddition').disabled && clickedPoints.length === 2) {
-            for (let i = clickedPoints.length - 1; i >= 0; i--) {
+            for (let i = clickedPoints.length - 1; i >= 0; i -= 1) {
                 clickedPoints[i].setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
                 clickedPoints[i].classList.remove('clickedPoint');
             }
         } else if (document.getElementById('pointMultiplication').disabled && clickedPoints.length >= 0) {
-            for (let i = clickedPoints.length - 1; i >= 0; i--) {
+            for (let i = clickedPoints.length - 1; i >= 0; i -= 1) {
                 clickedPoints[i].setAttributeNS(null, 'style', 'fill: rgb(59,129,246); stroke: rgb(59,129,246); stroke-width: 1px;');
                 clickedPoints[i].classList.remove('clickedPoint');
             }
@@ -382,7 +383,7 @@ function drawPointElement(canvas, curve, point, size, pointSize, color, temp = f
         circle.classList.add('clickedPoint');
 
         if (clickedPoints.length === 2) {
-            for (let i = 0; i < curve.points.length; i++) {
+            for (let i = 0; i < curve.points.length; i += 1) {
                 if (circles[i].classList.contains('clickedPoint')) {
                     indexOfClickedPoints.push(i);
                 }
@@ -401,7 +402,7 @@ function drawPointElement(canvas, curve, point, size, pointSize, color, temp = f
         const pointDetailArray = pointDescription(curve, point);
 
         let orderOfSubGroupString = `(${point.x}, ${point.y}), `;
-        for (let i = 0; i < pointDetailArray.orderOfSubGroup; i++) {
+        for (let i = 0; i < pointDetailArray.orderOfSubGroup; i += 1) {
             orderOfSubGroupString += `(${pointDetailArray.subGroup[i].x}, ${pointDetailArray.subGroup[i].y}) → `;
         }
 
@@ -418,11 +419,15 @@ function drawPointElement(canvas, curve, point, size, pointSize, color, temp = f
             return true;
         });
 
-        const pointDetails = [`<span class="detailKey">Index:</span> <span id="index">${index}</span>`, `<span class="detailKey">Point:</span> (${point.x}, ${point.y})`, `<span class="detailKey">Inverse:</span> (${pointDetailArray.negation.x}, ${pointDetailArray.negation.y})`, `<span class="detailKey">Subgroup: </span> ${pointDetailArray.orderOfSubGroup + 2}`, `<span class="detailKey">Generated sub group: </span> ${orderOfSubGroupString}`];
+        const pointDetails = [`<span class="detailKey">Index:</span> <span id="index">${index}</span>`,
+            `<span class="detailKey">Point:</span> (${point.x}, ${point.y})`,
+            `<span class="detailKey">Inverse:</span> (${pointDetailArray.negation.x}, ${pointDetailArray.negation.y})`,
+            `<span class="detailKey">Subgroup: </span> ${pointDetailArray.orderOfSubGroup + 2}`,
+            `<span class="detailKey">Generated sub group: </span> ${orderOfSubGroupString}`];
 
         output.innerHTML = '';
 
-        for (let i = 0; i < pointDetails.length; i++) {
+        for (let i = 0; i < pointDetails.length; i += 1) {
             const p = document.createElement('p');
             output.appendChild(p);
             p.setAttribute('class', 'pointDetails');
@@ -445,22 +450,22 @@ function drawPointElement(canvas, curve, point, size, pointSize, color, temp = f
     return circle;
 }
 
-function pointText(canvas, curve, point, eq = '') {
-    let textNode;
-    const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+// function pointText(canvas, curve, point, eq = '') {
+//     let textNode;
+//     const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
-    textElement.setAttribute('x', point.x * canvas.width / curve.fieldOrder);
-    textElement.setAttribute('y', canvas.height - (point.y * canvas.height / curve.fieldOrder));
+//     textElement.setAttribute('x', point.x * canvas.width / curve.fieldOrder);
+//     textElement.setAttribute('y', canvas.height - (point.y * canvas.height / curve.fieldOrder));
 
-    if (eq) {
-        textNode = document.createTextNode(`${eq}(${point.x}, ${point.y})`);
-    } else {
-        textNode = document.createTextNode(`(${point.x}, ${point.y})`);
-    }
+//     if (eq) {
+//         textNode = document.createTextNode(`${eq}(${point.x}, ${point.y})`);
+//     } else {
+//         textNode = document.createTextNode(`(${point.x}, ${point.y})`);
+//     }
 
-    textElement.appendChild(textNode);
-    return textElement;
-}
+//     textElement.appendChild(textNode);
+//     return textElement;
+// }
 
 function createTableHTML(curve, tableArray, tableSize, htmlID, outputID, colorBool) {
     const oldTable = document.getElementById(htmlID);
@@ -472,13 +477,13 @@ function createTableHTML(curve, tableArray, tableSize, htmlID, outputID, colorBo
     let delta;
 
     (colorBool === 'color') ? (delta = Number(document.getElementsByClassName('steps')[0].getAttribute('id'))) : (console.log('test2'));
-    console.log('delta:', delta);
+    // console.log('delta:', delta);
 
     const primeInverse = inversePrime(delta, curve.mod);
 
     const headerRow = document.createElement('tr');
 
-    for (let i = -1; i < tableSize; i++) {
+    for (let i = -1; i < tableSize; i += 1) {
         const header = document.createElement('td');
 
         if (i !== -1) {
@@ -508,7 +513,7 @@ function createTableHTML(curve, tableArray, tableSize, htmlID, outputID, colorBo
     newTable.appendChild(headerRow);
 
     // For each row
-    for (let rowIndex = 0; rowIndex < tableSize; rowIndex++) {
+    for (let rowIndex = 0; rowIndex < tableSize; rowIndex += 1) {
         const row = document.createElement('tr');
 
         const dataCell = document.createElement('td');
@@ -523,13 +528,13 @@ function createTableHTML(curve, tableArray, tableSize, htmlID, outputID, colorBo
         }
 
         // For each column
-        for (let i = 0; i < tableSize; i++) {
-            const dataCell = document.createElement('td');
+        for (let i = 0; i < tableSize; i += 1) {
+            const dataCell = document.createElement('td'); // TODO Datacell is already defined higher up
             dataCell.classList.add('text-center');
             if (i === delta && rowIndex <= primeInverse) {
-                console.log('lol', rowIndex);
+                // console.log('lol', rowIndex);
                 dataCell.classList.add('bg-blue-400', 'text-white');
-            } else if (rowIndex == primeInverse && i < delta) {
+            } else if (rowIndex == primeInverse && i < delta) { // TODO Should it be ===
                 dataCell.classList.add('bg-blue-400', 'text-white');
             } else if (i % 2 === 0 && rowIndex % 2 === 0) {
                 dataCell.classList.add('bg-gray-100');
@@ -569,9 +574,9 @@ function createTable(sizeOfTable, mod, options) {
 
 function calculateElements(size, mod, combinationFunction) {
     const arrayValues = [];
-    for (let i = 0; i < size; i++) {
+    for (let i = 0; i < size; i += 1) {
         const column = [];
-        for (let j = 0; j < size; j++) {
+        for (let j = 0; j < size; j += 1) {
             column[j] = combinationFunction(i, j, mod);
         }
         arrayValues[i] = column;
@@ -579,17 +584,17 @@ function calculateElements(size, mod, combinationFunction) {
     return arrayValues;
 }
 
-function clmul32(x1, x2, mod) { // https://www.youtube.com/watch?v=v4HKU_VBbqM
-    let result = 0;
-    // x2 |= 0;                            // Kun nødvendig hvis der er chance for at input er double
+// function clmul32(x1, x2, mod) { // https://www.youtube.com/watch?v=v4HKU_VBbqM
+//     let result = 0;
+//     // x2 |= 0;                            // Kun nødvendig hvis der er chance for at input er double
 
-    while (x1 !== 0) {
-        result ^= x2 * (x1 & -x1);
-        x1 &= x1 - 1;
-    }
+//     while (x1 !== 0) {
+//         result ^= x2 * (x1 & -x1);
+//         x1 &= x1 - 1;
+//     }
 
-    return result; //
-}
+//     return result; //
+// }
 
 function init() {
     const operationHeader = document.getElementById('operationHeader');
@@ -605,7 +610,7 @@ function init() {
         Array.from(operations).forEach((buttons) => {
             if (buttons.disabled === true) {
                 if (document.getElementById('pointAddition').disabled) {
-                    console.log('Doing point addition');
+                    // console.log('Doing point addition');
                 } else {
                     document.getElementById('Doing point multiplication');
                 }
@@ -641,25 +646,25 @@ function init() {
     });
 }
 
-function drawLineSvg(point1, point2, color = 'black') {
-    const svg = document.getElementById('lineSVG');
-    const svgns = 'http://www.w3.org/2000/svg';
-    const line = document.createElementNS(svgns, 'line');
+// function drawLineSvg(point1, point2, color = 'black') {
+//     const svg = document.getElementById('lineSVG');
+//     const svgns = 'http://www.w3.org/2000/svg';
+//     const line = document.createElementNS(svgns, 'line');
 
-    line.setAttributeNS(null, 'x1', `${point1.getAttribute('cx')}`);
-    line.setAttributeNS(null, 'y1', `${point1.getAttribute('cy')}`);
-    line.setAttributeNS(null, 'x2', `${point2.getAttribute('cx')}`);
-    line.setAttributeNS(null, 'y2', `${point2.getAttribute('cy')}`); // (canvas.height / (curve.fieldOrder * 1.2)) <= 5 ? (canvas.height / (curve.fieldOrder * 1.2)) : 5)
-    line.setAttributeNS(null, 'class', `stroke-${color} .line`);
-    svg.appendChild(line);
-}
+//     line.setAttributeNS(null, 'x1', `${point1.getAttribute('cx')}`);
+//     line.setAttributeNS(null, 'y1', `${point1.getAttribute('cy')}`);
+//     line.setAttributeNS(null, 'x2', `${point2.getAttribute('cx')}`);
+//     line.setAttributeNS(null, 'y2', `${point2.getAttribute('cy')}`); // (canvas.height / (curve.fieldOrder * 1.2)) <= 5 ? (canvas.height / (curve.fieldOrder * 1.2)) : 5)
+//     line.setAttributeNS(null, 'class', `stroke-${color} .line`);
+//     svg.appendChild(line);
+// }
 
 function pointAdditionSteps(curve, points) {
     const lambda = points.point3.alfa;
     const stepRows = document.getElementsByClassName('steps');
-    let delta = (!(points.point1 == points.point2)) ? (points.point1.x - points.point2.x) : (2 * points.point1.y);
+    let delta = (!(points.point1 == points.point2)) ? (points.point1.x - points.point2.x) : (2 * points.point1.y);  // TODO Should it be ===
     if (Number(delta) < 0) {
-        console.log('negative');
+        // console.log('negative');
         delta = Mod(delta, curve.mod);
     }
 
@@ -713,9 +718,9 @@ function drawPointMultiplication(canvas, curve, index, scalar) {
     clearLines();
 
     drawPointElement(canvas, curve, curve.points[index], curve.fieldOrder, 5, 'red', true);
-    for (let i = 2; i < scalar; i++) {
+    for (let i = 2; i < scalar; i += 1) {
         newPoint = curve.calcPointMultiplication(i, curve.points[index]);
-        console.log(newPoint);
+        // console.log(newPoint);
         const yellowPoint = drawPointElement(canvas, curve, newPoint, curve.fieldOrder, 5, 'yellow', true);
         yellowPoint.style.pointerEvents = 'none';
         yellowPoint.setAttribute('id', 'calculatedPoint');
@@ -725,43 +730,43 @@ function drawPointMultiplication(canvas, curve, index, scalar) {
     finiteField.drawLineDirectGood(canvas, curve, curve.points[index], newPoint, { prime: curve.fieldOrder == curve.mod });
 }
 
-function curveParameters() {
-    const curveList = document.getElementById('curveList');
+// function curveParameters() {
+//     const curveList = document.getElementById('curveList');
 
-    const r = new RegExp(/\d+/g);
-    let max;
+//     const r = new RegExp(/\d+/g);
+//     let max;
 
-    const a = document.getElementById('a').value;
-    const b = document.getElementById('b').value;
+//     const a = document.getElementById('a').value;
+//     const b = document.getElementById('b').value;
 
-    /* if (curveList.value.includes("GF")) {
-      let weierstrassCurve = `2. Pick curve parameters: \\(\(y^2 + cxy + dy = x^3 + ax + b\)\\)`;
-      document.getElementById("parameters").innerHTML = weierstrassCurve;
-      document.getElementById("weierstrass").style.display = "block";
+//     /* if (curveList.value.includes("GF")) {
+//       let weierstrassCurve = `2. Pick curve parameters: \\(\(y^2 + cxy + dy = x^3 + ax + b\)\\)`;
+//       document.getElementById("parameters").innerHTML = weierstrassCurve;
+//       document.getElementById("weierstrass").style.display = "block";
 
-      const power = curveList.value.split(" ")[1];
-      max = Math.pow(curveList.value.match(r)[0], power) - 1;5
+//       const power = curveList.value.split(" ")[1];
+//       max = Math.pow(curveList.value.match(r)[0], power) - 1;5
 
-      document.getElementById("a").setAttribute("max", `${max}`);
-      document.getElementById("b").setAttribute("max", `${max}`);
-      document.getElementById("c").setAttribute("max", `${max}`);
-      document.getElementById("d").setAttribute("max", `${max}`);
-      MathJax.typeset();
-    } else { */
-    document.getElementById('weierstrass').style.display = 'none';
+//       document.getElementById("a").setAttribute("max", `${max}`);
+//       document.getElementById("b").setAttribute("max", `${max}`);
+//       document.getElementById("c").setAttribute("max", `${max}`);
+//       document.getElementById("d").setAttribute("max", `${max}`);
+//       MathJax.typeset();
+//     } else { */
+//     document.getElementById('weierstrass').style.display = 'none';
 
-    const generalCurve = `2. Pick curve parameters: \\(\(y^2 = x^3 + ${a}x + ${b}\)\\)`;
-    document.getElementById('parameters').innerHTML = generalCurve;
+//     const generalCurve = `2. Pick curve parameters: \\(\(y^2 = x^3 + ${a}x + ${b}\)\\)`;
+//     document.getElementById('parameters').innerHTML = generalCurve;
 
-    max = curveList.value.match(r)[0] - 1;
+//     max = curveList.value.match(r)[0] - 1;
 
-    document.getElementById('a').setAttribute('max', `${max}`);
-    document.getElementById('b').setAttribute('max', `${max}`);
+//     document.getElementById('a').setAttribute('max', `${max}`);
+//     document.getElementById('b').setAttribute('max', `${max}`);
 
-    MathJax.typeset();
+//     MathJax.typeset();
 
-    // }
-}
+//     // }
+// }
 
 /* document.getElementById("power").addEventListener("input", () => {
     if (document.getElementById("power").value > 1) {
