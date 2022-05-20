@@ -1,5 +1,5 @@
 import { decrypt } from './cryptography';
-import { FiniteField } from '../finitefield/finiteFieldVisual';
+import FiniteField from '../finitefield/finiteFieldVisual';
 
 class User {
     constructor(label, curve, humanUser) {
@@ -119,7 +119,7 @@ class User {
             this.next.setAttribute('type', 'button');
             this.next.setAttribute('value', 'Next →');
             this.next.setAttribute('id', `nextButton${this.label}`);
-            this.back.classList.add(
+            this.next.classList.add(
                 'text-green-600',
                 'bg-white',
                 'hover:bg-gray-100',

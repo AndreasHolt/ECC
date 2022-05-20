@@ -212,4 +212,4 @@ class FiniteField {
 
 // }
 
-export default { FiniteField };
+export default FiniteField;

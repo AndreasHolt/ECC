@@ -1,5 +1,5 @@
 import { Curve, Point } from '../finitefield/curves';
-import { User } from './user';
+import User from './user';
 import { encrypt } from './cryptography';
 
 const myCurve = new Curve(2, 1, 0, 0, 317, 317);

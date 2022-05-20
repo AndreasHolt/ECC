@@ -7,7 +7,7 @@ import {
 } from './curves';
 import { addField, inversePrime, multiplyField } from './gfp';
 import { checkExplanationDisplay, isOnPage } from '../infinitefield/graphHelpers';
-import { FiniteField } from './finiteFieldVisual';
+import FiniteField from './finiteFieldVisual';
 
 const finiteField = new FiniteField();
 finiteField.addCanvas(document.getElementById('curveGraph'));
