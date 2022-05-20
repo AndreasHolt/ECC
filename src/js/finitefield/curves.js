@@ -1,8 +1,8 @@
 import {
     aXOR, mXOR, multiplicativeXOR, additiveXOR, findInverseGF2,
-} from './gf2.js';
-import { numberOfBits2, Mod } from './bits.js';
-import { inversePrime } from './gfp.js';
+} from './gf2';
+import { numberOfBits2, Mod } from './bits';
+import { inversePrime } from './gfp';
 
 class Curve {
     constructor(a, b, c, d, fieldOrder, mod) {
@@ -134,13 +134,13 @@ class Curve {
         } else {
             throw ('Not enough points on curve.');
         }
-        const point = {};
-        if (m < 0 || m > 2 ** fieldOrder) {
-            throw ('Invalid message.');
-        } else {
-            point.x = 1;
-        }
-        return point;
+        // const point = {};
+        // if (m < 0 || m > 2 ** fieldOrder) {
+        //     throw ('Invalid message.');
+        // } else {
+        //     point.x = 1;
+        // }
+        // return point;
     }
 
     pointToNumber(p) {

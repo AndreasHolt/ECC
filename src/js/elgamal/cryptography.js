@@ -1,23 +1,23 @@
-import { Point } from '../finitefield/curves.js';
-import { Mod } from '../finitefield/bits.js';
+import { Point } from '../finitefield/curves';
+import { Mod } from '../finitefield/bits';
 
 const charSize = BigInt(256);
 
 function encrypt(curve, message, sender, reciever) {
     const points = [];
     const pointResult = [];
-    const numberResult = [];
+    // const numberResult = [];
     const blockString = [];
     const numPoints = BigInt(curve.points.length);
     const blockSize = estLog2BigIntFloor(numPoints) / estLog2BigIntFloor(charSize); // log__charSize(points)
     if (blockSize < 1) {
-        throw ('Not enough points on curve');
+        throw new Error('Not enough points on curve');
     }
     let blocks = BigInt(message.length) / blockSize;
     if (blockSize * blocks !== BigInt(message.length)) {
         blocks += 1n;
     }
-    for (let i = 0; i < blocks; i++) {
+    for (let i = 0; i < blocks; i += 1) {
         const lastIndexOfMessageInBlock = Math.min((i + 1) * Number(blockSize), message.length);
         const block = message.substring(i * Number(blockSize), lastIndexOfMessageInBlock);
         const charValuesArr = [];
@@ -59,6 +59,15 @@ function decrypt(curve, chipherText, sender, reciever) {
     return result;
 }
 
+// function estLog2BigIntCeil(bigInt) {
+//     const bits = BigInt(bigInt.toString(2).length);
+//     if (2 ** bits === bigInt) {
+//         return bits;
+//     }
+
+//     return bits + 1;
+// }
+
 function encryptBlock(curve, point, sender, reciever) {
     const akG = curve.calcPointMultiplication(sender.privateKey, reciever.publicKey);
     return curve.calcPointAddition(point, akG);
@@ -70,16 +79,6 @@ function decryptBlock(curve, point, sender, reciever) {
     return curve.pointToNumber(pointPM);
 }
 
-function estLog2BigIntCeil(bigInt) {
-    const bits = BigInt(bigInt.toString(2).length);
-    if (2 ** bits === bigInt) {
-        return bits;
-    }
-    return bits + 1;
-
-    return;
-}
-
 function estLog2BigIntFloor(bigInt) {
     return BigInt(bigInt.toString(2).length - 1);
 }
@@ -89,7 +88,6 @@ function combineNumbersToNumberGivenABase(numbers, base) {
     for (let i = BigInt(0); i < numbers.length; i++) {
         const value = BigInt(numbers[i]);
         if (numbers[i] >= base) {
-            const test = 0;
             throw ('The value can not be larger than the base');
         }
         sum += value * (base ** i); // === value * Math.pow(base, i);
@@ -103,7 +101,7 @@ function seperateNumberIntoArrayOfNumbersGivenABase(number, base) {
     let val = BigInt(0);
     while ((val = number / (base ** i)) > 0) {
         result.push(Mod(val, base));
-        i++;
+        i += 1;
     }
     return result;
 }
