@@ -27,7 +27,7 @@ document.getElementById('pointText').addEventListener('wheel', (e) => {
 });
 
 function deletePoints() {
-    console.log("Zoom out");
+    console.log('Zoom out');
     redrawGraph(1, true);
 
     const allSVG = [
@@ -451,9 +451,8 @@ const observer = new MutationObserver((mutationList) => {
         });
     });
 });
-observer.observe(document.getElementById('layer2'), { 
-    childList: true, subtree: true
+observer.observe(document.getElementById('layer2'), {
+    childList: true, subtree: true,
 });
 
 init();
-
