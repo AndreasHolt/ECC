@@ -76,8 +76,7 @@ function calculateAddition(myGraph, pointArr) {
     if (pointArr[1].x === pointArr[0].x && pointArr[0].y !== pointArr[1].y) {
         newY = 9999999;
         newX = pointArr[0].x;
-
-    } else if(pointArr[1].x === pointArr[0].x && pointArr[0].y === pointArr[1].y) {
+    } else if (pointArr[1].x === pointArr[0].x && pointArr[0].y === pointArr[1].y) {
         // Handle edge case: point doubling if P = Q
         pointDouble(myGraph);
         return 0;

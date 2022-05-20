@@ -233,7 +233,7 @@ function addCalculatedPoint(myGraph, point, pointOperation) {
         }
 
         if (pointOperation === 3) {
-            addTextToPoints(myGraph, point, i+1);
+            addTextToPoints(myGraph, point, i + 1);
         } else {
             addTextToPoints(myGraph, point, i);
         }
@@ -262,12 +262,12 @@ function addPointOnClick(myGraph) {
         document.getElementById('Px').value = `${twoDecimalRound((point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX)}`;
         document.getElementById('Py').value = `${twoDecimalRound(-(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY)}`;
 
-        addTextToPoints(myGraph, {x: (point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: -(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY}, 2)
+        addTextToPoints(myGraph, { x: (point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: -(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY }, 2);
     } else if (document.getElementsByClassName('workingPoints').length === 2) {
         document.getElementById('Qx').value = `${twoDecimalRound((point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX)}`;
         document.getElementById('Qy').value = `${twoDecimalRound(-(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY)}`;
 
-        addTextToPoints(myGraph, {x: (point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: (point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY}, 3)
+        addTextToPoints(myGraph, { x: (point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: (point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY }, 3);
     }
 }
 
@@ -300,5 +300,5 @@ function removeBinaryParagraphs() {
 export {
     movePoint, moveSection, mouseToGraph, convertToXY, graphToCoords, coordsToGraph,
     getPointPlacement, addCalculatedPoint, logicPointAddition, drawLine, addPointOnClick,
-    getXY, addPointByInput, removeBinaryParagraphs, checkExplanationDisplay, isOnPage
+    getXY, addPointByInput, removeBinaryParagraphs, checkExplanationDisplay, isOnPage,
 };
