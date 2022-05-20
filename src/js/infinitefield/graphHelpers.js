@@ -283,6 +283,7 @@ function addPointByInput(idX, myGraph) {
     circle.setAttribute('r', 5);
     circle.setAttribute('idPoint', `${idX[0]}`);
 
+    document.getElementById(idX).value = `${twoDecimalRound(x)}`
     y.value = `${twoDecimalRound(myGraph.equationP(x))}`;
     const svg = document.querySelector('svg');
     svg.appendChild(circle);
