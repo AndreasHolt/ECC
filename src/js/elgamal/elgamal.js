@@ -1,6 +1,6 @@
-import { Curve, AXYCurve, Point } from '../finitefield/curves.js';
-import { User } from './user.js';
-import { encrypt, decrypt, pointListToString } from './cryptography.js';
+import { Curve, Point } from '../finitefield/curves';
+import { User } from './user';
+import { encrypt } from './cryptography';
 
 const myCurve = new Curve(2, 1, 0, 0, 317, 317);
 myCurve.createPoints();
@@ -36,7 +36,7 @@ function createUTF8EncodingTable() {
 
     table.setAttribute('align', 'center');
 
-    for (let i = 32; i <= 127; i++) {
+    for (let i = 32; i <= 127; i += 1) {
         if ((i - 32) % 19 === 0) {
             if (rowKey && rowValue && (i !== 32)) {
                 rowKey.classList.add('bg-blue-100');
@@ -50,12 +50,12 @@ function createUTF8EncodingTable() {
         const dataCellKey = document.createElement('td');
         dataCellKey.classList.add('text-white', 'text-sm', 'font-medium', 'px-1', 'py-3', 'border-b', 'bg-gray-800', 'border-gray-800');
         dataCellKey.setAttribute('align', 'center');
-        dataCellKey.setAttribute('id', 'pointCell' + `${i}`);
+        dataCellKey.setAttribute('id', `pointCell${i}`);
         dataCellKey.textContent = curve.numberToPoint(i).toString();
         rowKey.appendChild(dataCellKey);
         const dataCellValue = document.createElement('td');
         dataCellValue.setAttribute('align', 'center');
-        dataCellValue.setAttribute('id', 'charCell' + `${i}`);
+        dataCellValue.setAttribute('id', `charCell${i}`);
         (i % 2 === 1) ? (dataCellValue.classList.add('bg-gray-100', 'py-1')) : ('');
         dataCellValue.textContent = String.fromCharCode(i);
         rowValue.appendChild(dataCellValue);
@@ -174,15 +174,15 @@ function next(e) {
     decryptionVisualization(label); */
 }
 
-function back1(e) {
-    const label = e.target.id[e.target.id.length - 1];
-    /*     document.getElementById(`decryption${label}`).hidden = false; */
-    document.getElementById(`decryptionVisualization${label}`).hidden = true;
-    document.getElementById(`nextButton${label}`).style.visibility = 'visible';
-    document.getElementById(`backButton${label}`).removeEventListener('click', back1);
+// function back1(e) {
+//     const label = e.target.id[e.target.id.length - 1];
+//     /*     document.getElementById(`decryption${label}`).hidden = false; */
+//     document.getElementById(`decryptionVisualization${label}`).hidden = true;
+//     document.getElementById(`nextButton${label}`).style.visibility = 'visible';
+//     document.getElementById(`backButton${label}`).removeEventListener('click', back1);
 
-    encryptionVisualization(label);
-}
+//     encryptionVisualization(label);
+// }
 
 /* function encryptionVisualization(label) {
 

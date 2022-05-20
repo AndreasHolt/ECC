@@ -27,7 +27,6 @@ document.getElementById('pointText').addEventListener('wheel', (e) => {
 });
 
 function deletePoints() {
-    console.log('Zoom out');
     redrawGraph(1, true);
 
     const allSVG = [
@@ -63,10 +62,9 @@ document.getElementById('pointText').addEventListener('mousemove', (e) => {
     movePoint(e, myGraph);
 });
 
-document.getElementById('negateP').addEventListener('click', (e) => {
+document.getElementById('negateP').addEventListener('click', () => {
     const pointsOnGraph = document.getElementsByClassName('workingPoints');
-    let x; let
-        y;
+    let y;
     const pointPx = document.getElementById('Px');
     const pointPy = document.getElementById('Py');
 
@@ -88,10 +86,9 @@ document.getElementById('negateP').addEventListener('click', (e) => {
     }
 });
 
-document.getElementById('negateQ').addEventListener('click', (e) => {
+document.getElementById('negateQ').addEventListener('click', () => {
     const pointsOnGraph = document.getElementsByClassName('workingPoints');
-    let x; let
-        y;
+    let y;
     const pointQx = document.getElementById('Qx');
     const pointQy = document.getElementById('Qy');
 
