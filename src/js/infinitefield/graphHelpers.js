@@ -302,13 +302,13 @@ function addPointToEdgeCase(idX, sign, myGraph) {
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     circle.setAttribute('fill', 'red');
     circle.setAttribute('cx', myGraph.centerX + (x * myGraph.scaleX));
-    circle.setAttribute('cy', myGraph.centerY + (myGraph.scaleY * ((sign==='+')?(myGraph.equationP(x)):(-myGraph.equationP(x)))));
+    circle.setAttribute('cy', myGraph.centerY + (myGraph.scaleY * ((sign === '+') ? (myGraph.equationP(x)) : (-myGraph.equationP(x)))));
     circle.classList.add('workingPoints');
     circle.setAttribute('r', 5);
     circle.setAttribute('idPoint', `${idX[0]}`);
 
-    document.getElementById(idX).value = `${twoDecimalRound(x)}`
-    y.value = `${twoDecimalRound((sign==='+')?(myGraph.equationP(x)):(-myGraph.equationP(x)))}`;
+    document.getElementById(idX).value = `${twoDecimalRound(x)}`;
+    y.value = `${twoDecimalRound((sign === '+') ? (myGraph.equationP(x)) : (-myGraph.equationP(x)))}`;
     const svg = document.querySelector('svg');
     svg.appendChild(circle);
 
@@ -331,5 +331,5 @@ function removeBinaryParagraphs() {
 export {
     movePoint, moveSection, mouseToGraph, convertToXY, graphToCoords, coordsToGraph,
     getPointPlacement, addCalculatedPoint, logicPointAddition, drawLine, addPointOnClick,
-    getXY, addPointByInput, removeBinaryParagraphs, checkExplanationDisplay, isOnPage, addPointToEdgeCase
+    getXY, addPointByInput, removeBinaryParagraphs, checkExplanationDisplay, isOnPage, addPointToEdgeCase,
 };

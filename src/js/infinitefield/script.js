@@ -2,7 +2,7 @@ import { pointDouble, calculateDouble } from './realsDoubling';
 import { pointAddition, twoDecimalRound } from './realsAddition';
 import { pointMultiplication } from './realsMultiplication';
 import {
-    movePoint, isOnPage, graphToCoords, coordsToGraph, addPointOnClick, addPointByInput, removeBinaryParagraphs, addCalculatedPoint, addPointToEdgeCase
+    movePoint, isOnPage, graphToCoords, coordsToGraph, addPointOnClick, addPointByInput, removeBinaryParagraphs, addCalculatedPoint, addPointToEdgeCase,
 } from './graphHelpers';
 import {
     Graph, drawXAxis, drawYAxis, drawEquation,
@@ -288,7 +288,7 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
 });
 
 function init() {
-    edgeCaseForm('create') // As default operation is point addition
+    edgeCaseForm('create'); // As default operation is point addition
     drawEquations();
 
     const operations = document.querySelectorAll('#pointAddition, #pointDoubling, #pointMultiplication');
@@ -304,132 +304,115 @@ function init() {
 
         edgeCaseForm('create');
 
-
         document.getElementById('explanationContainer').style.display = 'none';
         deletePoints();
         e.target.disabled = true;
     });
 
     function performEdgeCase() {
-        let sel = document.getElementById('edgeCaseList')
-        let opt, selected;
+        let sel = document.getElementById('edgeCaseList');
+        let opt; let
+            selected;
 
-        
-
-        for(let i = 0; i < sel.options.length; i++) {
-            opt = sel.options[i]
-            if(opt.selected === true) {
-                console.log(opt.value)
-                sel = opt.value
+        for (let i = 0; i < sel.options.length; i++) {
+            opt = sel.options[i];
+            if (opt.selected === true) {
+                console.log(opt.value);
+                sel = opt.value;
                 break;
             }
         }
 
-        if(sel === 'Point at infinity') {
+        if (sel === 'Point at infinity') {
             deletePoints();
-            if(Number.isNaN(myGraph.equationP(1))===false) {
+            if (Number.isNaN(myGraph.equationP(1)) === false) {
                 console.log(myGraph.equationP(1));
                 document.getElementById('Px').value = 1;
                 addPointToEdgeCase('Px', '+', myGraph);
                 document.getElementById('Qx').value = 1;
-                addPointToEdgeCase('Qx', '-', myGraph); 
+                addPointToEdgeCase('Qx', '-', myGraph);
                 pointAddition(myGraph);
-            } else if(Number.isNaN(myGraph.equationP(-1))===false) {
+            } else if (Number.isNaN(myGraph.equationP(-1)) === false) {
                 document.getElementById('Px').value = 0;
                 addPointToEdgeCase('Px', '+', myGraph);
                 document.getElementById('Qx').value = 0;
-                addPointToEdgeCase('Qx', '-', myGraph); 
+                addPointToEdgeCase('Qx', '-', myGraph);
                 pointAddition(myGraph);
-            } else if(Number.isNaN(myGraph.equationP(0))===false) {
+            } else if (Number.isNaN(myGraph.equationP(0)) === false) {
                 document.getElementById('Px').value = -1;
                 addPointToEdgeCase('Px', '+', myGraph);
                 document.getElementById('Qx').value = -1;
-                addPointToEdgeCase('Qx', '-', myGraph); 
+                addPointToEdgeCase('Qx', '-', myGraph);
                 pointAddition(myGraph);
-            } else if(Number.isNaN(myGraph.equationP(-5))===false) {
+            } else if (Number.isNaN(myGraph.equationP(-5)) === false) {
                 document.getElementById('Px').value = -5;
                 addPointToEdgeCase('Px', '+', myGraph);
                 document.getElementById('Qx').value = -5;
-                addPointToEdgeCase('Qx', '-', myGraph); 
+                addPointToEdgeCase('Qx', '-', myGraph);
                 pointAddition(myGraph);
-            } else if(Number.isNaN(myGraph.equationP(5))===false) {
+            } else if (Number.isNaN(myGraph.equationP(5)) === false) {
                 document.getElementById('Px').value = 5;
                 addPointToEdgeCase('Px', '+', myGraph);
                 document.getElementById('Qx').value = 5;
-                addPointToEdgeCase('Qx', '-', myGraph); 
+                addPointToEdgeCase('Qx', '-', myGraph);
                 pointAddition(myGraph);
             }
-            setTimeout(()=>{redrawGraph(1, true)}, 1);
-    
-        } else if(sel === 'Point addition with the same point') {
+            setTimeout(() => { redrawGraph(1, true); }, 1);
+        } else if (sel === 'Point addition with the same point') {
             // CODE HERE
 
-        } else if(sel ==='Point at infliction') {
+        } else if (sel === 'Point at infliction') {
             deletePoints();
             function testInfliction(myGraph, x) {
-                let initPoint = {x: x, y: -myGraph.equationP(x)};
-                let P = findInfliction(initPoint, myGraph);
-                console.log(P)
+                const initPoint = { x, y: -myGraph.equationP(x) };
+                const P = findInfliction(initPoint, myGraph);
+                console.log(P);
                 document.getElementById('Px').value = P.x;
                 addPointByInput('Px', myGraph);
                 addCalculatedPoint(myGraph, P, 2);
             }
-            
+
             function findInfliction(P, myGraph) {
-                let newP = calculateDouble(myGraph, P);
-                if(Math.abs(newP.x - P.x) < 0.00001) {
+                const newP = calculateDouble(myGraph, P);
+                if (Math.abs(newP.x - P.x) < 0.00001) {
                     console.log(newP);
                     return newP;
                 }
-                else {
-                    newP.x = (newP.x - (newP.x - P.x)/2)
-                    newP.y = -myGraph.equationP(newP.x);
-                    return findInfliction(newP, myGraph);
-                }
+
+                newP.x -= (newP.x - P.x) / 2;
+                newP.y = -myGraph.equationP(newP.x);
+                return findInfliction(newP, myGraph);
             }
-            
-            testInfliction(myGraph, 0);   
+
+            testInfliction(myGraph, 0);
         }
-
-
-
     }
 
     function edgeCaseForm(action) {
-        if(action === 'delete' && isOnPage(document.getElementById('edgeCaseForm'))) {
+        if (action === 'delete' && isOnPage(document.getElementById('edgeCaseForm'))) {
             document.getElementById('edgeCaseForm').remove();
             return 1;
-        } else if(action === 'create' && !isOnPage(document.getElementById('edgeCaseForm'))) {
-            let div = document.createElement('div')
-            div.setAttribute('id', 'edgeCaseForm')
-            div.classList.add('grid', 'grid-cols-1', 'gap-2', 'mr-20', 'w-64')
-            document.getElementById('right-column-infinite').appendChild(div)
-    
+        } if (action === 'create' && !isOnPage(document.getElementById('edgeCaseForm'))) {
+            const div = document.createElement('div');
+            div.setAttribute('id', 'edgeCaseForm');
+            div.classList.add('grid', 'grid-cols-1', 'gap-2', 'mr-20', 'w-64');
+            document.getElementById('right-column-infinite').appendChild(div);
+
             const html = '<hr class="mt-20">'
-                        +'<p class="font-bold text-xl text-gray-800 mb-2 mt-5">Discover Edge Cases</p>'
+                        + '<p class="font-bold text-xl text-gray-800 mb-2 mt-5">Discover Edge Cases</p>'
                         + '<select name="edgeCaseList" id="edgeCaseList" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-3 px-4 border border-gray-400 rounded shadow inline-flex items-center mr-5">'
                         + '<option value="" selected disabled hidden>Select edge case</option>'
                         + '<option>Point at infinity</option>'
                         + '<option>Point addition with the same point</option>'
                         + '<option>Point at infliction</option>'
                         + '</select>'
-                        + '<button class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center mr-10" id="edgeCaseSubmit">Show Edge Case</button>'
-            
-        
-    
+                        + '<button class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow inline-flex items-center mr-10" id="edgeCaseSubmit">Show Edge Case</button>';
+
             div.innerHTML += html;
-    
-            document.getElementById('edgeCaseSubmit').addEventListener('click', performEdgeCase, false)
+
+            document.getElementById('edgeCaseSubmit').addEventListener('click', performEdgeCase, false);
         }
-
-        
-        
-
-
-        
-    };
-
-  
+    }
 
     document.getElementById('pointDoubling').addEventListener('click', (e) => {
         Array.from(operations).forEach((buttons) => {
@@ -443,7 +426,7 @@ function init() {
 
         document.getElementById('explanationContainer').style.display = 'none';
         deletePoints();
-        edgeCaseForm('delete')
+        edgeCaseForm('delete');
         e.target.disabled = true;
     });
 
@@ -458,7 +441,7 @@ function init() {
 
         document.getElementById('explanationContainer').style.display = 'none';
         deletePoints();
-        edgeCaseForm('delete')
+        edgeCaseForm('delete');
 
         e.target.disabled = true;
     });
@@ -561,7 +544,7 @@ const observer = new MutationObserver((mutationList) => {
     mutationList.forEach((mutation) => {
         mutation.addedNodes.forEach((child) => {
             // Dont zoom out when line is infinity
-            if (child.tagName !== 'circle' || child.getAttribute("cy") >= Number.MAX_SAFE_INTEGER) { return; }
+            if (child.tagName !== 'circle' || child.getAttribute('cy') >= Number.MAX_SAFE_INTEGER) { return; }
 
             checkPoints(child);
         });

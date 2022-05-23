@@ -662,7 +662,7 @@ function init() {
 function pointAdditionSteps(curve, points) {
     const lambda = points.point3.alfa;
     const stepRows = document.getElementsByClassName('steps');
-    let delta = (!(points.point1 == points.point2)) ? (points.point1.x - points.point2.x) : (2 * points.point1.y);  // TODO Should it be ===
+    let delta = (!(points.point1 == points.point2)) ? (points.point1.x - points.point2.x) : (2 * points.point1.y); // TODO Should it be ===
     if (Number(delta) < 0) {
         // console.log('negative');
         delta = Mod(delta, curve.mod);
