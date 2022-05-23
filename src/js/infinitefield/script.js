@@ -560,7 +560,8 @@ function checkPoints(child) {
 const observer = new MutationObserver((mutationList) => {
     mutationList.forEach((mutation) => {
         mutation.addedNodes.forEach((child) => {
-            if (child.tagName !== 'circle') { return; }
+            // Dont zoom out when line is infinity
+            if (child.tagName !== 'circle' || child.getAttribute("cy") >= Number.MAX_SAFE_INTEGER) { return; }
 
             checkPoints(child);
         });
