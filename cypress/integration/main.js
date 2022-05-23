@@ -9,6 +9,13 @@ import { calculateAddition } from '../../src/js/infinitefield/realsAddition';
 
 import { calculateDouble } from '../../src/js/infinitefield/realsDoubling';
 
+import {
+    Curve, Point, AXYCurve, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2, listPoints,
+} from '../../src/js/finitefield/curves.js';
+
+import { User } from '../../src/js/elgamal/user.js';
+import { encrypt, decrypt } from '../../src/js/elgamal/cryptography.js';
+
 const myGraph = {
     canvas: {},
     minX: -10,
@@ -36,20 +43,11 @@ const myGraph = {
     centerY: 195,
     centerX: 375.5,
 };
-
-import {Curve, Point, AXYCurve, calcPointAdditionPrime, calcPointAdditionGF2, calcDiscriminant, calcDiscriminantGF2, listPoints} from "../../src/js/finitefield/curves.js";
 const myCurve = new Curve(2, 1, 0, 0, 317, 317);
 myCurve.createPoints();
 myCurve.G = myCurve.points[142];
-
-import {User} from "../../src/js/elgamal/user.js";
-import { encrypt, decrypt } from '../../src/js/elgamal/cryptography.js';
-let user1 = new User("0", myCurve, undefined);
-let user2 = new User("1", myCurve, undefined);
-
-
-
-
+const user1 = new User('0', myCurve, undefined);
+const user2 = new User('1', myCurve, undefined);
 
 describe('Unit Test Application Code', () => {
     before(() => {
@@ -82,7 +80,7 @@ describe('Unit Test Application Code', () => {
             });
 
             it('Point Addition button click', () => {
-                cy.get('#pointAddition').click({force: true});
+                cy.get('#pointAddition').click({ force: true });
             });
 
             it('Point Addition button disabled', () => {
@@ -249,46 +247,43 @@ describe('Unit Test Application Code', () => {
     });
 
     context('Finite field operations', () => {
-        it(`Points include 1 correct point`, () => {
+        it('Points include 1 correct point', () => {
             const newPoint = new Point(90, 9);
             let result = false;
-            for (let element of myCurve.points) {
+            for (const element of myCurve.points) {
                 if (element.x === newPoint.x && element.y === newPoint.y) {
                     result = true;
                 }
             }
             expect(result).to.eq(true);
         });
-        it(`Point multiplication`, () => {
+        it('Point multiplication', () => {
             const newPoint = new Point(90, 9);
             console.log(myCurve.calcPointMultiplication(2, newPoint).toString());
             expect(myCurve.calcPointMultiplication(2, newPoint).x).to.eq(97);
             expect(myCurve.calcPointMultiplication(2, newPoint).y).to.eq(15);
         });
-        it(`Check all points`, () => {
+        it('Check all points', () => {
             let result = true;
-            for (let p of myCurve.points) {
+            for (const p of myCurve.points) {
                 if (p.x === Infinity) {
                     if (p.y !== Infinity) {
                         result = false;
                     }
-                } else {
-                    if (Math.pow(p.y, 2) % myCurve.fieldOrder === (Math.pow(p.x, 3) + myCurve.a * p.x + myCurve.b) % myCurve.fieldOrder) {
-                        result = false;
-                    }
+                } else if (p.y ** 2 % myCurve.fieldOrder === (p.x ** 3 + myCurve.a * p.x + myCurve.b) % myCurve.fieldOrder) {
+                    result = false;
                 }
             }
-
         });
     });
     context('Elgamal operations', () => {
-        it(`Check plain text equals decrypted chipher text`, () => {
-            let plainText = "Hej Test 120 , ";
-            let chipherText = encrypt(myCurve, plainText, user1, user2).encryptedPoints.reduce((prev, elem) => {
-                prev = prev + elem.toString() + ",";
+        it('Check plain text equals decrypted chipher text', () => {
+            const plainText = 'Hej Test 120 , ';
+            const chipherText = encrypt(myCurve, plainText, user1, user2).encryptedPoints.reduce((prev, elem) => {
+                prev = `${prev + elem.toString()},`;
                 return prev;
-            }, "");
-            let decrypted = decrypt(myCurve, chipherText, user1, user2)
+            }, '');
+            const decrypted = decrypt(myCurve, chipherText, user1, user2);
             expect(plainText).to.eq(decrypted);
         });
     });

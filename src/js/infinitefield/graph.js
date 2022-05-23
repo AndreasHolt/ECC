@@ -153,23 +153,23 @@ function drawEquation(equation, color, thickness, myGraph) {
     context.save();
     transformContext(myGraph);
 
-    //context.beginPath();
-    //context.moveTo(myGraph.minX, equation(myGraph.minX));
+    // context.beginPath();
+    // context.moveTo(myGraph.minX, equation(myGraph.minX));
 
-    //let lastX = 0;
+    // let lastX = 0;
 
-    /*for (let x = myGraph.minX + myGraph.iteration; x <= myGraph.maxX; x += myGraph.iteration) {
+    /* for (let x = myGraph.minX + myGraph.iteration; x <= myGraph.maxX; x += myGraph.iteration) {
         if (Number.isNaN(equation(x))) {
             lastX = x;
         }
-    }*/
+    } */
 
-    //const realRootMultiplier = 1.01;
-    //const realRoot = lastX * realRootMultiplier;
+    // const realRootMultiplier = 1.01;
+    // const realRoot = lastX * realRootMultiplier;
 
     let isPrevXInSolution = false;
     let isCurrentXInSolution = false;
-    let startX = myGraph.minX + myGraph.iteration
+    const startX = myGraph.minX + myGraph.iteration;
     for (let x = startX; x <= myGraph.maxX; x += myGraph.iteration) {
         if (Number.isNaN(equation(x))) {
             isCurrentXInSolution = false;
@@ -177,13 +177,12 @@ function drawEquation(equation, color, thickness, myGraph) {
             isCurrentXInSolution = true;
         }
 
-        
         if (isCurrentXInSolution || isPrevXInSolution) {
             if (isCurrentXInSolution && isPrevXInSolution) {
                 context.lineTo(x, equation(x));
             } else if (isCurrentXInSolution) {
                 context.beginPath();
-                if(x === startX) {
+                if (x === startX) {
                     context.moveTo(x, equation(x));
                 } else {
                     context.moveTo(x - myGraph.iteration, 0);
