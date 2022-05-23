@@ -65,24 +65,29 @@ function pointAdditionSteps(myGraph, points, lambdaI, x, y) {
 }
 
 function calculateAddition(myGraph, pointArr) {
+    const point = {};
+
     if (pointArr[0] === 0) {
         return pointArr[1];
     }
-    const lambda = ((pointArr[1].y - pointArr[0].y) / (pointArr[1].x - pointArr[0].x));
-    let newX = (lambda * lambda) - pointArr[1].x - pointArr[0].x;
-    let newY = pointArr[1].y + lambda * newX + lambda * (-pointArr[1].x);
 
-    // Handle edge case: point at infinity
-    if (pointArr[1].x === pointArr[0].x && pointArr[0].y !== pointArr[1].y) {
-        newY = 9999999;
-        newX = pointArr[0].x;
-    } else if (pointArr[1].x === pointArr[0].x && pointArr[0].y === pointArr[1].y) {
-        // Handle edge case: point doubling if P = Q
+    // Handle edge case: point doubling if P = Q
+    if (pointArr[1].x === pointArr[0].x && pointArr[0].y === pointArr[1].y) {
         pointDouble(myGraph);
         return 0;
     }
 
-    return { x: newX, y: newY };
+    const lambda = ((pointArr[1].y - pointArr[0].y) / (pointArr[1].x - pointArr[0].x));
+    point.x = (lambda * lambda) - pointArr[1].x - pointArr[0].x;
+    point.y = pointArr[1].y + lambda * point.x + lambda * (-pointArr[1].x);
+
+    // Handle edge case: point at infinity
+    if (pointArr[1].x === pointArr[0].x && pointArr[0].y !== pointArr[1].y) {
+        point.y = Number.MAX_SAFE_INTEGER;
+        point.x = pointArr[0].x;
+    }
+
+    return point;
 }
 
 function pointAddition(myGraph) {
