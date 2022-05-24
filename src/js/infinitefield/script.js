@@ -400,7 +400,7 @@ function init() {
 
             const html = '<hr class="mt-20">'
                         + '<p class="font-bold text-xl text-gray-800 mb-2 mt-5">Discover Edge Cases</p>'
-                        + '<select name="edgeCaseList" id="edgeCaseList" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-3 px-4 border border-gray-400 rounded shadow inline-flex items-center mr-5">'
+                        + '<select name="edgeCaseList" id="edgeCaseList" class="bg-white hover:bg-gray-100 disabled:bg-gray-200 text-gray-800 font-semibold py-3 px-4 border border-gray-400 rounded shadow inline-flex items-center mr-10">'
                         + '<option value="" selected disabled hidden>Select edge case</option>'
                         + '<option>Point at infinity</option>'
                         + '<option>Point addition with the same point</option>'
