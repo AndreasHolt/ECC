@@ -16,7 +16,7 @@ import {
 import { User } from '../../src/js/elgamal/user.js';
 import { encrypt, decrypt } from '../../src/js/elgamal/cryptography.js';
 
-const myGraph = {
+const rGraph = {
     canvas: {},
     minX: -10,
     minY: -10,
@@ -133,7 +133,7 @@ describe('Unit Test Application Code', () => {
 
             // TODO get click to work
             it('Graph click center', () => {
-                const center = coordsToGraph(myGraph, 0, 0);
+                const center = coordsToGraph(rGraph, 0, 0);
 
                 cy.get('#pointAddition').click();
                 cy.wait(1000);
@@ -154,11 +154,11 @@ describe('Unit Test Application Code', () => {
         });
 
         it('mouseToGraph X coordinate', () => {
-            expect(mouseToGraph(myGraph, 1, 2).x).to.eq(-264);
+            expect(mouseToGraph(rGraph, 1, 2).x).to.eq(-264);
         });
 
         it('mouseToGraph Y coordinate', () => {
-            expect(mouseToGraph(myGraph, 1, 2).y).to.eq(-120);
+            expect(mouseToGraph(rGraph, 1, 2).y).to.eq(-120);
         });
 
         // movePoint
@@ -172,11 +172,11 @@ describe('Unit Test Application Code', () => {
         });
 
         it('coordsToGraph X coordinate', () => {
-            expect(coordsToGraph(myGraph, 1, 2).x).to.eq(413.05);
+            expect(coordsToGraph(rGraph, 1, 2).x).to.eq(413.05);
         });
 
         it('coordsToGraph Y coordinate', () => {
-            expect(coordsToGraph(myGraph, 1, 2).y).to.eq(234);
+            expect(coordsToGraph(rGraph, 1, 2).y).to.eq(234);
         });
 
         // getPointPlacement
@@ -186,7 +186,7 @@ describe('Unit Test Application Code', () => {
 
         // TODO Unable to run due to getAttribute might be another way to run it
         // it('getPointPlacement point position', () => {
-        //     expect(getPointPlacement(myGraph, 99).x).to.eq(413.05);
+        //     expect(getPointPlacement(rGraph, 99).x).to.eq(413.05);
         // });
 
         // logicPointAddition
@@ -196,7 +196,7 @@ describe('Unit Test Application Code', () => {
 
         // TODO Unable to run due to getAttribute might be another way to run it
         // it('logicPointAddition point position', () => {
-        //     expect(logicPointAddition(myGraph, 99).x).to.eq(413.05);
+        //     expect(logicPointAddition(rGraph, 99).x).to.eq(413.05);
         // });
 
         // drawLine
@@ -220,25 +220,25 @@ describe('Unit Test Application Code', () => {
             const point1 = { x: 0.8388814913448736, y: -3.3757861359141805 };
             const point2 = { x: -1.7177097203728364, y: 4.303533459549233 };
 
-            expect(calculateAddition(myGraph, [point1, point2]).x).to.eq(9.90124534636108);
+            expect(calculateAddition(rGraph, [point1, point2]).x).to.eq(9.90124534636108);
         });
 
         it('calculateAddition y coordinate', () => {
             const point1 = { x: 0.8388814913448736, y: -3.3757861359141805 };
             const point2 = { x: -1.7177097203728364, y: 4.303533459549233 };
 
-            expect(calculateAddition(myGraph, [point1, point2]).y).to.eq(-30.596715322433464);
+            expect(calculateAddition(rGraph, [point1, point2]).y).to.eq(-30.596715322433464);
         });
 
         it('calculateDouble x coordinate', () => {
             const point1 = { x: -1.2916111850865513, y: -4.393553613618751 };
 
-            expect(calculateDouble(myGraph, point1).x).to.eq(2.5832226658830533);
+            expect(calculateDouble(rGraph, point1).x).to.eq(2.5832226658830533);
         });
 
         it('calculateDouble y coordinate', () => {
             const point1 = { x: -1.2916111850865513, y: -4.393553613618751 };
-            expect(calculateDouble(myGraph, point1).y).to.eq(4.395660718021738);
+            expect(calculateDouble(rGraph, point1).y).to.eq(4.395660718021738);
         });
 
         it('test y coordinate', () => {

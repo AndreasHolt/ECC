@@ -22,9 +22,9 @@ function moveSection(id, x, y) {
     }
 }
 
-function mouseToGraph(myGraph, mouseX, mouseY) {
-    const x = (myGraph.centerX - myGraph.offsetLeft) + mouseX - myGraph.maxX * myGraph.scaleX;
-    const y = (myGraph.centerY - myGraph.offsetTop) + mouseY - myGraph.maxY * myGraph.scaleY;
+function mouseToGraph(rGraph, mouseX, mouseY) {
+    const x = (rGraph.centerX - rGraph.offsetLeft) + mouseX - rGraph.maxX * rGraph.scaleX;
+    const y = (rGraph.centerY - rGraph.offsetTop) + mouseY - rGraph.maxY * rGraph.scaleY;
     return { x, y };
 }
 
@@ -32,21 +32,21 @@ function convertToXY(point) {
     return { x: point[0], y: point[1] };
 }
 
-function graphToCoords(myGraph, point) {
-    const x = (point.x - myGraph.centerX) / myGraph.scaleX;
-    const y = (point.y - myGraph.centerY) / myGraph.scaleY;
+function graphToCoords(rGraph, point) {
+    const x = (point.x - rGraph.centerX) / rGraph.scaleX;
+    const y = (point.y - rGraph.centerY) / rGraph.scaleY;
 
     return { x, y };
 }
 
-function movePoint(event, myGraph) {
-    const mousePos = mouseToGraph(myGraph, event.clientX, event.clientY);
-    const coords = graphToCoords(myGraph, mousePos);
+function movePoint(event, rGraph) {
+    const mousePos = mouseToGraph(rGraph, event.clientX, event.clientY);
+    const coords = graphToCoords(rGraph, mousePos);
 
-    if (mousePos.y > myGraph.centerY) {
-        moveSection('point', mousePos.x, myGraph.centerY - (-myGraph.equationP(coords.x) * myGraph.scaleY));
+    if (mousePos.y > rGraph.centerY) {
+        moveSection('point', mousePos.x, rGraph.centerY - (-rGraph.equationP(coords.x) * rGraph.scaleY));
     } else {
-        moveSection('point', mousePos.x, myGraph.centerY - (myGraph.equationP(coords.x) * myGraph.scaleY));
+        moveSection('point', mousePos.x, rGraph.centerY - (rGraph.equationP(coords.x) * rGraph.scaleY));
     }
 }
 
@@ -56,17 +56,17 @@ function getXY(el) {
     return { x, y };
 }
 
-function coordsToGraph(myGraph, coordsX, coordsY) {
-    const x = myGraph.centerX + (coordsX * myGraph.scaleX);
-    const y = myGraph.centerY + (coordsY * myGraph.scaleY);
+function coordsToGraph(rGraph, coordsX, coordsY) {
+    const x = rGraph.centerX + (coordsX * rGraph.scaleX);
+    const y = rGraph.centerY + (coordsY * rGraph.scaleY);
     return { x, y };
 }
 
-function getPointPlacement(myGraph, x) {
+function getPointPlacement(rGraph, x) {
     const points = document.getElementsByClassName('workingPoints');
 
-    const x1 = (getXY(points[0]).x - myGraph.centerX) / myGraph.scaleX;
-    const x2 = (getXY(points[1]).x - myGraph.centerX) / myGraph.scaleX;
+    const x1 = (getXY(points[0]).x - rGraph.centerX) / rGraph.scaleX;
+    const x2 = (getXY(points[1]).x - rGraph.centerX) / rGraph.scaleX;
 
     let returnValue;
 
@@ -81,8 +81,8 @@ function getPointPlacement(myGraph, x) {
     return returnValue;
 }
 
-function logicPointAddition(myGraph, x) {
-    const pointDecider = getPointPlacement(myGraph, x);
+function logicPointAddition(rGraph, x) {
+    const pointDecider = getPointPlacement(rGraph, x);
     if (pointDecider === 1) {
         const tempPoint = document.getElementsByClassName('workingPoints');
 
@@ -106,12 +106,12 @@ function logicPointAddition(myGraph, x) {
     return null;
 }
 
-function drawLine(myGraph, operator, color, i, x, y, svg, pointOperation) {
+function drawLine(rGraph, operator, color, i, x, y, svg, pointOperation) {
     let fromPoint;
     let pointDecider = 0;
     if (pointOperation === 1) {
-        fromPoint = logicPointAddition(myGraph, x);
-        pointDecider = getPointPlacement(myGraph, x);
+        fromPoint = logicPointAddition(rGraph, x);
+        pointDecider = getPointPlacement(rGraph, x);
     } else if (pointOperation === 2) {
         // eslint-disable-next-line prefer-destructuring
         fromPoint = document.getElementsByClassName('workingPoints')[0];
@@ -121,16 +121,16 @@ function drawLine(myGraph, operator, color, i, x, y, svg, pointOperation) {
         newLine.setAttribute('x1', fromPoint.getAttribute('cx'));
         newLine.setAttribute('y1', fromPoint.getAttribute('cy'));
     } else {
-        newLine.setAttribute('x1', (x * myGraph.scaleX) + myGraph.centerX);
-        newLine.setAttribute('y1', (-y * myGraph.scaleY) + myGraph.centerY);
+        newLine.setAttribute('x1', (x * rGraph.scaleX) + rGraph.centerX);
+        newLine.setAttribute('y1', (-y * rGraph.scaleY) + rGraph.centerY);
     }
     if (pointOperation === 1 && i === 0 && pointDecider === 2) {
         const secondPoint = document.getElementsByClassName('workingPoints')[1];
         newLine.setAttribute('x2', secondPoint.getAttribute('cx'));
         newLine.setAttribute('y2', secondPoint.getAttribute('cy'));
     } else {
-        newLine.setAttribute('x2', (x * myGraph.scaleX) + myGraph.centerX);
-        newLine.setAttribute('y2', ((((operator === '-') ? (y) : (y)) * myGraph.scaleY) + myGraph.centerY));
+        newLine.setAttribute('x2', (x * rGraph.scaleX) + rGraph.centerX);
+        newLine.setAttribute('y2', ((((operator === '-') ? (y) : (y)) * rGraph.scaleY) + rGraph.centerY));
     }
     newLine.classList.add('linesConnecting');
     newLine.setAttribute('stroke', color);
@@ -139,12 +139,12 @@ function drawLine(myGraph, operator, color, i, x, y, svg, pointOperation) {
     svg.appendChild(newLine);
 }
 
-function addTextToPoints(myGraph, pointC, i) {
+function addTextToPoints(rGraph, pointC, i) {
     let textNode;
     const textEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    const point1 = coordsToGraph(myGraph, pointC.x, pointC.y);
-    const point2 = coordsToGraph(myGraph, pointC.x, -pointC.y);
+    const point1 = coordsToGraph(rGraph, pointC.x, pointC.y);
+    const point2 = coordsToGraph(rGraph, pointC.x, -pointC.y);
 
     if (i === 0) {
         circle.setAttributeNS(null, 'cy', point1.y);
@@ -194,7 +194,7 @@ function addTextToPoints(myGraph, pointC, i) {
     document.getElementById('pointText').appendChild(textEl);
 }
 
-function addCalculatedPoint(myGraph, point, pointOperation) {
+function addCalculatedPoint(rGraph, point, pointOperation) {
     document.querySelectorAll('.calculatedPoints, .linesConnecting').forEach((el) => {
         el.remove();
     });
@@ -216,7 +216,7 @@ function addCalculatedPoint(myGraph, point, pointOperation) {
             circle.setAttribute('fill', 'fuchsia');
         }
 
-        const pointG = coordsToGraph(myGraph, point.x, -arrayIntersectInverted[i]);
+        const pointG = coordsToGraph(rGraph, point.x, -arrayIntersectInverted[i]);
 
         circle.setAttribute('cx', pointG.x);
         circle.setAttribute('cy', pointG.y);
@@ -227,15 +227,15 @@ function addCalculatedPoint(myGraph, point, pointOperation) {
         svg.appendChild(circle);
 
         if (i === 0 && pointOperation !== 3) {
-            drawLine(myGraph, '+', 'fuchsia', i, point.x, point.y, svg, pointOperation);
+            drawLine(rGraph, '+', 'fuchsia', i, point.x, point.y, svg, pointOperation);
         } else if (pointOperation !== 3) {
-            drawLine(myGraph, '-', 'orange', i, point.x, point.y, svg, pointOperation);
+            drawLine(rGraph, '-', 'orange', i, point.x, point.y, svg, pointOperation);
         }
 
         if (pointOperation === 3) {
-            addTextToPoints(myGraph, point, i + 1);
+            addTextToPoints(rGraph, point, i + 1);
         } else {
-            addTextToPoints(myGraph, point, i);
+            addTextToPoints(rGraph, point, i);
         }
     }
 
@@ -245,7 +245,7 @@ function addCalculatedPoint(myGraph, point, pointOperation) {
     document.getElementById('negRy').value = `${-twoDecimalRound(point.y)}`;
 }
 
-function addPointOnClick(myGraph) {
+function addPointOnClick(rGraph) {
     const point = document.getElementById('point');
 
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -259,63 +259,63 @@ function addPointOnClick(myGraph) {
     svg.appendChild(circle);
 
     if (document.getElementsByClassName('workingPoints').length === 1) {
-        document.getElementById('Px').value = `${twoDecimalRound((point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX)}`;
-        document.getElementById('Py').value = `${twoDecimalRound(-(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY)}`;
+        document.getElementById('Px').value = `${twoDecimalRound((point.getAttribute('cx') - rGraph.centerX) / rGraph.scaleX)}`;
+        document.getElementById('Py').value = `${twoDecimalRound(-(point.getAttribute('cy') - rGraph.centerY) / rGraph.scaleY)}`;
 
-        addTextToPoints(myGraph, { x: (point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: -(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY }, 2);
+        addTextToPoints(rGraph, { x: (point.getAttribute('cx') - rGraph.centerX) / rGraph.scaleX, y: -(point.getAttribute('cy') - rGraph.centerY) / rGraph.scaleY }, 2);
     } else if (document.getElementsByClassName('workingPoints').length === 2) {
-        document.getElementById('Qx').value = `${twoDecimalRound((point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX)}`;
-        document.getElementById('Qy').value = `${twoDecimalRound(-(point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY)}`;
+        document.getElementById('Qx').value = `${twoDecimalRound((point.getAttribute('cx') - rGraph.centerX) / rGraph.scaleX)}`;
+        document.getElementById('Qy').value = `${twoDecimalRound(-(point.getAttribute('cy') - rGraph.centerY) / rGraph.scaleY)}`;
 
-        addTextToPoints(myGraph, { x: (point.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: (point.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY }, 3);
+        addTextToPoints(rGraph, { x: (point.getAttribute('cx') - rGraph.centerX) / rGraph.scaleX, y: (point.getAttribute('cy') - rGraph.centerY) / rGraph.scaleY }, 3);
     }
 }
 
-function addPointByInput(idX, myGraph) {
+function addPointByInput(idX, rGraph) {
     const x = document.getElementById(idX).value;
     const y = document.getElementById(`${idX[0]}y`);
 
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     circle.setAttribute('fill', 'red');
-    circle.setAttribute('cx', myGraph.centerX + (x * myGraph.scaleX));
-    circle.setAttribute('cy', myGraph.centerY + (myGraph.scaleY * -myGraph.equationP(x)));
+    circle.setAttribute('cx', rGraph.centerX + (x * rGraph.scaleX));
+    circle.setAttribute('cy', rGraph.centerY + (rGraph.scaleY * -rGraph.equationP(x)));
     circle.classList.add('workingPoints');
     circle.setAttribute('r', 5);
     circle.setAttribute('idPoint', `${idX[0]}`);
 
     document.getElementById(idX).value = `${twoDecimalRound(x)}`;
-    y.value = `${twoDecimalRound(myGraph.equationP(x))}`;
+    y.value = `${twoDecimalRound(rGraph.equationP(x))}`;
     const svg = document.querySelector('svg');
     svg.appendChild(circle);
 
     if (idX === 'Px') {
-        addTextToPoints(myGraph, { x: (circle.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: -(circle.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY }, 2);
+        addTextToPoints(rGraph, { x: (circle.getAttribute('cx') - rGraph.centerX) / rGraph.scaleX, y: -(circle.getAttribute('cy') - rGraph.centerY) / rGraph.scaleY }, 2);
     } else if (idX === 'Qx') {
-        addTextToPoints(myGraph, { x: (circle.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: (circle.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY }, 3);
+        addTextToPoints(rGraph, { x: (circle.getAttribute('cx') - rGraph.centerX) / rGraph.scaleX, y: (circle.getAttribute('cy') - rGraph.centerY) / rGraph.scaleY }, 3);
     }
 }
 
-function addPointToEdgeCase(idX, sign, myGraph) {
+function addPointToEdgeCase(idX, sign, rGraph) {
     const x = document.getElementById(idX).value;
     const y = document.getElementById(`${idX[0]}y`);
 
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     circle.setAttribute('fill', 'red');
-    circle.setAttribute('cx', myGraph.centerX + (x * myGraph.scaleX));
-    circle.setAttribute('cy', myGraph.centerY + (myGraph.scaleY * ((sign === '+') ? (myGraph.equationP(x)) : (-myGraph.equationP(x)))));
+    circle.setAttribute('cx', rGraph.centerX + (x * rGraph.scaleX));
+    circle.setAttribute('cy', rGraph.centerY + (rGraph.scaleY * ((sign === '+') ? (rGraph.equationP(x)) : (-rGraph.equationP(x)))));
     circle.classList.add('workingPoints');
     circle.setAttribute('r', 5);
     circle.setAttribute('idPoint', `${idX[0]}`);
 
     document.getElementById(idX).value = `${twoDecimalRound(x)}`;
-    y.value = `${twoDecimalRound((sign === '+') ? (myGraph.equationP(x)) : (-myGraph.equationP(x)))}`;
+    y.value = `${twoDecimalRound((sign === '+') ? (rGraph.equationP(x)) : (-rGraph.equationP(x)))}`;
     const svg = document.querySelector('svg');
     svg.appendChild(circle);
 
     if (idX === 'Px') {
-        addTextToPoints(myGraph, { x: (circle.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: -(circle.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY }, 2);
+        addTextToPoints(rGraph, { x: (circle.getAttribute('cx') - rGraph.centerX) / rGraph.scaleX, y: -(circle.getAttribute('cy') - rGraph.centerY) / rGraph.scaleY }, 2);
     } else if (idX === 'Qx') {
-        addTextToPoints(myGraph, { x: (circle.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX, y: (circle.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY }, 3);
+        addTextToPoints(rGraph, { x: (circle.getAttribute('cx') - rGraph.centerX) / rGraph.scaleX, y: (circle.getAttribute('cy') - rGraph.centerY) / rGraph.scaleY }, 3);
     }
 }
 

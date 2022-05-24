@@ -7,14 +7,14 @@ function twoDecimalRound(val) {
     return Math.round(val * 100) / 100;
 }
 
-function listPoints(myGraph, placedPoints, calculatedX, calculatedY, operation) {
-    const pObj = graphToCoords(myGraph, placedPoints[0]);
+function listPoints(rGraph, placedPoints, calculatedX, calculatedY, operation) {
+    const pObj = graphToCoords(rGraph, placedPoints[0]);
     const P = `${twoDecimalRound(pObj.x)}, ${twoDecimalRound(-pObj.y)}`;
 
     let Q;
     let qObj;
     if (operation === 'addition') {
-        qObj = graphToCoords(myGraph, placedPoints[1]);
+        qObj = graphToCoords(rGraph, placedPoints[1]);
         Q = `${twoDecimalRound(qObj.x)}, ${twoDecimalRound(-qObj.y)}`;
     }
 
@@ -36,7 +36,7 @@ function listPoints(myGraph, placedPoints, calculatedX, calculatedY, operation) 
     return pObj;
 }
 
-function pointAdditionSteps(myGraph, points, lambdaI, x, y) {
+function pointAdditionSteps(rGraph, points, lambdaI, x, y) {
     points.forEach((point) => {
         // eslint-disable-next-line no-param-reassign
         point.x = twoDecimalRound(point.x);
@@ -61,10 +61,10 @@ function pointAdditionSteps(myGraph, points, lambdaI, x, y) {
     // eslint-disable-next-line no-undef
     checkExplanationDisplay();
 
-    addCalculatedPoint(myGraph, { x: newX, y: newY }, 1);
+    addCalculatedPoint(rGraph, { x: newX, y: newY }, 1);
 }
 
-function calculateAddition(myGraph, pointArr) {
+function calculateAddition(rGraph, pointArr) {
     const point = {};
 
     if (pointArr[0] === 0) {
@@ -73,7 +73,7 @@ function calculateAddition(myGraph, pointArr) {
 
     // Handle edge case: point doubling if P = Q
     if (pointArr[1].x === pointArr[0].x && pointArr[0].y === pointArr[1].y) {
-        pointDouble(myGraph);
+        pointDouble(rGraph);
         return 0;
     }
 
@@ -90,25 +90,25 @@ function calculateAddition(myGraph, pointArr) {
     return point;
 }
 
-function pointAddition(myGraph) {
+function pointAddition(rGraph) {
     const wPoints = document.getElementsByClassName('workingPoints');
 
     const points = [getXY(wPoints[0]), getXY(wPoints[1])];
 
-    const p1 = graphToCoords(myGraph, points[0]);
-    const p2 = graphToCoords(myGraph, points[1]);
+    const p1 = graphToCoords(rGraph, points[0]);
+    const p2 = graphToCoords(rGraph, points[1]);
 
     const lambda = ((p2.y - p1.y) / (p2.x - p1.x));
 
-    const thirdPoint = calculateAddition(myGraph, [p1, p2]);
+    const thirdPoint = calculateAddition(rGraph, [p1, p2]);
 
     if (!thirdPoint) { return; }
 
-    const listedPoints = listPoints(myGraph, points, thirdPoint.x, thirdPoint.y, 'addition');
+    const listedPoints = listPoints(rGraph, points, thirdPoint.x, thirdPoint.y, 'addition');
 
-    pointAdditionSteps(myGraph, listedPoints, lambda, thirdPoint.x, thirdPoint.y);
+    pointAdditionSteps(rGraph, listedPoints, lambda, thirdPoint.x, thirdPoint.y);
 
-    addCalculatedPoint(myGraph, thirdPoint, 1);
+    addCalculatedPoint(rGraph, thirdPoint, 1);
 }
 
 export {

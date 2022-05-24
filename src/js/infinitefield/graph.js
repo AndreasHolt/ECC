@@ -1,86 +1,86 @@
-function drawXAxis(myGraph) {
-    const { context } = myGraph;
+function drawXAxis(rGraph) {
+    const { context } = rGraph;
     context.save();
     context.beginPath();
-    context.moveTo(0, myGraph.centerY);
-    context.lineTo(myGraph.canvas.width, myGraph.centerY);
-    context.strokeStyle = myGraph.axisColor;
+    context.moveTo(0, rGraph.centerY);
+    context.lineTo(rGraph.canvas.width, rGraph.centerY);
+    context.strokeStyle = rGraph.axisColor;
     context.lineWidth = 2;
     context.stroke();
 
     // draw tick marks
-    const xPosIncrement = myGraph.unitsPerTick * myGraph.unitX;
+    const xPosIncrement = rGraph.unitsPerTick * rGraph.unitX;
     let xPos; let
         unit;
-    context.font = myGraph.font;
+    context.font = rGraph.font;
     context.textAlign = 'center';
     context.textBaseline = 'top';
 
     // draw left tick marks
-    xPos = myGraph.centerX - xPosIncrement;
-    unit = -1 * myGraph.unitsPerTick;
+    xPos = rGraph.centerX - xPosIncrement;
+    unit = -1 * rGraph.unitsPerTick;
     while (xPos > 0) {
-        context.moveTo(xPos, myGraph.centerY - myGraph.tickSize / 2);
-        context.lineTo(xPos, myGraph.centerY + myGraph.tickSize / 2);
+        context.moveTo(xPos, rGraph.centerY - rGraph.tickSize / 2);
+        context.lineTo(xPos, rGraph.centerY + rGraph.tickSize / 2);
         context.stroke();
-        context.fillText(Math.round(unit * 100) / 100, xPos, myGraph.centerY + myGraph.tickSize / 2 + 3);
-        unit -= myGraph.unitsPerTick;
+        context.fillText(Math.round(unit * 100) / 100, xPos, rGraph.centerY + rGraph.tickSize / 2 + 3);
+        unit -= rGraph.unitsPerTick;
         xPos = Math.round(xPos - xPosIncrement);
     }
 
     // draw right tick marks
-    xPos = myGraph.centerX + xPosIncrement;
-    unit = myGraph.unitsPerTick;
-    while (xPos < myGraph.canvas.width) {
-        context.moveTo(xPos, myGraph.centerY - myGraph.tickSize / 2);
-        context.lineTo(xPos, myGraph.centerY + myGraph.tickSize / 2);
+    xPos = rGraph.centerX + xPosIncrement;
+    unit = rGraph.unitsPerTick;
+    while (xPos < rGraph.canvas.width) {
+        context.moveTo(xPos, rGraph.centerY - rGraph.tickSize / 2);
+        context.lineTo(xPos, rGraph.centerY + rGraph.tickSize / 2);
         context.stroke();
-        context.fillText(Math.round(unit * 100) / 100, xPos, myGraph.centerY + myGraph.tickSize / 2 + 3);
-        unit += myGraph.unitsPerTick;
+        context.fillText(Math.round(unit * 100) / 100, xPos, rGraph.centerY + rGraph.tickSize / 2 + 3);
+        unit += rGraph.unitsPerTick;
         xPos = Math.round(xPos + xPosIncrement);
     }
     context.restore();
 }
 
-function drawYAxis(myGraph) {
-    const { context } = myGraph;
+function drawYAxis(rGraph) {
+    const { context } = rGraph;
     context.save();
     context.beginPath();
-    context.moveTo(myGraph.centerX, 0);
-    context.lineTo(myGraph.centerX, myGraph.canvas.height);
-    context.strokeStyle = myGraph.axisColor;
+    context.moveTo(rGraph.centerX, 0);
+    context.lineTo(rGraph.centerX, rGraph.canvas.height);
+    context.strokeStyle = rGraph.axisColor;
     context.lineWidth = 2;
     context.stroke();
 
     // draw tick marks
-    const yPosIncrement = myGraph.unitsPerTick * myGraph.unitY;
+    const yPosIncrement = rGraph.unitsPerTick * rGraph.unitY;
     let yPos; let
         unit;
-    context.font = myGraph.font;
+    context.font = rGraph.font;
     context.textAlign = 'right';
     context.textBaseline = 'middle';
 
     // draw top tick marks
-    yPos = myGraph.centerY - yPosIncrement;
-    unit = myGraph.unitsPerTick;
+    yPos = rGraph.centerY - yPosIncrement;
+    unit = rGraph.unitsPerTick;
     while (yPos > 0) {
-        context.moveTo(myGraph.centerX - myGraph.tickSize / 2, yPos);
-        context.lineTo(myGraph.centerX + myGraph.tickSize / 2, yPos);
+        context.moveTo(rGraph.centerX - rGraph.tickSize / 2, yPos);
+        context.lineTo(rGraph.centerX + rGraph.tickSize / 2, yPos);
         context.stroke();
-        context.fillText(Math.round(unit * 100) / 100, myGraph.centerX - myGraph.tickSize / 2 - 3, yPos);
-        unit += myGraph.unitsPerTick;
+        context.fillText(Math.round(unit * 100) / 100, rGraph.centerX - rGraph.tickSize / 2 - 3, yPos);
+        unit += rGraph.unitsPerTick;
         yPos = Math.round(yPos - yPosIncrement);
     }
 
     // draw bottom tick marks
-    yPos = myGraph.centerY + yPosIncrement;
-    unit = -1 * myGraph.unitsPerTick;
-    while (yPos < myGraph.canvas.height) {
-        context.moveTo(myGraph.centerX - myGraph.tickSize / 2, yPos);
-        context.lineTo(myGraph.centerX + myGraph.tickSize / 2, yPos);
+    yPos = rGraph.centerY + yPosIncrement;
+    unit = -1 * rGraph.unitsPerTick;
+    while (yPos < rGraph.canvas.height) {
+        context.moveTo(rGraph.centerX - rGraph.tickSize / 2, yPos);
+        context.lineTo(rGraph.centerX + rGraph.tickSize / 2, yPos);
         context.stroke();
-        context.fillText(Math.round(unit * 100) / 100, myGraph.centerX - myGraph.tickSize / 2 - 3, yPos);
-        unit -= myGraph.unitsPerTick;
+        context.fillText(Math.round(unit * 100) / 100, rGraph.centerX - rGraph.tickSize / 2 - 3, yPos);
+        unit -= rGraph.unitsPerTick;
         yPos = Math.round(yPos + yPosIncrement);
     }
     context.restore();
@@ -133,32 +133,32 @@ function Graph(config) {
     drawYAxis(this);
 }
 
-function transformContext(myGraph) {
-    const { context } = myGraph;
+function transformContext(rGraph) {
+    const { context } = rGraph;
 
     // move context to center of canvas
-    myGraph.context.translate(myGraph.centerX, myGraph.centerY);
+    rGraph.context.translate(rGraph.centerX, rGraph.centerY);
 
     /*
     * stretch grid to fit the canvas window, and
     * invert the y scale so that that increments
     * as you move upwards
     */
-    context.scale(myGraph.scaleX, -myGraph.scaleY);
+    context.scale(rGraph.scaleX, -rGraph.scaleY);
 }
 
-function drawEquation(equation, color, thickness, myGraph) {
-    const { context } = myGraph;
+function drawEquation(equation, color, thickness, rGraph) {
+    const { context } = rGraph;
     context.save();
     context.save();
-    transformContext(myGraph);
+    transformContext(rGraph);
 
     // context.beginPath();
-    // context.moveTo(myGraph.minX, equation(myGraph.minX));
+    // context.moveTo(rGraph.minX, equation(rGraph.minX));
 
     // let lastX = 0;
 
-    /* for (let x = myGraph.minX + myGraph.iteration; x <= myGraph.maxX; x += myGraph.iteration) {
+    /* for (let x = rGraph.minX + rGraph.iteration; x <= rGraph.maxX; x += rGraph.iteration) {
         if (Number.isNaN(equation(x))) {
             lastX = x;
         }
@@ -169,8 +169,8 @@ function drawEquation(equation, color, thickness, myGraph) {
 
     let isPrevXInSolution = false;
     let isCurrentXInSolution = false;
-    const startX = myGraph.minX + myGraph.iteration;
-    for (let x = startX; x <= myGraph.maxX; x += myGraph.iteration) {
+    const startX = rGraph.minX + rGraph.iteration;
+    for (let x = startX; x <= rGraph.maxX; x += rGraph.iteration) {
         if (Number.isNaN(equation(x))) {
             isCurrentXInSolution = false;
         } else {
@@ -185,7 +185,7 @@ function drawEquation(equation, color, thickness, myGraph) {
                 if (x === startX) {
                     context.moveTo(x, equation(x));
                 } else {
-                    context.moveTo(x - myGraph.iteration, 0);
+                    context.moveTo(x - rGraph.iteration, 0);
                 }
                 context.lineTo(x, equation(x));
             } else {
@@ -196,7 +196,7 @@ function drawEquation(equation, color, thickness, myGraph) {
                 context.strokeStyle = color;
                 context.stroke();
                 context.save();
-                transformContext(myGraph);
+                transformContext(rGraph);
             }
         }
         isPrevXInSolution = isCurrentXInSolution;

@@ -4,7 +4,7 @@ import {
 import { calculateDouble } from './realsDoubling';
 import { calculateAddition, listPoints, twoDecimalRound } from './realsAddition';
 
-function pointMultiplicationSteps(myGraph, points, x, y, scalar) {
+function pointMultiplicationSteps(rGraph, points, x, y, scalar) {
     points.x = twoDecimalRound(points.x);
     points.y = twoDecimalRound(points.y);
 
@@ -95,9 +95,9 @@ function convertToBinary(scalar, arrayBool) {
     return binaryArray;
 }
 
-function pointMultiplication(myGraph, changedScalar = false) {
+function pointMultiplication(rGraph, changedScalar = false) {
     const pointEl = document.getElementsByClassName('workingPoints')[0];
-    const point = graphToCoords(myGraph, getXY(pointEl));
+    const point = graphToCoords(rGraph, getXY(pointEl));
     point.y = -point.y;
 
     if (changedScalar) {
@@ -116,19 +116,19 @@ function pointMultiplication(myGraph, changedScalar = false) {
     let res = point;
 
     while (i >= 0) {
-        res = calculateDouble(myGraph, res); // Double
+        res = calculateDouble(rGraph, res); // Double
         if (bits[i] == 1) {
-            res = calculateAddition(myGraph, [res, point]); // Add
+            res = calculateAddition(rGraph, [res, point]); // Add
             res.y = -res.y;
         }
 
         i -= 1;
     }
 
-    const listedPoints = listPoints(myGraph, [point], res.x, res.y, 'doubling');
-    pointMultiplicationSteps(myGraph, listedPoints, res.x, res.y, scalar);
+    const listedPoints = listPoints(rGraph, [point], res.x, res.y, 'doubling');
+    pointMultiplicationSteps(rGraph, listedPoints, res.x, res.y, scalar);
 
-    addCalculatedPoint(myGraph, res, 3);
+    addCalculatedPoint(rGraph, res, 3);
 
     res.y = -res.y;
     return res;
