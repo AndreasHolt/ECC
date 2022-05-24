@@ -137,17 +137,34 @@ class FiniteField {
     }
 
     drawLineDirect(point1, point2, newPoint, delay) {
-        const alfa = (point2.y - point1.y) / (point2.x - point1.x);
-        this.drawLineDirect_AUX(alfa, 0, this.curve.fieldOrder / 100, point1, newPoint, delay);
+        if (point1.x === point2.x && point1.y !== point2.y) {
+            this.drawLineSvg1(point1.x, point2.x, Math.min(point1.y, point2.y),this.curve.fieldOrder,this.curve.fieldOrder,'black');
+            this.drawLineSvg1(point1.x, this.curve.fieldOrder, this.curve.fieldOrder,this.curve.fieldOrder,this.curve.fieldOrder,'green');
+        } else {
+            let alfa;
+            if (point1.x === point2.x && point1.y === point2.y) {
+                alfa = newPoint.alfa;
+            } else {
+                alfa = (point2.y - point1.y) / (point2.x - point1.x);
+            }
+            let speed = {x:1, y:alfa};
+            speed.length = Math.sqrt(speed.x*speed.x + speed.y*speed.y);
+            if (speed.length > 0) {
+                speed.x = (speed.x / speed.length)*0.01 * this.curve.fieldOrder;
+                speed.y = (speed.y / speed.length)*0.01 * this.curve.fieldOrder;
+                speed.length = Math.sqrt(speed.x*speed.x + speed.y*speed.y);
+                this.drawLineDirect_AUX(alfa, 0, speed, point1, newPoint, delay);
+            }
+        }
     }
 
     drawLineDirect_AUX(alfa, progress, speed, previousPoint, target, delay) {
         if (progress < this.curve.fieldOrder) {
             // console.log("Alfa: " + alfa);
-            const newPoint = { x: Mod(previousPoint.x + speed, this.curve.fieldOrder), y: Mod(previousPoint.y + (alfa * speed), this.curve.fieldOrder) };
-            const xDifference = newPoint.x - (previousPoint.x + (speed));
+            const newPoint = { x: Mod(previousPoint.x + speed.x, this.curve.fieldOrder), y: Mod(previousPoint.y + (speed.y), this.curve.fieldOrder) };
+            const xDifference = newPoint.x - (previousPoint.x + (speed.x));
             const xMod = Math.abs(xDifference) > 0.00002;
-            const yDifference = newPoint.y - (previousPoint.y + (alfa * speed));
+            const yDifference = newPoint.y - (previousPoint.y + speed.y);
             const yMod = Math.abs(yDifference) > 0.00002;
 
             const collideX = !xMod && (previousPoint.x - target.x) / (newPoint.x - target.x) < 0;
@@ -156,23 +173,22 @@ class FiniteField {
             console.log(`${collideX} ${collideY}`);
             // console.log(collide);
 
-            if (collide || ((xMod || yMod) && (Math.abs(previousPoint.x - target.x) < speed || Math.abs(newPoint.x - target.x) < speed) && (Math.abs(previousPoint.y - this.curve.inverseOfPoint(target).y) < speed || Math.abs(newPoint.y - this.curve.inverseOfPoint(target).y) < speed))) {
-                if ((xMod && yMod) === false) {
+            if (collide || ((xMod || yMod) && (Math.abs(previousPoint.x - target.x) < speed.length || Math.abs(newPoint.x - target.x) < speed.length) && (Math.abs(previousPoint.y - this.curve.inverseOfPoint(target).y) < speed.length || Math.abs(newPoint.y - this.curve.inverseOfPoint(target).y) < speed.length))) {
+                if ((xMod || yMod) === false) {
                     this.drawLineSvg1(previousPoint.x, target.x, previousPoint.y, this.curve.inverseOfPoint(target).y, this.curve.fieldOrder, 'black');
-                    console.log('Hello');
                 }
                 this.drawLineSvg1(target.x, target.x, this.curve.inverseOfPoint(target).y, target.y, this.curve.fieldOrder, 'green');
             } else {
                 if (xMod || yMod) {
                     if (xMod && yMod) {
-                        this.drawLineSvg1(previousPoint.x, previousPoint.x + (speed), previousPoint.y, previousPoint.y + (alfa * speed), this.curve.fieldOrder, 'green');
-                        this.drawLineSvg1(newPoint.x - (speed), newPoint.x, newPoint.y - (alfa * speed), this.curve.fieldOrder, 'black');
+                        this.drawLineSvg1(previousPoint.x, previousPoint.x + (speed.x), previousPoint.y, previousPoint.y + (speed.y), this.curve.fieldOrder, 'green');
+                        this.drawLineSvg1(newPoint.x - (speed.x), newPoint.x, newPoint.y - (speed.y), this.curve.fieldOrder, 'black');
                     } else if (xMod) {
-                        this.drawLineSvg1(previousPoint.x, previousPoint.x + (speed), previousPoint.y, newPoint.y, this.curve.fieldOrder, 'black');
-                        this.drawLineSvg1(newPoint.x - (speed), newPoint.x, previousPoint.y, newPoint.y, this.curve.fieldOrder, 'black');
+                        this.drawLineSvg1(previousPoint.x, previousPoint.x + (speed.x), previousPoint.y, newPoint.y, this.curve.fieldOrder, 'black');
+                        this.drawLineSvg1(newPoint.x - (speed.x), newPoint.x, previousPoint.y, newPoint.y, this.curve.fieldOrder, 'black');
                     } else {
-                        this.drawLineSvg1(previousPoint.x, newPoint.x, previousPoint.y, previousPoint.y + (alfa * speed), this.curve.fieldOrder, 'black');
-                        this.drawLineSvg1(previousPoint.x, newPoint.x, newPoint.y - (alfa * speed), newPoint.y, this.curve.fieldOrder, 'black');
+                        this.drawLineSvg1(previousPoint.x, newPoint.x, previousPoint.y, previousPoint.y + (speed.y), this.curve.fieldOrder, 'black');
+                        this.drawLineSvg1(previousPoint.x, newPoint.x, newPoint.y - (speed.y), newPoint.y, this.curve.fieldOrder, 'black');
                     }
                 } else {
                     this.drawLineSvg1(previousPoint.x, newPoint.x, previousPoint.y, newPoint.y, this.curve.fieldOrder, 'black');
