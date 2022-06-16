@@ -1,7 +1,7 @@
 import {
     multiplicativeXOR, additiveXOR,
 } from './gf2';
-import { Mod } from './bits';
+import { Mod, numberOfBits2 } from './bits';
 import {
     listPoints, Curve, calcDiscriminant, calcDiscriminantGF2,
 } from './curves';
@@ -220,33 +220,38 @@ function pointAdditionFinite(canvas, curve, index1, index2) {
         console.log(e);
     }
 }
-
-document.getElementById('additionForm').addEventListener('submit', (event) => {
-    // console.log('HelloAddition');
-
+function additionFormSubmit(event) {
+    console.log("event = ", event);
     event.preventDefault();
     const index1 = Number(event.target.index1.value);
     const index2 = Number(event.target.index2.value);
     pointAdditionFinite(finiteField.canvas, finiteField.curve, index1, index2);
-});
+}
 
-function addScalarForm(canvas, curve) {
-    document.getElementById('scalarForm').addEventListener('submit', (event) => {
-        // console.log('HelloScalar');
-        deleteDrawing(0);
-        event.preventDefault();
-        const index = Number(event.target.index1.value);
-        const point = curve.points[index];
-        const scale = Number(event.target.index2.value);
-        drawPoint(canvas, point, curve.fieldOrder, 5, 'blue');
+function multiplicationFormSubmit(event) {
+    event.preventDefault();
+    let canvas = finiteField.canvas;
+    let curve = finiteField.curve;
+    deleteDrawing(0);
+    const index = Number(event.target.index1.value);
+    const point = curve.points[index];
+    const scale = Number(event.target.index2.value);
+    drawPoint(canvas, point, curve.fieldOrder, 5, 'blue');
+    if (point) {
+        const scaledPoint = curve.calcPointMultiplication(scale, point);
+        drawPoint(canvas, scaledPoint, curve.fieldOrder, 5, 'red');
+        //finiteField.drawLineDirectGood(canvas, curve, point, scaledPoint, { prime: curve.fieldOrder == curve.mod });
+        drawPointMultiplication(canvas, curve, index, scale);
+    }
+}
+function addAdditionForm() {
+    document.getElementById('scalarForm').removeEventListener('submit', multiplicationFormSubmit);
+    document.getElementById('additionForm').addEventListener('submit', additionFormSubmit);
+}
 
-        if (point) {
-            const scaledPoint = curve.calcPointMultiplication(scale, point);
-            drawPoint(canvas, scaledPoint, curve.fieldOrder, 5, 'red');
-            finiteField.drawLineDirectGood(canvas, curve, point, scaledPoint, { prime: curve.fieldOrder == curve.mod });
-            drawPointMultiplication(canvas, curve, index, scale);
-        }
-    });
+function addScalarForm() {
+    document.getElementById('scalarForm').removeEventListener('submit', additionFormSubmit)
+    document.getElementById('scalarForm').addEventListener('submit', multiplicationFormSubmit);
 }
 
 function drawPoints(canvas, curve, arrayPoints, fieldOrder) {
@@ -401,7 +406,7 @@ function drawPointElement(canvas, curve, point, size, pointSize, color, temp = f
     circle.addEventListener('mouseover', () => {
         const pointDetailArray = pointDescription(curve, point);
 
-        let orderOfSubGroupString = `(${point.x}, ${point.y}), `;
+        let orderOfSubGroupString = `(${point.x}, ${point.y}) → `;
         for (let i = 0; i < pointDetailArray.orderOfSubGroup; i += 1) {
             orderOfSubGroupString += `(${pointDetailArray.subGroup[i].x}, ${pointDetailArray.subGroup[i].y}) → `;
         }
@@ -625,6 +630,7 @@ function init() {
         label2.innerHTML = 'Index of 2nd point:';
         form.removeAttribute('scalarForm');
         form.setAttribute('id', 'additionForm');
+        addAdditionForm();
         e.target.disabled = true;
     });
 
@@ -645,7 +651,7 @@ function init() {
         label2.innerHTML = 'Scalar to multiply';
         form.removeAttribute('additionForm');
         form.setAttribute('id', 'scalarForm');
-        addScalarForm(finiteField.canvas, finiteField.curve);
+        addScalarForm();
         e.target.disabled = true;
     });
 }
@@ -716,13 +722,24 @@ function pointAdditionSteps(curve, points) {
     checkExplanationDisplay();
 }
 
-function drawPointMultiplication(canvas, curve, index, scalar) {
+function isPowerOf2(i) {
+    while(i>=1) {
+        i = i/2
+    }
+    if (i === 1) {
+        return true
+    } else {return false}
+}
+async function drawPointMultiplication(canvas, curve, index, scalar) {
     let newPoint;
+    let bitValue;
+    let startingPoint = curve.points[index];
+    let currentPoint = startingPoint;
 
     clearLines();
 
     drawPointElement(canvas, curve, curve.points[index], curve.fieldOrder, 5, 'red', true);
-    for (let i = 2; i < scalar; i += 1) {
+    for (let i = 2; i <= scalar; i += 1) {
         newPoint = curve.calcPointMultiplication(i, curve.points[index]);
         // console.log(newPoint);
         const yellowPoint = drawPointElement(canvas, curve, newPoint, curve.fieldOrder, 5, 'yellow', true);
@@ -730,8 +747,41 @@ function drawPointMultiplication(canvas, curve, index, scalar) {
         yellowPoint.setAttribute('id', 'calculatedPoint');
     }
 
+    for (let i = numberOfBits2(scalar)-2; i >= 0; i--) {
+        bitValue = (scalar >> i) & 1;
+        newPoint = curve.calcPointMultiplication(2,currentPoint);
+        await finiteField.drawLineDirect(currentPoint, currentPoint, newPoint, 1);
+
+        currentPoint = newPoint;
+        await new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, 2000)
+        });
+        if ((scalar & 1 === 1)) {
+            clearLines();
+        }
+        if ((i === 0) || (scalar & 1 === 1)) {
+        } else {
+            clearLines();
+        }
+
+        if (bitValue === 1) {
+            newPoint = curve.calcPointAddition(currentPoint, startingPoint);
+            await finiteField.drawLineDirect(startingPoint, currentPoint, newPoint, 1);
+
+            currentPoint = newPoint;
+
+            await new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, 2000)
+            });
+            if(i > 0) {clearLines();}
+        }
+    }
+
     newPoint = curve.calcPointMultiplication(scalar, curve.points[index]);
-    finiteField.drawLineDirectGood(canvas, curve, curve.points[index], newPoint, { prime: curve.fieldOrder == curve.mod });
 }
 
 // function curveParameters() {

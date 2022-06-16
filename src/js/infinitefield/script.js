@@ -69,7 +69,7 @@ document.getElementById('negateP').addEventListener('click', () => {
     const pointPy = document.getElementById('Py');
 
     for (const x of pointsOnGraph) {
-        if ((pointPx.value < (x.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX + 0.0001) && (pointPx.value > (x.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX - 0.0001)) {
+        if ((pointPx.value < (x.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX + 0.01) && (pointPx.value > (x.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX - 0.01)) {
             pointPy.value = `${-twoDecimalRound(pointPy.value)}`;
 
             y = (x.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY;
@@ -93,7 +93,7 @@ document.getElementById('negateQ').addEventListener('click', () => {
     const pointQy = document.getElementById('Qy');
 
     for (const x of pointsOnGraph) {
-        if ((pointQx.value < (x.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX + 0.0001) && (pointQx.value > (x.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX - 0.0001)) {
+        if ((pointQx.value < (x.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX + 0.01) && (pointQx.value > (x.getAttribute('cx') - myGraph.centerX) / myGraph.scaleX - 0.01)) {
             pointQy.value = `${-twoDecimalRound(pointQy.value)}`;
 
             y = (x.getAttribute('cy') - myGraph.centerY) / myGraph.scaleY;
