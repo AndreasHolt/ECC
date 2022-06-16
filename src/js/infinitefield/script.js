@@ -362,11 +362,7 @@ function init() {
             // CODE HERE
             document.getElementById('Px').value = Math.floor(Math.random() * 3);
             if(isOnPage(document.getElementsByClassName('workingPoints')[0])) {
-                for(let i = 0; i < document.getElementsByClassName('workingPoints').length; i++) {
-                    document.getElementsByClassName('workingPoints')[i].remove()
-                }
-
-                document.getElementById('pointText').replaceChildren()
+                deletePoints();
             }
             addPointByInput('Px', myGraph);
             
@@ -383,7 +379,6 @@ function init() {
             function testInfliction(myGraph, x) {
                 const initPoint = { x, y: -myGraph.equationP(x) };
                 const P = findInfliction(initPoint, myGraph);
-                console.log('This is P', P);
                 document.getElementById('Px').value = P.x;
                 addPointByInput('Px', myGraph);
                 addCalculatedPoint(myGraph, P, 2);
