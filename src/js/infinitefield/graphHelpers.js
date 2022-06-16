@@ -139,59 +139,49 @@ function drawLine(rGraph, operator, color, i, x, y, svg, pointOperation) {
     svg.appendChild(newLine);
 }
 
-function addTextToPoints(rGraph, pointC, i) {
-    let textNode;
-    const textEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    const point1 = coordsToGraph(rGraph, pointC.x, pointC.y);
-    const point2 = coordsToGraph(rGraph, pointC.x, -pointC.y);
+function addTextToPoints(rGraph) {
+    // Remove all old labels
+    const textlabels = document.querySelectorAll('.textLabel')
 
-    if (i === 0) {
-        circle.setAttributeNS(null, 'cy', point1.y);
+    textlabels.forEach(el => {
+        el.remove();
+    });
+
+    const pointsOnGraph = document.querySelectorAll('.workingPoints, .calculatedPoints');
+    
+    for (const point of pointsOnGraph) {
+        const text = point.getAttribute('idPoint');
+        if (!text)
+            return;
+
+        let textNode;
+        const textEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+
+        circle.setAttributeNS(null, 'cy', point.getAttribute('cy'));
         circle.classList.add('pointMinusR');
 
-        textEl.setAttribute('y', point1.y);
-        textNode = document.createTextNode('-R');
+        textEl.setAttribute('y', point.getAttribute('cy'));
+        textNode = document.createTextNode(text);
         textEl.classList.add('pointMinusR');
-    } else if (i === 1) {
-        circle.setAttributeNS(null, 'cy', point2.y);
-        circle.classList.add('pointR');
 
-        textEl.setAttribute('y', point2.y);
-        textNode = document.createTextNode('R');
-        textEl.classList.add('pointR');
-    } else if (i === 2) {
-        circle.setAttributeNS(null, 'cy', point2.y);
-        circle.classList.add('pointP');
+        circle.setAttributeNS(null, 'r', 12);
+        circle.setAttributeNS(null, 'style', 'fill: lightgray;');
+        circle.setAttributeNS(null, 'cx', point.getAttribute('cx'));
+        circle.classList.add('textLabel');
 
-        textEl.setAttribute('y', point2.y);
-        textNode = document.createTextNode('P');
-        textEl.classList.add('pointP');
-    } else {
-        circle.setAttributeNS(null, 'cy', point1.y);
-        circle.classList.add('pointQ');
+        textEl.setAttribute('x', point.getAttribute('cx'));
+        textEl.setAttribute('fill', 'white');
+        textEl.setAttribute('dominant-baseline', 'middle');
+        textEl.setAttribute('text-anchor', 'middle');
+        textEl.classList.add('textLabel');
+        textEl.classList.add('text-xl');
 
-        textEl.setAttribute('y', point1.y);
-        textNode = document.createTextNode('Q');
-        textEl.classList.add('pointQ');
+        textEl.appendChild(textNode);
+
+        document.getElementById('pointText').appendChild(circle);
+        document.getElementById('pointText').appendChild(textEl);
     }
-
-    circle.setAttributeNS(null, 'r', 12);
-    circle.setAttributeNS(null, 'style', 'fill: lightgray;');
-    circle.setAttributeNS(null, 'cx', point1.x);
-    circle.classList.add('textLabel');
-
-    textEl.setAttribute('x', point1.x);
-    textEl.setAttribute('fill', 'white');
-    textEl.setAttribute('dominant-baseline', 'middle');
-    textEl.setAttribute('text-anchor', 'middle');
-    textEl.classList.add('textLabel');
-    textEl.classList.add('text-xl');
-
-    textEl.appendChild(textNode);
-
-    document.getElementById('pointText').appendChild(circle);
-    document.getElementById('pointText').appendChild(textEl);
 }
 
 function addCalculatedPoint(rGraph, point, pointOperation) {
@@ -221,6 +211,7 @@ function addCalculatedPoint(rGraph, point, pointOperation) {
         circle.setAttribute('cx', pointG.x);
         circle.setAttribute('cy', pointG.y);
         circle.classList.add('calculatedPoints');
+        circle.setAttribute('idPoint', i === 0 ? "R" : "-R");
         circle.setAttribute('r', 5);
 
         const svg = document.querySelector('svg');
@@ -232,11 +223,7 @@ function addCalculatedPoint(rGraph, point, pointOperation) {
             drawLine(rGraph, '-', 'orange', i, point.x, point.y, svg, pointOperation);
         }
 
-        if (pointOperation === 3) {
-            addTextToPoints(rGraph, point, i + 1);
-        } else {
-            addTextToPoints(rGraph, point, i);
-        }
+        addTextToPoints(rGraph);
     }
 
     document.getElementById('Rx').value = `${twoDecimalRound(point.x)}`;
@@ -254,21 +241,19 @@ function addPointOnClick(rGraph) {
     circle.setAttribute('cy', point.getAttribute('cy'));
     circle.classList.add('workingPoints');
     circle.setAttribute('r', 5);
-    circle.setAttribute('idPoint', (document.getElementsByClassName('workingPoints').length === 1) ? 'P' : 'Q');
+    circle.setAttribute('idPoint', (document.getElementsByClassName('workingPoints').length === 1) ? 'Q' : 'P');
     const svg = document.querySelector('svg');
     svg.appendChild(circle);
 
     if (document.getElementsByClassName('workingPoints').length === 1) {
         document.getElementById('Px').value = `${twoDecimalRound((point.getAttribute('cx') - rGraph.centerX) / rGraph.scaleX)}`;
         document.getElementById('Py').value = `${twoDecimalRound(-(point.getAttribute('cy') - rGraph.centerY) / rGraph.scaleY)}`;
-
-        addTextToPoints(rGraph, { x: (point.getAttribute('cx') - rGraph.centerX) / rGraph.scaleX, y: -(point.getAttribute('cy') - rGraph.centerY) / rGraph.scaleY }, 2);
     } else if (document.getElementsByClassName('workingPoints').length === 2) {
         document.getElementById('Qx').value = `${twoDecimalRound((point.getAttribute('cx') - rGraph.centerX) / rGraph.scaleX)}`;
         document.getElementById('Qy').value = `${twoDecimalRound(-(point.getAttribute('cy') - rGraph.centerY) / rGraph.scaleY)}`;
-
-        addTextToPoints(rGraph, { x: (point.getAttribute('cx') - rGraph.centerX) / rGraph.scaleX, y: (point.getAttribute('cy') - rGraph.centerY) / rGraph.scaleY }, 3);
     }
+
+    addTextToPoints(rGraph);
 }
 
 function addPointByInput(idX, rGraph) {
@@ -288,11 +273,7 @@ function addPointByInput(idX, rGraph) {
     const svg = document.querySelector('svg');
     svg.appendChild(circle);
 
-    if (idX === 'Px') {
-        addTextToPoints(rGraph, { x: (circle.getAttribute('cx') - rGraph.centerX) / rGraph.scaleX, y: -(circle.getAttribute('cy') - rGraph.centerY) / rGraph.scaleY }, 2);
-    } else if (idX === 'Qx') {
-        addTextToPoints(rGraph, { x: (circle.getAttribute('cx') - rGraph.centerX) / rGraph.scaleX, y: (circle.getAttribute('cy') - rGraph.centerY) / rGraph.scaleY }, 3);
-    }
+    addTextToPoints(rGraph);
 }
 
 function addPointToEdgeCase(idX, sign, rGraph) {
@@ -312,11 +293,7 @@ function addPointToEdgeCase(idX, sign, rGraph) {
     const svg = document.querySelector('svg');
     svg.appendChild(circle);
 
-    if (idX === 'Px') {
-        addTextToPoints(rGraph, { x: (circle.getAttribute('cx') - rGraph.centerX) / rGraph.scaleX, y: -(circle.getAttribute('cy') - rGraph.centerY) / rGraph.scaleY }, 2);
-    } else if (idX === 'Qx') {
-        addTextToPoints(rGraph, { x: (circle.getAttribute('cx') - rGraph.centerX) / rGraph.scaleX, y: (circle.getAttribute('cy') - rGraph.centerY) / rGraph.scaleY }, 3);
-    }
+    addTextToPoints(rGraph);
 }
 
 function removeBinaryParagraphs() {
