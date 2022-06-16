@@ -360,13 +360,25 @@ function init() {
             setTimeout(() => { redrawGraph(1, true); }, 1);
         } else if (sel === 'Point addition with the same point') {
             // CODE HERE
+            document.getElementById('Px').value = Math.floor(Math.random() * 3);
+            if(isOnPage(document.getElementsByClassName('workingPoints')[0])) {
+                deletePoints();
+            }
+            addPointByInput('Px', myGraph);
+            
+            let point = {};
+            point.x = document.getElementsByClassName('workingPoints')[0].getAttribute('cx');
+            point.y = document.getElementsByClassName('workingPoints')[0].getAttribute('cy');
+            let convertedPoint = graphToCoords(myGraph, point)
+            let P = calculateDouble(myGraph, convertedPoint)
+
+            addCalculatedPoint(myGraph, P, 2);
 
         } else if (sel === 'Point at infliction') {
             deletePoints();
             function testInfliction(myGraph, x) {
                 const initPoint = { x, y: -myGraph.equationP(x) };
                 const P = findInfliction(initPoint, myGraph);
-                console.log(P);
                 document.getElementById('Px').value = P.x;
                 addPointByInput('Px', myGraph);
                 addCalculatedPoint(myGraph, P, 2);

@@ -181,7 +181,7 @@ function deleteDrawing(bool) {
 
 function pointAdditionFinite(canvas, curve, index1, index2) {
     deleteDrawing(0);
-    toggleTable(curve, 0);
+    toggleTable(finiteField.curve, 0);
 
     try {
         const point1 = curve.points[index1];
@@ -606,6 +606,8 @@ function init() {
 
     document.getElementById('pointAddition').addEventListener('click', (e) => {
         deleteDrawing(1);
+        document.getElementById('explanationExpand').style.display = 'flex';
+
 
         Array.from(operations).forEach((buttons) => {
             if (buttons.disabled === true) {
@@ -628,6 +630,8 @@ function init() {
 
     document.getElementById('pointMultiplication').addEventListener('click', (e) => {
         deleteDrawing(1);
+        document.getElementById('explanationExpand').style.display = 'none';
+        document.getElementById('explanationContainer').style.display = 'none'
 
         Array.from(operations).forEach((buttons) => {
             if (buttons.disabled === true) {
@@ -706,7 +710,7 @@ function pointAdditionSteps(curve, points) {
 
     document.getElementById('multiplicationTableButton').addEventListener('click', () => {
         // TODO remove event listener for the other if active?
-        toggleTable(curve, 1);
+        toggleTable(finiteField.curve);
     });
 
     checkExplanationDisplay();
