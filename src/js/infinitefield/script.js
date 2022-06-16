@@ -82,6 +82,8 @@ document.getElementById('negateP').addEventListener('click', () => {
             pointAddition(myGraph);
         } else if (document.getElementById('pointDoubling').disabled == true && pointsOnGraph.length == 1) {
             pointDouble(myGraph);
+        } else if (document.getElementById('pointMultiplication').disabled == true && pointsOnGraph.length == 1) {
+            pointMultiplication(myGraph)
         }
     }
 });
