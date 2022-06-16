@@ -136,7 +136,8 @@ class FiniteField {
         }
     }
 
-    drawLineDirect(point1, point2, newPoint, delay) {
+    async drawLineDirect(point1, point2, newPoint, delay) {
+        
         if (point1.x === point2.x && point1.y !== point2.y) {
             this.drawLineSvg1(point1.x, point2.x, Math.min(point1.y, point2.y),this.curve.fieldOrder,this.curve.fieldOrder,'black');
             this.drawLineSvg1(point1.x, this.curve.fieldOrder, this.curve.fieldOrder,this.curve.fieldOrder,this.curve.fieldOrder,'green');
@@ -153,12 +154,14 @@ class FiniteField {
                 speed.x = (speed.x / speed.length)*0.01 * this.curve.fieldOrder;
                 speed.y = (speed.y / speed.length)*0.01 * this.curve.fieldOrder;
                 speed.length = Math.sqrt(speed.x*speed.x + speed.y*speed.y);
-                this.drawLineDirect_AUX(alfa, 0, speed, point1, newPoint, delay);
+                let promise = new Promise((resolve, reject) => {
+                    this.drawLineDirect_AUX(alfa, 0, speed, point1, newPoint, delay, resolve);
+                })
+                await promise;
             }
         }
     }
-
-    drawLineDirect_AUX(alfa, progress, speed, previousPoint, target, delay) {
+    drawLineDirect_AUX(alfa, progress, speed, previousPoint, target, delay, resolve) {
         if (progress < this.curve.fieldOrder) {
             // console.log("Alfa: " + alfa);
             const newPoint = { x: Mod(previousPoint.x + speed.x, this.curve.fieldOrder), y: Mod(previousPoint.y + (speed.y), this.curve.fieldOrder) };
@@ -178,6 +181,7 @@ class FiniteField {
                     this.drawLineSvg1(previousPoint.x, target.x, previousPoint.y, this.curve.inverseOfPoint(target).y, this.curve.fieldOrder, 'black');
                 }
                 this.drawLineSvg1(target.x, target.x, this.curve.inverseOfPoint(target).y, target.y, this.curve.fieldOrder, 'green');
+                resolve();
             } else {
                 if (xMod || yMod) {
                     if (xMod && yMod) {
@@ -193,9 +197,9 @@ class FiniteField {
                 } else {
                     this.drawLineSvg1(previousPoint.x, newPoint.x, previousPoint.y, newPoint.y, this.curve.fieldOrder, 'black');
                 }
-                setTimeout(() => { this.drawLineDirect_AUX(alfa, progress, speed, newPoint, target, delay); }, delay);
+                setTimeout(() => { this.drawLineDirect_AUX(alfa, progress, speed, newPoint, target, delay, resolve); }, delay);
             }
-        }
+        } 
     }
 
     clearVisual() {
