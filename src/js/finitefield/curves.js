@@ -13,6 +13,8 @@ class Curve {
         this.points = [];
         this.fieldOrder = fieldOrder;
         this.mod = mod;
+        this.isLarge = (mod >=66000) ? true : false;
+        this.G = this.findG();
         if (this.fieldOrder === this.mod) {
             this.D = calcDiscriminant(this.a, this.b, this.c, this.d);
             this.calcPointAddition = calcPointAdditionPrime;
@@ -22,6 +24,9 @@ class Curve {
             this.calcPointAddition = calcPointAdditionGF2;
             this.calcPoints = createPointsGF2;
         }
+    }
+    findG () {
+        return new Point(1/*?*/,1/*?*/);
     }
 
     createPoints() {
@@ -38,7 +43,11 @@ class Curve {
                 }
             }
         } else {
-            this.calcPoints();
+            if (this.isLarge === false) {
+                this.calcPoints();
+            } else {
+                this.createPointsLarge(256);
+            }
             localStorage.setItem(curveID, JSON.stringify(this.points));
         }
         if (this.points[10] instanceof Point) {
@@ -46,39 +55,11 @@ class Curve {
         } else {
             console.log('It is not point');
         }
-        /*
-        const fileUrl = new URL(`./public/curves/${curveID}.json`, import.meta.url).href
-        fs.readFile(fileUrl, 'utf8', (err, data) => {
-            if (err) {
-              console.error(err);
-              return;
-            }
-            console.log(data);
-        }); */
-
-        /* fetch(fileUrl)
-        .then(response => {
-            //if (response.status === "404")
-            return response.text();
-        }) .then((data) => {
-            console.log(data);
-        }).catch((reason) => {
-            console.log(reason);
-            if (reason === "404") {//????
-                if (this.fieldOrder === this.mod) {
-                    createPointsPrime();
-                } else {
-                    createPointsGF2();
-                }
-
-            }
-        }); */
-
-        /* if (this.fieldOrder === this.mod) {
-            createPointsPrime();
-        } else {
-            createPointsGF2();
-        } */
+    }
+    createPointsLarge(numPoints) {
+        for (let i = 0;  i < numPoints; i++) {
+            this.points.push(this.calcPointMultiplication(i, this.G));
+        }
     }
 
     calcPointMultiplication(k, P) {
@@ -307,6 +288,7 @@ function createPointsPrime() {
     }
     this.points.push(new Point(Infinity, Infinity, 0, true));
 }
+
 
 function listPoints(point1, point2, point3) {
     const pointsListed = document.getElementById('pointsListed');
