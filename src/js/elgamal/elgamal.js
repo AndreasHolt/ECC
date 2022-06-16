@@ -5,9 +5,7 @@ import { encrypt } from './cryptography';
 const myCurve = new Curve(2, 1, 0, 0, 317, 317);
 myCurve.createPoints();
 const newPoint = new Point(144, 17);
-console.log('Hej');
 console.log(myCurve.calcPointMultiplication(2, newPoint).toString());
-console.log('Hej');
 
 const curve = new Curve(118, 0, 0, 0, 257, 257); // 256 points??
 console.log('Starting');
@@ -110,6 +108,9 @@ document.getElementById('inputMessageForm').addEventListener('submit', (Event) =
     for (const user of users) {
         const { label } = user;
         document.getElementById(`sendMessage${label}`).disabled = false;
+        if (user.next) {
+            user.next.disabled = false;
+        }
         /* if (document.getElementById(`nextButton${label}`)) {
             document.getElementById(`nextButton${label}`).remove();
         }
