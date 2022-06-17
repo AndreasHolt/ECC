@@ -245,7 +245,7 @@ function multiplicationFormSubmit(event) {
     }
 }
 function addAdditionForm() {
-    document.getElementById('scalarForm').removeEventListener('submit', multiplicationFormSubmit);
+    document.getElementById('additionForm').removeEventListener('submit', multiplicationFormSubmit);
     document.getElementById('additionForm').addEventListener('submit', additionFormSubmit);
 }
 
@@ -722,14 +722,7 @@ function pointAdditionSteps(curve, points) {
     checkExplanationDisplay();
 }
 
-function isPowerOf2(i) {
-    while(i>=1) {
-        i = i/2
-    }
-    if (i === 1) {
-        return true
-    } else {return false}
-}
+
 async function drawPointMultiplication(canvas, curve, index, scalar) {
     let newPoint;
     let bitValue;
