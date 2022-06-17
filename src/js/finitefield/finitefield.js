@@ -9,6 +9,7 @@ import { addField, inversePrime, multiplyField } from './gfp';
 import { checkExplanationDisplay, isOnPage } from '../infinitefield/graphHelpers';
 import FiniteField from './finiteFieldVisual';
 
+
 const finiteField = new FiniteField();
 finiteField.addCanvas(document.getElementById('curveGraph'));
 finiteField.addHighlightSVG(document.getElementById('highlightSVG'));
@@ -597,6 +598,7 @@ function calculateElements(size, mod, combinationFunction) {
 // }
 
 function init() {
+    addAdditionForm()
     const operationHeader = document.getElementById('operationHeader');
     const label1 = document.getElementById('labelForm1');
     const label2 = document.getElementById('labelForm2');
