@@ -361,7 +361,6 @@ function init() {
             }
             setTimeout(() => { redrawGraph(1, true); }, 1);
         } else if (sel === 'Point addition with the same point') {
-            // CODE HERE
             document.getElementById('Px').value = Math.floor(Math.random() * 3);
             if(isOnPage(document.getElementsByClassName('workingPoints')[0])) {
                 deletePoints();
