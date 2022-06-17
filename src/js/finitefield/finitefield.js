@@ -162,6 +162,14 @@ function deleteDrawing(bool) {
     if (isOnPage(document.getElementById('calculatedPoint'))) {
         document.getElementById('calculatedPoint').remove();
     }
+    
+    if (isOnPage(document.getElementsByClassName('calculatedPoints')[0])) {
+        for(let i = 0; i < document.getElementsByClassName('calculatedPoints').length; i++) {
+            document.getElementsByClassName('calculatedPoints')[i].remove()
+        }
+     }
+
+    
 
     newCalculatedPoints.forEach((point) => {
         point.remove();
@@ -739,7 +747,8 @@ async function drawPointMultiplication(canvas, curve, index, scalar) {
         // console.log(newPoint);
         let yellowPoint = drawPointElement(canvas, curve, newPoint, curve.fieldOrder, 5, 'yellow', true);
         yellowPoint.style.pointerEvents = 'none';
-        yellowPoint.setAttribute('id', 'calculatedPoint');
+        //yellowPoint.setAttribute('id', 'calculatedPoint');
+        yellowPoint.classList.add('calculatedPoints')
     }
 
     for (let i = numberOfBits2(scalar)-2; i >= 0; i--) {
@@ -752,6 +761,7 @@ async function drawPointMultiplication(canvas, curve, index, scalar) {
             setTimeout(() => {
 
                 const greenPoint = drawPointElement(canvas, curve, newPoint, curve.fieldOrder, 5, 'green', true);
+                greenPoint.classList.add('calculatedPoints')
 
                 resolve();
             }, 2000)
