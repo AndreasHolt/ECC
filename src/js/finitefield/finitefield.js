@@ -745,7 +745,7 @@ async function drawPointMultiplication(canvas, curve, index, scalar) {
     for (let i = numberOfBits2(scalar)-2; i >= 0; i--) {
         bitValue = (scalar >> i) & 1;
         newPoint = curve.calcPointMultiplication(2,currentPoint);
-        await finiteField.drawLineDirect(currentPoint, currentPoint, newPoint, 1);
+        await finiteField.drawLineDirect(currentPoint, currentPoint, newPoint, 5);
 
         currentPoint = newPoint;
         await new Promise((resolve) => {
@@ -766,7 +766,7 @@ async function drawPointMultiplication(canvas, curve, index, scalar) {
 
         if (bitValue === 1) {
             newPoint = curve.calcPointAddition(currentPoint, startingPoint);
-            await finiteField.drawLineDirect(startingPoint, currentPoint, newPoint, 1);
+            await finiteField.drawLineDirect(startingPoint, currentPoint, newPoint, 5);
 
             currentPoint = newPoint;
 
