@@ -197,7 +197,11 @@ class FiniteField {
                 } else {
                     this.drawLineSvg1(previousPoint.x, newPoint.x, previousPoint.y, newPoint.y, this.curve.fieldOrder, 'black');
                 }
-                setTimeout(() => { this.drawLineDirect_AUX(alfa, progress, speed, newPoint, target, delay, resolve); }, delay);
+                if (delay > 0) {
+                    setTimeout(() => { this.drawLineDirect_AUX(alfa, progress, speed, newPoint, target, delay, resolve); }, delay);
+                } else if (delay === 0) {
+                    this.drawLineDirect_AUX(alfa, progress, speed, newPoint, target, delay, resolve);
+                }
             }
         } 
     }
