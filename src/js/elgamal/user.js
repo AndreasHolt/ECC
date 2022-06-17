@@ -152,8 +152,9 @@ class User {
             <p id="titleBox${this.label}"></p>
             <div class="flex flex-col gap-1 border-2 border-blue-500 rounded-md"
             id="encryptionBox">
-                <div class="basis-1/8 flex flex-row">
-                    <p class="text-center">Encrypted point = AKG + Plain point ///// Decrypted point = Encrypted point - AKG</p>
+                <div class="basis-1/8 flex flex-row justify-evenly">
+                    <p class=" text-gray-800"><a class="font-bold underline decoration-wavy decoration-red-500">Encrypted point</a> = <a class="font-bold underline decoration-green-500">AKG</a> + <a class="font-bold underline decoration-blue-500">Plain point</a>. </p>
+                    <p class=" text-gray-800"><a class="font-bold underline decoration-wavy decoration-yellow-500">Decrypted point</a> = <a class="font-bold underline decoration-red-500">Encrypted point</a> - <a class="font-bold underline decoration-green-500">AKG.</a></p>
                 </div>
                 <div class="grow basis-6/8 grid grid-cols-2 p-0.5">
                     <div class="col-span-1 flex flex-col border-2 border-right-blue-500 rounded-md p-0.5">
