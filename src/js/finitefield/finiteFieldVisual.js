@@ -153,7 +153,7 @@ class FiniteField {
             if (speed.length > 0) {
                 speed.x = (speed.x / speed.length)*0.01 * this.curve.fieldOrder;
                 speed.y = (speed.y / speed.length)*0.01 * this.curve.fieldOrder;
-                speed.length = Math.sqrt(speed.x*speed.x + speed.y*speed.y);
+                speed.length = Math.sqrt(speed.x*speed.x + speed.y*speed.y)*2;
                 let promise = new Promise((resolve, reject) => {
                     this.drawLineDirect_AUX(alfa, 0, speed, point1, newPoint, delay, resolve);
                 })
@@ -171,7 +171,13 @@ class FiniteField {
             const yMod = Math.abs(yDifference) > 0.00002;
 
             const collideX = !xMod && (previousPoint.x - target.x) / (newPoint.x - target.x) < 0;
-            const collideY = !yMod && (previousPoint.y - this.curve.inverseOfPoint(target).y) / (newPoint.y - this.curve.inverseOfPoint(target).y) < 0;
+            let collideY;
+            if (speed.y !== 0) {
+                collideY = !yMod && (previousPoint.y - this.curve.inverseOfPoint(target).y) / (newPoint.y - this.curve.inverseOfPoint(target).y) < 0;
+            } else {
+                collideY = true;
+            }
+
             const collide = collideX && collideY;
             console.log(`${collideX} ${collideY}`);
             // console.log(collide);
