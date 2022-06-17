@@ -39,7 +39,6 @@ document.getElementById('explanationExpand').addEventListener('click', () => {
 
     if (document.getElementById('pointAddition').disabled) {
         document.getElementById('multiplicationTableButton').addEventListener('click', () => {
-            // TODO remove event listener for the other if active?
             toggleTable(finiteField.curve, 1);
         });
     }
@@ -214,7 +213,6 @@ function pointAdditionFinite(canvas, curve, index1, index2) {
         if (index1 !== index2) {
             finiteField.drawLineDirect(point1, point2, newPoint, 5);
         }
-        // finiteField.drawLineDirectGood(point1, newPoint, {"prime": curve.fieldOrder == curve.mod ? true : false});
     } catch (e) {
         console.log('Error! find selv ud af det!');
         console.log(e);
@@ -240,7 +238,6 @@ function multiplicationFormSubmit(event) {
     if (point) {
         const scaledPoint = curve.calcPointMultiplication(scale, point);
         drawPoint(canvas, scaledPoint, curve.fieldOrder, 5, 'red');
-        //finiteField.drawLineDirectGood(canvas, curve, point, scaledPoint, { prime: curve.fieldOrder == curve.mod });
         drawPointMultiplication(canvas, curve, index, scale);
     }
 }
@@ -264,7 +261,6 @@ function drawPoints(canvas, curve, arrayPoints, fieldOrder) {
 }
 
 function drawPoint(canvas, point, size, pointSize, color) {
-    // console.log("Hello1");
     const ctx = canvas.getContext('2d');
     ctx.beginPath();
     ctx.arc(point.x * canvas.width / size, canvas.height - (point.y * canvas.height / size), pointSize, 0, 2 * Math.PI);
@@ -345,7 +341,7 @@ function drawPointElement(canvas, curve, point, size, pointSize, color, temp = f
     const svg = document.getElementById('highlightSVG');
     const svgns = 'http://www.w3.org/2000/svg';
     const circle = document.createElementNS(svgns, 'circle');
-    circle.style.pointerEvents = 'none'; // TODO: Maybe remove later
+    circle.style.pointerEvents = 'none';
 
     if (point.x === Infinity) {
         circle.setAttributeNS(null, 'cx', canvas.width);
@@ -482,7 +478,6 @@ function createTableHTML(curve, tableArray, tableSize, htmlID, outputID, colorBo
     let delta;
 
     (colorBool === 'color') ? (delta = Number(document.getElementsByClassName('steps')[0].getAttribute('id'))) : (console.log('test2'));
-    // console.log('delta:', delta);
 
     const primeInverse = inversePrime(delta, curve.mod);
 
@@ -742,7 +737,7 @@ async function drawPointMultiplication(canvas, curve, index, scalar) {
     for (let i = 2; i <= scalar; i += 1) {
         newPoint = curve.calcPointMultiplication(i, curve.points[index]);
         // console.log(newPoint);
-        const yellowPoint = drawPointElement(canvas, curve, newPoint, curve.fieldOrder, 5, 'yellow', true);
+        let yellowPoint = drawPointElement(canvas, curve, newPoint, curve.fieldOrder, 5, 'yellow', true);
         yellowPoint.style.pointerEvents = 'none';
         yellowPoint.setAttribute('id', 'calculatedPoint');
     }
@@ -755,6 +750,9 @@ async function drawPointMultiplication(canvas, curve, index, scalar) {
         currentPoint = newPoint;
         await new Promise((resolve) => {
             setTimeout(() => {
+
+                const greenPoint = drawPointElement(canvas, curve, newPoint, curve.fieldOrder, 5, 'green', true);
+
                 resolve();
             }, 2000)
         });
