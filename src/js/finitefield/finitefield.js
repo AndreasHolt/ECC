@@ -241,7 +241,11 @@ function multiplicationFormSubmit(event) {
         const scaledPoint = curve.calcPointMultiplication(scale, point);
         drawPoint(canvas, scaledPoint, curve.fieldOrder, 5, 'red');
         //finiteField.drawLineDirectGood(canvas, curve, point, scaledPoint, { prime: curve.fieldOrder == curve.mod });
-        drawPointMultiplication(canvas, curve, index, scale);
+        document.getElementById("pointOperationSubmit").disabled = true;
+        drawPointMultiplication(canvas, curve, index, scale)
+        .then(() => {
+            document.getElementById("pointOperationSubmit").disabled = false;
+        });
     }
 }
 function addAdditionForm() {
