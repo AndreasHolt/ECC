@@ -262,7 +262,7 @@ class StageSystem {
         this.finalStage = this.stageHistory.length;
     }
 
-    changeStage(bool) {
+    changeStage(bool) {     //bool = 1: Next stage, bool = 0: previous stage
         if (!this.currentStage) {
             this.parent.encryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage].point, this.parent.encryptFiniteField.operationPointStyle);
             this.parent.decryptFiniteField.drawPointSvg(this.stageHistory[this.currentStage].point, this.parent.encryptFiniteField.operationPointStyle);
