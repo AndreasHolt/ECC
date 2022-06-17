@@ -377,6 +377,10 @@ function init() {
 
         } else if (sel === 'Point at infliction') {
             deletePoints();
+            if (myGraph.b < 0) {
+                alert("B must be larger than 0 for finding an infliction point.");
+                return;
+            }
             function testInfliction(myGraph, x) {
                 const initPoint = { x, y: -myGraph.equationP(x) };
                 const P = findInfliction(initPoint, myGraph);
