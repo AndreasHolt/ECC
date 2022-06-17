@@ -259,7 +259,6 @@ describe('Unit Test Application Code', () => {
         });
         it('Point multiplication', () => {
             const newPoint = new Point(90, 9);
-            console.log(myCurve.calcPointMultiplication(2, newPoint).toString());
             expect(myCurve.calcPointMultiplication(2, newPoint).x).to.eq(97);
             expect(myCurve.calcPointMultiplication(2, newPoint).y).to.eq(15);
         });
@@ -270,16 +269,19 @@ describe('Unit Test Application Code', () => {
                     if (p.y !== Infinity) {
                         result = false;
                     }
-                } else if (p.y ** 2 % myCurve.fieldOrder === (p.x ** 3 + myCurve.a * p.x + myCurve.b) % myCurve.fieldOrder) {
+                } else if (p.y ** 2 % myCurve.fieldOrder === (p.x ** 3 + 
+                    myCurve.a * p.x + myCurve.b) % myCurve.fieldOrder) {
                     result = false;
                 }
             }
+            expect(result).to.eq(true);
         });
     });
     context('Elgamal operations', () => {
         it('Check plain text equals decrypted chipher text', () => {
             const plainText = 'Hej Test 120 , ';
-            const chipherText = encrypt(myCurve, plainText, user1, user2).encryptedPoints.reduce((prev, elem) => {
+            const chipherText = encrypt(myCurve, plainText, user1, user2)
+            .encryptedPoints.reduce((prev, elem) => {
                 prev = `${prev + elem.toString()},`;
                 return prev;
             }, '');
